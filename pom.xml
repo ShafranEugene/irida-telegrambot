@@ -15,6 +15,7 @@
 	<description>Telgeram bot for creating a newsfeed</description>
 	<properties>
 		<java.version>11</java.version>
+		<telegrambot.stater.version>5.7.1</telegrambot.stater.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -27,6 +28,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots-spring-boot-starter</artifactId>
+			<version>${telegrambot.stater.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Service
 public class SendMessageServiceImpl implements SendMessageService {
 
-    private final IridaBot iridaBot;
+    private IridaBot iridaBot;
 
     @Autowired
     public SendMessageServiceImpl(IridaBot iridaBot) {
@@ -18,6 +20,8 @@ public class SendMessageServiceImpl implements SendMessageService {
 
     @Override
     public void sendMessage(String chatId, String message) {
+        if(isBlank(message)) return;
+
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(message);
         sendMessage.setChatId(chatId);

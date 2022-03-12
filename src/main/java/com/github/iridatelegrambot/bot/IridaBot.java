@@ -13,9 +13,6 @@ import static com.github.iridatelegrambot.command.CommandName.NO;
 @Component
 public class IridaBot extends TelegramLongPollingBot {
 
-    @Autowired
-    private SendMessageServiceImpl sendMessage;
-
     private final static String COMMAND_PREFIX = "/";
 
     private final CommandContainer container;

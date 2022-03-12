@@ -1,5 +1,6 @@
 package com.github.iridatelegrambot.bot;
 
+import com.github.iridatelegrambot.command.CommandName;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,12 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class IridaBot extends TelegramLongPollingBot {
+
     @Autowired
-    SendMessageServiceImpl sendMessage;
+    private SendMessageServiceImpl sendMessage;
+
+    private final static String COMMAND_PREFIX = "/";
+
 
     @Value("${bot.username}")
     private String username;

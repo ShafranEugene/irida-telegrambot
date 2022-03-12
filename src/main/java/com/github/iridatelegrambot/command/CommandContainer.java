@@ -6,12 +6,12 @@ import com.google.common.collect.ImmutableMap;
 
 import static com.github.iridatelegrambot.command.CommandName.*;
 
-public class СommandContainer {
+public class CommandContainer {
 
     private final ImmutableMap<String,Command> commandMap;
     private final Command unknowCommand;
 
-    public СommandContainer(SendMessageService sendMessage) {
+    public CommandContainer(SendMessageService sendMessage) {
 
         commandMap = ImmutableMap.<String, Command>builder()
                 .put(START.getCommandName(), new StartCommand((SendMessageServiceImpl) sendMessage))
@@ -22,5 +22,9 @@ public class СommandContainer {
 
         unknowCommand = new UnknownCommand((SendMessageServiceImpl) sendMessage);
 
+    }
+
+    public Command findCommand(String commandIdentifier){
+        return commandMap.getOrDefault(commandIdentifier,unknowCommand);
     }
 }

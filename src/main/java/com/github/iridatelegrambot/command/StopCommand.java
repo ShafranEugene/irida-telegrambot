@@ -7,7 +7,7 @@ public class StopCommand implements Command{
 
     private final SendMessageServiceImpl sendMessage;
 
-    private final static String STOP_MESSAGE = "Бот остановлен.";
+    public final static String STOP_MESSAGE = "Бот остановлен.";
 
     public StopCommand(SendMessageServiceImpl sendMessage) {
         this.sendMessage = sendMessage;

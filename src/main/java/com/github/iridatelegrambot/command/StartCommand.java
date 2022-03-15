@@ -7,7 +7,7 @@ public class StartCommand implements Command{
 
     private final SendMessageServiceImpl sendMessage;
 
-    private final static String START_MESSAGE = "Привет! Я бот Ирида. По команде /help ты можешь узнать что я уже умею.";
+    public final static String START_MESSAGE = "Привет! Я бот Ирида. По команде /help ты можешь узнать что я уже умею.";
 
     public StartCommand(SendMessageServiceImpl sendMessage) {
         this.sendMessage = sendMessage;

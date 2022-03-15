@@ -7,7 +7,7 @@ public class UnknownCommand implements Command{
 
     private final SendMessageServiceImpl sendMessage;
 
-    private final static String UNKNOW_MESSAGE = "Я не знаю такой команды, обратившись по /help можешь узнать список доступных команд.";
+    public final static String UNKNOWN_MESSAGE = "Я не знаю такой команды, обратившись по /help можешь узнать список доступных команд.";
 
     public UnknownCommand(SendMessageServiceImpl sendMessage) {
         this.sendMessage = sendMessage;
@@ -15,6 +15,6 @@ public class UnknownCommand implements Command{
 
     @Override
     public void execute(Update update) {
-        sendMessage.sendMessage(update.getMessage().getChatId().toString(),UNKNOW_MESSAGE);
+        sendMessage.sendMessage(update.getMessage().getChatId().toString(),UNKNOWN_MESSAGE);
     }
 }

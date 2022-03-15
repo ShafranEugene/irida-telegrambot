@@ -26,7 +26,6 @@ public class IridaBot extends TelegramLongPollingBot {
     public IridaBot() {
         this.container = new CommandContainer(new SendMessageServiceImpl(this));
     }
-
     @Override
     public String getBotUsername() {
         return username;

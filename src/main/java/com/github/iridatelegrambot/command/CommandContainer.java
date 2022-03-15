@@ -9,7 +9,7 @@ import static com.github.iridatelegrambot.command.CommandName.*;
 public class CommandContainer {
 
     private final ImmutableMap<String,Command> commandMap;
-    private final Command unknowCommand;
+    private final Command unknownCommand;
 
     public CommandContainer(SendMessageService sendMessage) {
 
@@ -20,11 +20,11 @@ public class CommandContainer {
                 .put(NO.getCommandName(), new NoCommand((SendMessageServiceImpl) sendMessage))
                 .build();
 
-        unknowCommand = new UnknownCommand((SendMessageServiceImpl) sendMessage);
+        unknownCommand = new UnknownCommand((SendMessageServiceImpl) sendMessage);
 
     }
 
     public Command findCommand(String commandIdentifier){
-        return commandMap.getOrDefault(commandIdentifier,unknowCommand);
+        return commandMap.getOrDefault(commandIdentifier,unknownCommand);
     }
 }

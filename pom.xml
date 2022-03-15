@@ -15,7 +15,10 @@
 	<description>Telgeram bot for creating a newsfeed</description>
 	<properties>
 		<java.version>11</java.version>
-		<telegrambot.stater.version>5.7.1</telegrambot.stater.version>
+		<junit.version>5.8.2</junit.version>
+		<mockito.version>4.3.1</mockito.version>
+		<telegrambots.spring.starter.version>5.7.1</telegrambots.spring.starter.version>
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -28,12 +31,34 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.telegram</groupId>
 			<artifactId>telegrambots-spring-boot-starter</artifactId>
-			<version>${telegrambot.stater.version}</version>
+			<version>${telegrambots.spring.starter.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>30.0-jre</version>
+        </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 
 	</dependencies>
 

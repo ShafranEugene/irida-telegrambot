@@ -2,6 +2,7 @@ package com.github.iridatelegrambot.command;
 
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.UserTelegramService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,11 +16,13 @@ class CommandContainerTest {
 
     private CommandContainer container;
     private SendMessageService mSendMessageService;
+    private UserTelegramService mUserTelegramService;
 
     @BeforeEach
     void init(){
         mSendMessageService = Mockito.mock(SendMessageServiceImpl.class);
-        container = new CommandContainer(mSendMessageService);
+        mUserTelegramService = Mockito.mock(UserTelegramService.class);
+        container = new CommandContainer(mSendMessageService,mUserTelegramService);
     }
 
     @Test

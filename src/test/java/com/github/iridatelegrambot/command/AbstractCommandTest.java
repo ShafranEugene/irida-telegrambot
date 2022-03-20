@@ -3,6 +3,7 @@ package com.github.iridatelegrambot.command;
 import com.github.iridatelegrambot.bot.IridaBot;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.UserTelegramService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 abstract class AbstractCommandTest {
-
+    protected UserTelegramService mUserTelegramService = Mockito.mock(UserTelegramService.class);
     protected IridaBot mIridaBot = Mockito.mock(IridaBot.class);
     protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot);
 

@@ -1,4 +1,4 @@
-package com.github.iridatelegrambot.repository.entity;
+package com.github.iridatelegrambot.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +10,7 @@ import javax.persistence.Table;
 public class UserTelegram {
     @Id
     @Column(name = "chat_id")
-    private String chatId;
+    private Long chatId;
 
     @Column
     private boolean active;
@@ -18,11 +18,11 @@ public class UserTelegram {
     public UserTelegram() {
     }
 
-    public String getChatId() {
+    public Long getChatId() {
         return chatId;
     }
 
-    public void setChatId(String chatId) {
+    public void setChatId(Long chatId) {
         this.chatId = chatId;
     }
 

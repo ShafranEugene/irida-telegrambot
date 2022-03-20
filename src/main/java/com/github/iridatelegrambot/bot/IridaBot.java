@@ -2,6 +2,7 @@ package com.github.iridatelegrambot.bot;
 
 import com.github.iridatelegrambot.command.*;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.UserTelegramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,8 +24,9 @@ public class IridaBot extends TelegramLongPollingBot {
     @Value("${bot.token}")
     private String token;
 
-    public IridaBot() {
-        this.container = new CommandContainer(new SendMessageServiceImpl(this));
+    @Autowired
+    public IridaBot(UserTelegramService userService) {
+        this.container = new CommandContainer(new SendMessageServiceImpl(this), userService);
     }
     @Override
     public String getBotUsername() {

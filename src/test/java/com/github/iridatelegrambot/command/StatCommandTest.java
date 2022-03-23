@@ -1,21 +1,49 @@
 package com.github.iridatelegrambot.command;
 
+import com.github.iridatelegrambot.bot.IridaBot;
+import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.UserTelegramService;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
 import static com.github.iridatelegrambot.command.CommandName.STAT;
 import static com.github.iridatelegrambot.command.StatCommand.STAT_MESSAGE;
 
-public class StatCommandTest extends AbstractCommandTest {
-    @Override
-    String getCommandName() {
-        return STAT.getCommandName();
-    }
+public class StatCommandTest {
 
-    @Override
-    String getCommandMessage() {
-        return STAT_MESSAGE;
-    }
+    private final UserTelegramService mUserTelegramService = Mockito.mock(UserTelegramService.class);
+    private final IridaBot mIridaBot = Mockito.mock(IridaBot.class);
+    private final SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot);
+    private final StatCommand statCommand = new StatCommand(sendMessageService,mUserTelegramService);
 
-    @Override
-    Command getCommand() {
-        return new StatCommand(sendMessageService,mUserTelegramService);
+    @Test
+    void shouldProperSendMessage() throws TelegramApiException {
+        //given
+        Long chatId = 12345678L;
+
+        Update update = new Update();
+
+        Message message = Mockito.mock(Message.class);
+        Mockito.when(message.getChatId()).thenReturn(chatId);
+        Mockito.when(message.getText()).thenReturn(STAT.getCommandName());
+
+        update.setMessage(message);
+
+        int quantityUsers = mUserTelegramService.getAllActiveUser().size();
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId.toString());
+        sendMessage.setText(String.format(STAT_MESSAGE,quantityUsers));
+        sendMessage.enableHtml(true);
+
+        //when
+        statCommand.execute(update);
+
+        //then
+        Mockito.verify(mIridaBot).execute(sendMessage);
     }
 }

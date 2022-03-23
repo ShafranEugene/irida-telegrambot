@@ -9,7 +9,7 @@ public class StatCommand implements Command{
     private final SendMessageServiceImpl sendMessage;
     private final UserTelegramService telegramService;
 
-    public final static String STAT_MESSAGE = "Количество активных пользователей: ";
+    public final static String STAT_MESSAGE ="Количество активных пользователей: %s";
 
     public StatCommand(SendMessageServiceImpl sendMessage, UserTelegramService telegramService) {
         this.sendMessage = sendMessage;
@@ -18,9 +18,7 @@ public class StatCommand implements Command{
 
     @Override
     public void execute(Update update) {
-        Long chatId = update.getMessage().getChatId();
-
         int quantityUsers = telegramService.getAllActiveUser().size();
-        sendMessage.sendMessage(update.getMessage().getChatId().toString(),STAT_MESSAGE + quantityUsers);
+        sendMessage.sendMessage(update.getMessage().getChatId().toString(),String.format(STAT_MESSAGE, quantityUsers));
     }
 }

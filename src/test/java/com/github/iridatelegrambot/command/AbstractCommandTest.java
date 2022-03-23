@@ -1,7 +1,6 @@
 package com.github.iridatelegrambot.command;
 
 import com.github.iridatelegrambot.bot.IridaBot;
-import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import org.junit.jupiter.api.Test;

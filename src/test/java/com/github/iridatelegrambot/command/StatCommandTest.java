@@ -10,19 +10,18 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-abstract class AbstractCommandTest {
-    protected UserTelegramService mUserTelegramService = Mockito.mock(UserTelegramService.class);
-    protected IridaBot mIridaBot = Mockito.mock(IridaBot.class);
-    protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot);
+import static com.github.iridatelegrambot.command.CommandName.STAT;
+import static com.github.iridatelegrambot.command.StatCommand.STAT_MESSAGE;
 
-    abstract String getCommandName();
+public class StatCommandTest {
 
-    abstract String getCommandMessage();
-
-    abstract Command getCommand();
+    private final UserTelegramService mUserTelegramService = Mockito.mock(UserTelegramService.class);
+    private final IridaBot mIridaBot = Mockito.mock(IridaBot.class);
+    private final SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot);
+    private final StatCommand statCommand = new StatCommand(sendMessageService,mUserTelegramService);
 
     @Test
-    void shouldExecuteCommand() throws TelegramApiException {
+    void shouldProperSendMessage() throws TelegramApiException {
         //given
         Long chatId = 12345678L;
 
@@ -30,17 +29,19 @@ abstract class AbstractCommandTest {
 
         Message message = Mockito.mock(Message.class);
         Mockito.when(message.getChatId()).thenReturn(chatId);
-        Mockito.when(message.getText()).thenReturn(getCommandName());
+        Mockito.when(message.getText()).thenReturn(STAT.getCommandName());
 
         update.setMessage(message);
 
+        int quantityUsers = mUserTelegramService.getAllActiveUser().size();
+
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId.toString());
-        sendMessage.setText(getCommandMessage());
+        sendMessage.setText(String.format(STAT_MESSAGE,quantityUsers));
         sendMessage.enableHtml(true);
 
         //when
-        getCommand().execute(update);
+        statCommand.execute(update);
 
         //then
         Mockito.verify(mIridaBot).execute(sendMessage);

@@ -1,0 +1,9 @@
+INSERT INTO user_telegram VALUES ("100000001", 0);
+INSERT INTO user_telegram VALUES ("100000002", 0);
+INSERT INTO user_telegram VALUES ("100000003", 0);
+INSERT INTO user_telegram VALUES ("100000004", 1);
+INSERT INTO user_telegram VALUES ("100000005", 1);
+INSERT INTO user_telegram VALUES ("100000006", 1);
+INSERT INTO user_telegram VALUES ("100000007", 1);
+INSERT INTO user_telegram VALUES ("100000008", 1);
+INSERT INTO user_telegram VALUES ("100000009", 1);

@@ -16,11 +16,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set up MySQL
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        mysql version: '8.0.28'
+        mysql database: 'telegram_bot_irida'
+        mysql root password: 'root'
+        mysql user: 'bestuser'
+        mysql password: 'bestuser'
     - name: Set up JDK 11
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v1
       with:
         java-version: '11'
-        distribution: 'temurin'
-        cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+

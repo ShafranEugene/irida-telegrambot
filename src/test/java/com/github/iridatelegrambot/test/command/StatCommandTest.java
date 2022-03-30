@@ -1,8 +1,8 @@
-package com.github.iridatelegrambot.command;
-
-import com.github.iridatelegrambot.bot.IridaBot;
+package com.github.iridatelegrambot.test.command;
+import com.github.iridatelegrambot.command.StatCommand;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.bot.IridaBot;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import static com.github.iridatelegrambot.command.CommandName.STAT;
-import static com.github.iridatelegrambot.command.StatCommand.STAT_MESSAGE;
 
 public class StatCommandTest {
 
@@ -37,7 +36,7 @@ public class StatCommandTest {
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId.toString());
-        sendMessage.setText(String.format(STAT_MESSAGE,quantityUsers));
+        sendMessage.setText(String.format(StatCommand.STAT_MESSAGE,quantityUsers));
         sendMessage.enableHtml(true);
 
         //when

@@ -1,13 +1,13 @@
-package com.github.iridatelegrambot.service;
+package com.github.iridatelegrambot.test.service;
 
 import com.github.iridatelegrambot.bot.IridaBot;
+import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SendMessageServiceImplTest {
     private SendMessageService sendMessageService;

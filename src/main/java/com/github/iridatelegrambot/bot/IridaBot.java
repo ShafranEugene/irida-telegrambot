@@ -1,15 +1,14 @@
 package com.github.iridatelegrambot.bot;
 
-import com.github.iridatelegrambot.command.*;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.command.CommandContainer;
+import com.github.iridatelegrambot.command.CommandName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import static com.github.iridatelegrambot.command.CommandName.NO;
 
 @Component
 public class IridaBot extends TelegramLongPollingBot {
@@ -49,7 +48,7 @@ public class IridaBot extends TelegramLongPollingBot {
 
                 container.findCommand(commandIdentifier).execute(update);
             } else {
-                container.findCommand(NO.getCommandName()).execute(update);
+                container.findCommand(CommandName.NO.getCommandName()).execute(update);
             }
         }
 

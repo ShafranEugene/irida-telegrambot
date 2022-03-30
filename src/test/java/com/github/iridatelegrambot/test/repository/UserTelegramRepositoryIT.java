@@ -1,7 +1,8 @@
-package com.github.iridatelegrambot.repository;
+package com.github.iridatelegrambot.test.repository;
 
 
 import com.github.iridatelegrambot.entity.UserTelegram;
+import com.github.iridatelegrambot.repository.UserTelegramRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,7 @@
-package com.github.iridatelegrambot.command;
+package com.github.iridatelegrambot.test.command;
+import com.github.iridatelegrambot.command.Command;
+import com.github.iridatelegrambot.command.StartCommand;
 
-import static com.github.iridatelegrambot.command.CommandName.HELP;
 import static com.github.iridatelegrambot.command.CommandName.START;
 import static com.github.iridatelegrambot.command.StartCommand.START_MESSAGE;
 

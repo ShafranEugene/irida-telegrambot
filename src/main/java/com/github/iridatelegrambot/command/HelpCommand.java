@@ -3,8 +3,6 @@ package com.github.iridatelegrambot.command;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static com.github.iridatelegrambot.command.CommandName.*;
-
 public class HelpCommand implements Command{
 
     private final SendMessageServiceImpl sendMessage;
@@ -14,7 +12,7 @@ public class HelpCommand implements Command{
                                                 + "%s - приостановить работу\n"
                                                 + "%s - получить помощь\n"
                                                 + "%s - получить информацию по работе бота\n",
-            START.getCommandName(),STOP.getCommandName(),HELP.getCommandName(),STAT.getCommandName());
+            CommandName.START.getCommandName(), CommandName.STOP.getCommandName(), CommandName.HELP.getCommandName(), CommandName.STAT.getCommandName());
 
     public HelpCommand(SendMessageServiceImpl sendMessage) {
         this.sendMessage = sendMessage;

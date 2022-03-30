@@ -1,4 +1,7 @@
-package com.github.iridatelegrambot.command;
+package com.github.iridatelegrambot.test.command;
+
+import com.github.iridatelegrambot.command.Command;
+import com.github.iridatelegrambot.command.StopCommand;
 
 import static com.github.iridatelegrambot.command.CommandName.STOP;
 import static com.github.iridatelegrambot.command.StopCommand.STOP_MESSAGE;

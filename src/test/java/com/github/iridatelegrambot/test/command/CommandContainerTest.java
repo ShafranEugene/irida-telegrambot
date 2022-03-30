@@ -1,14 +1,15 @@
-package com.github.iridatelegrambot.command;
+package com.github.iridatelegrambot.test.command;
 
+import com.github.iridatelegrambot.command.Command;
+import com.github.iridatelegrambot.command.CommandContainer;
+import com.github.iridatelegrambot.command.CommandName;
+import com.github.iridatelegrambot.command.UnknownCommand;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 

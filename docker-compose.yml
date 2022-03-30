@@ -1,13 +1,6 @@
 version: '3.1'
 
 services:
-  irida:
-    build:
-      context: .
-    environment:
-      - BOT_NAME=${BOT_NAME}
-      - BOT_TOKEN=${BOT_TOKEN}
-    restart: always
   iridaDB:
     image: mysql:8.0.28
     restart: always
@@ -21,3 +14,13 @@ services:
     expose:
       - '3306'
     command: --character-set-server=utf8 --collation-server=utf8_general_ci
+  irida:
+    depends_on:
+      - iridaDB
+    build:
+      context: .
+    environment:
+      BOT_NAME: irida_recom_test_bot
+      BOT_TOKEN: 5127901141:AAF_5wRZtWTYSZyyJT-5FkBNPQ9hI3ijgro
+      SPRING_DATABASE_URL: jdbc:mysql://iridaDB:3306/telegram_bot_irida
+    restart: always

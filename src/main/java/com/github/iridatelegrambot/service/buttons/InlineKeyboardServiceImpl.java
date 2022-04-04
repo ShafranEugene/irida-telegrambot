@@ -12,7 +12,7 @@ import static com.github.iridatelegrambot.service.buttons.CityName.*;
 
 public class InlineKeyboardServiceImpl implements InlineKeyboardService{
     @Override
-    public InlineKeyboardMarkup cityButtons() {
+    public InlineKeyboardMarkup cityButtons(Object orderOrIvoice) {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         HashMap<String,String> cityNameValue = new HashMap<>();

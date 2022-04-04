@@ -4,7 +4,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 
 public interface InlineKeyboardService {
 
-    InlineKeyboardMarkup cityButtons();
+    InlineKeyboardMarkup cityButtons(Object orderOrIvoice);
 
     void mainMenu();
 

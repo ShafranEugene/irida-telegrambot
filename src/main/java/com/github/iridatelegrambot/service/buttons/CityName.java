@@ -2,19 +2,19 @@ package com.github.iridatelegrambot.service.buttons;
 
 public enum CityName {
 
-    DNIPRO("Днепр", "/addCityDnipro"),
-    KYIV("Киев", "/addCityKyiv"),
-    LVIV("Львов", "/addCityLviv"),
-    RIVNE("Ровно", "/addCityRivne"),
-    IVANO_FRANKIVSK("Ивано-Франковск", "/addCityIvanoFrankivsk"),
-    VINNITSA("Винница", "/addCityVinniisa"),
-    ODESSA("Одесса", "/addCityOdessa"),
-    ZAPOROZHYE("Запорожье", "/addCityZaporozhye"),
-    KHARKIV("Харьков", "/addCityKharkiv"),
-    KROPYVNYTSKYI("Кропивницкий", "/addCityKropyvnytskyi"),
-    POLTAVA("Полтава", "/addCityPoltava"),
-    NIKOLAEV("Николаев", "/addCityNikolaev"),
-    CHERKASY("Черкассы", "/addCityCherkasy");
+    DNIPRO("Днепр", "addCity:Dnipro"),
+    KYIV("Киев", "addCity:Kyiv"),
+    LVIV("Львов", "addCity:Lviv"),
+    RIVNE("Ровно", "addCity:Rivne"),
+    IVANO_FRANKIVSK("Ивано-Франковск", "addCity:IvanoFrankivsk"),
+    VINNITSA("Винница", "addCity:Vinniisa"),
+    ODESSA("Одесса", "addCity:Odessa"),
+    ZAPOROZHYE("Запорожье", "addCity:Zaporozhye"),
+    KHARKIV("Харьков", "addCity:Kharkiv"),
+    KROPYVNYTSKYI("Кропивницкий", "addCity:Kropyvnytskyi"),
+    POLTAVA("Полтава", "addCity:Poltava"),
+    NIKOLAEV("Николаев", "addCity:Nikolaev"),
+    CHERKASY("Черкассы", "addCity:Cherkasy");
 
     private final String name;
     private final String callBack;

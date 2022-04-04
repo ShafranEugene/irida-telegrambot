@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
@@ -17,6 +18,7 @@ public class IridaBot extends TelegramLongPollingBot {
     private final CommandContainer container;
     private final AnswerCatcherService answerCatcher;
     private final CheckUpdateOnPost checkUpdateOnPost;
+    private final SendMessageServiceImpl userService;
 
     @Value("${bot.username}")
     private String username;
@@ -26,7 +28,7 @@ public class IridaBot extends TelegramLongPollingBot {
 
     @Autowired
     public IridaBot(UserTelegramService userTelegramService, CheckUpdateOnPost checkUpdateOnPost, OrderService orderService) {
-        SendMessageServiceImpl userService = new SendMessageServiceImpl(this);
+        userService = new SendMessageServiceImpl(this);
         this.checkUpdateOnPost = checkUpdateOnPost;
         this.container = new CommandContainer(userService,userTelegramService,checkUpdateOnPost);
         this.answerCatcher = new AnswerCatcherServiceImpl(userService,orderService,checkUpdateOnPost);
@@ -44,12 +46,22 @@ public class IridaBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
+        if(update.hasCallbackQuery()){
+            handleCallback(update);
+        } else if(update.hasMessage()){
+            handleMessage(update);
+        }
+
+    }
+
+
+    private void handleMessage(Update update){
         if(checkUpdateOnPost.isLastMessageAddOrder()){
             answerCatcher.answerByOrder(update);
             return;
         }
 
-        if(update.hasMessage() && update.getMessage().hasText()){
+        if(update.getMessage().hasText()){
             String message = update.getMessage().getText().trim();
 
             if(message.startsWith(COMMAND_PREFIX)){
@@ -60,6 +72,16 @@ public class IridaBot extends TelegramLongPollingBot {
                 container.findCommand(CommandName.NO.getCommandName()).execute(update);
             }
         }
+    }
 
+
+    private void handleCallback(Update update){
+        CallbackQuery callbackQuery = update.getCallbackQuery();
+        String[] componentsCallback = callbackQuery.getData().split(":");
+        String action = componentsCallback[0];
+
+        if(action.contains("addCity")){
+            userService.sendMessage(callbackQuery.getMessage().getChatId().toString(),"123");
+        }
     }
 }

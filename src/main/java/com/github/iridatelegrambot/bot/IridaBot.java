@@ -1,5 +1,6 @@
 package com.github.iridatelegrambot.bot;
 
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContainer;
 import com.github.iridatelegrambot.service.*;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
@@ -18,7 +19,7 @@ public class IridaBot extends TelegramLongPollingBot {
     private final CommandContainer container;
     private final AnswerCatcherService answerCatcher;
     private final CheckUpdateOnPost checkUpdateOnPost;
-    private final SendMessageServiceImpl userService;
+    private final CallbackCommandContainer callbackCommandContainer;
 
     @Value("${bot.username}")
     private String username;
@@ -28,9 +29,10 @@ public class IridaBot extends TelegramLongPollingBot {
 
     @Autowired
     public IridaBot(UserTelegramService userTelegramService, CheckUpdateOnPost checkUpdateOnPost, OrderService orderService) {
-        userService = new SendMessageServiceImpl(this);
+        SendMessageServiceImpl userService = new SendMessageServiceImpl(this);
         this.checkUpdateOnPost = checkUpdateOnPost;
         this.container = new CommandContainer(userService,userTelegramService,checkUpdateOnPost);
+        this.callbackCommandContainer = new CallbackCommandContainer(userService,orderService);
         this.answerCatcher = new AnswerCatcherServiceImpl(userService,orderService,checkUpdateOnPost);
     }
     @Override
@@ -77,11 +79,8 @@ public class IridaBot extends TelegramLongPollingBot {
 
     private void handleCallback(Update update){
         CallbackQuery callbackQuery = update.getCallbackQuery();
-        String[] componentsCallback = callbackQuery.getData().split(":");
-        String action = componentsCallback[0];
 
-        if(action.contains("addCity")){
-            userService.sendMessage(callbackQuery.getMessage().getChatId().toString(),"123");
+        callbackCommandContainer.findAnswer(callbackQuery).execute(callbackQuery);
+
         }
     }
-}

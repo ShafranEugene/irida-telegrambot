@@ -1,5 +1,7 @@
 package com.github.iridatelegrambot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -11,15 +13,18 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @JsonIgnore
     @Column(name = "number_order")
     private String number;
 
     @Column
     private String city;
 
+    @JsonIgnore
     @Column(name = "id_user")
     private Long idUser;
 
+    @JsonIgnore
     @Column(name = "status")
     private boolean statusActive;
 

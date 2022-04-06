@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
+import java.util.List;
+
 @Service
 public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
@@ -33,6 +35,11 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
             sendMessageService.sendMessage(chatId.toString(),"Сообщение не содержит номера!\nПовторите попытку.");
             return;
         }
+
+        if(checkIdentityOrder(numberOrder)){
+            sendMessageService.sendMessage(chatId.toString(),"Такой номер уже есть в базе!\nПовторите попытку.");
+            return;
+        }
         Order order = new Order();
 
         order.setNumber(numberOrder);
@@ -41,7 +48,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
         orderService.save(order);
 
-        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.cityButtons();
+        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.cityButtons(order);
 
         sendMessageService.sendMessage(chatId.toString(),"Готово! \nВведите город который сделал заказ:",inlineKeyboardMarkup);
 
@@ -49,5 +56,17 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
 
         checkUpdateOnPost.setLastMessageAddOrder(false);
+    }
+
+
+    private boolean checkIdentityOrder(String numberOrder){
+        final boolean[] DBhasThisNumber = {false};
+        List<Order> orders = orderService.getAllOrdersActive();
+        orders.forEach(order -> {
+            if(order.getNumber().equals(numberOrder)){
+                DBhasThisNumber[0] = true;
+            }
+        });
+        return DBhasThisNumber[0];
     }
 }

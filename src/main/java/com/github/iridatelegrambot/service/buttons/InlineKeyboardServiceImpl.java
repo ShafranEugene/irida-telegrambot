@@ -1,42 +1,73 @@
 package com.github.iridatelegrambot.service.buttons;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.iridatelegrambot.entity.Order;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
-import static com.github.iridatelegrambot.service.buttons.CityName.*;
 
 public class InlineKeyboardServiceImpl implements InlineKeyboardService{
     @Override
-    public InlineKeyboardMarkup cityButtons(Object orderOrIvoice) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        HashMap<String,String> cityNameValue = new HashMap<>();
+    public InlineKeyboardMarkup cityButtons(Order order){
+        InlineKeyboardMarkup inlineKeyboardMarkup;
 
         List<CityName> cityNamesList = new ArrayList<>(Arrays.asList(CityName.values()));
 
-        cityNamesList.forEach(city -> {
-            cityNameValue.put(city.getNameCity(),city.getCallBack());
-        });
+        List<String> listJSONOrdersWithCity = new ArrayList<>();
 
-        inlineKeyboardMarkup = InlineKeyboardMarkup.builder()
-                .keyboardRow(List.of(InlineKeyboardButton.builder()
-                            .text(DNIPRO.getNameCity())
-                            .callbackData(DNIPRO.getCallBack())
-                            .build(),
-                        InlineKeyboardButton.builder()
-                            .text(KHARKIV.getNameCity())
-                            .callbackData(KHARKIV.getCallBack())
-                            .build()))
-                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
 
+        for (CityName cityName : cityNamesList) {
+            order.setCity(cityName.getNameCity());
 
+            try {
+                String orderInJSON = "add_order:" + objectMapper.writeValueAsString(order);
+                listJSONOrdersWithCity.add(orderInJSON);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        inlineKeyboardMarkup = creatorMarkupWithCity(cityNamesList,listJSONOrdersWithCity);
 
         return inlineKeyboardMarkup;
+    }
+
+
+    private InlineKeyboardMarkup creatorMarkupWithCity(List<CityName> cityNamesList, List<String> listJSONOWithCity){
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+        int countRows = (int) Math.ceil(((double) cityNamesList.size())/3);
+        for(int i = 0; i < countRows; i++){
+
+            rows.add(new ArrayList<>());
+
+            for (int j = i * 3; j < i * 3 + 3; j++){
+                if(j >= cityNamesList.size()){
+                    continue;
+                }
+                InlineKeyboardButton button = new InlineKeyboardButton();
+                button.setText(cityNamesList.get(j).getNameCity());
+                button.setCallbackData(listJSONOWithCity.get(j));
+
+                rows.get(i).add(button);
+            }
+        }
+
+        InlineKeyboardButton buttonCancel = new InlineKeyboardButton();
+        buttonCancel.setText("Отмена");
+        buttonCancel.setCallbackData("Cancel");
+        rows.get(countRows - 1).add(buttonCancel);
+
+        markup.setKeyboard(rows);
+        return markup;
     }
 
     @Override

@@ -63,6 +63,8 @@ public class IridaBot extends TelegramLongPollingBot {
             return;
         }
 
+
+
         if(update.getMessage().hasText()){
             String message = update.getMessage().getText().trim();
 

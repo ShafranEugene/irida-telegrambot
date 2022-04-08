@@ -1,9 +1,6 @@
 package com.github.iridatelegrambot.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +12,8 @@ public class UserTelegram {
 
     @Column
     private boolean active;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "userTelegram")
+    private ConditionBot conditionBot;
 
     public UserTelegram() {
     }
@@ -33,6 +32,14 @@ public class UserTelegram {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public ConditionBot getConditionBot() {
+        return conditionBot;
+    }
+
+    public void setConditionBot(ConditionBot conditionBot) {
+        this.conditionBot = conditionBot;
     }
 
     @Override

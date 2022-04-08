@@ -1,17 +1,18 @@
 package com.github.iridatelegrambot.command;
 
+import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class StatCommand implements Command{
 
-    private final SendMessageServiceImpl sendMessage;
+    private final SendMessageService sendMessage;
     private final UserTelegramService telegramService;
 
     public final static String STAT_MESSAGE ="Количество активных пользователей: %s";
 
-    public StatCommand(SendMessageServiceImpl sendMessage, UserTelegramService telegramService) {
+    public StatCommand(SendMessageService sendMessage, UserTelegramService telegramService) {
         this.sendMessage = sendMessage;
         this.telegramService = telegramService;
     }

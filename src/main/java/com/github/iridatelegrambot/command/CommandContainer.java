@@ -2,7 +2,6 @@ package com.github.iridatelegrambot.command;
 
 import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.service.SendMessageService;
-import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.google.common.collect.ImmutableMap;
 
@@ -14,15 +13,15 @@ public class CommandContainer {
     public CommandContainer(SendMessageService sendMessage, UserTelegramService userTelegramService, CheckUpdateOnPost checkUpdateOnPost) {
 
         commandMap = ImmutableMap.<String, Command>builder()
-                .put(CommandName.START.getCommandName(), new StartCommand((SendMessageServiceImpl) sendMessage,userTelegramService))
-                .put(CommandName.STOP.getCommandName(), new StopCommand((SendMessageServiceImpl) sendMessage,userTelegramService))
-                .put(CommandName.HELP.getCommandName(), new HelpCommand((SendMessageServiceImpl) sendMessage))
-                .put(CommandName.NO.getCommandName(), new NoCommand((SendMessageServiceImpl) sendMessage))
-                .put(CommandName.STAT.getCommandName(),new StatCommand((SendMessageServiceImpl) sendMessage,userTelegramService))
+                .put(CommandName.START.getCommandName(), new StartCommand(sendMessage,userTelegramService))
+                .put(CommandName.STOP.getCommandName(), new StopCommand(sendMessage,userTelegramService))
+                .put(CommandName.HELP.getCommandName(), new HelpCommand(sendMessage))
+                .put(CommandName.NO.getCommandName(), new NoCommand(sendMessage))
+                .put(CommandName.STAT.getCommandName(),new StatCommand(sendMessage,userTelegramService))
                 .put(CommandName.ADDORDER.getCommandName(),new AddOrderCommand(sendMessage,checkUpdateOnPost))
                 .build();
 
-        unknownCommand = new UnknownCommand((SendMessageServiceImpl) sendMessage);
+        unknownCommand = new UnknownCommand(sendMessage);
 
     }
 

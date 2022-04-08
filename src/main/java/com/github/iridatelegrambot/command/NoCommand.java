@@ -1,15 +1,16 @@
 package com.github.iridatelegrambot.command;
 
+import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class NoCommand implements Command{
 
-    private final SendMessageServiceImpl sendMessage;
+    private final SendMessageService sendMessage;
 
     public final static String NO_MESSAGE = "Я поддерживаю команды, о которых ты можешь узнать по команде /help ты можешь узнать что я уже умею.";
 
-    public NoCommand(SendMessageServiceImpl sendMessage) {
+    public NoCommand(SendMessageService sendMessage) {
         this.sendMessage = sendMessage;
     }
 

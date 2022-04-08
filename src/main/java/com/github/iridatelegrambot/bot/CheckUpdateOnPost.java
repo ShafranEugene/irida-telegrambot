@@ -1,28 +1,36 @@
 package com.github.iridatelegrambot.bot;
 
+import com.github.iridatelegrambot.entity.ConditionBot;
+import com.github.iridatelegrambot.entity.UserTelegram;
+import com.github.iridatelegrambot.service.UserTelegramService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CheckUpdateOnPost {
-    private boolean lastMessageAddOrder = false;
-    private boolean lastMessageAddInvoice = false;
 
-    public CheckUpdateOnPost() {
+    private final UserTelegramService userTelegramService;
+    @Autowired
+    public CheckUpdateOnPost(UserTelegramService userTelegramService) {
+        this.userTelegramService = userTelegramService;
     }
 
-    public boolean isLastMessageAddOrder() {
-        return lastMessageAddOrder;
+    public boolean waitingNumberOrder(Long idChat){
+        ConditionBot conditionBot = findConditionBot(idChat);
+        return conditionBot.isAnswerOrderStatus();
     }
 
-    public void setLastMessageAddOrder(boolean lastMessageAddOrder) {
-        this.lastMessageAddOrder = lastMessageAddOrder;
+    public boolean waitingNumberInvoice(Long idChat){
+        ConditionBot conditionBot = findConditionBot(idChat);
+        return conditionBot.isAnswerInvoiceStatus();
     }
 
-    public boolean isLastMessageAddInvoice() {
-        return lastMessageAddInvoice;
+    public void setStatusOrder(Long idChat,boolean status){
+
     }
 
-    public void setLastMessageAddInvoice(boolean lastMessageAddInvoice) {
-        this.lastMessageAddInvoice = lastMessageAddInvoice;
+    private ConditionBot findConditionBot(Long idChat){
+        UserTelegram userTelegram = userTelegramService.findByChatId(idChat).get();
+        return userTelegram.getConditionBot();
     }
 }

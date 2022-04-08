@@ -55,7 +55,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 //        sendMessageService.sendMessage(chatId.toString(),"Готово! \nВведите город который сделал заказ:");
 
 
-        checkUpdateOnPost.setLastMessageAddOrder(false);
+//        checkUpdateOnPost.setLastMessageAddOrder(false);
     }
 
 

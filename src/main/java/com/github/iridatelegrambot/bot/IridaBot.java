@@ -58,7 +58,8 @@ public class IridaBot extends TelegramLongPollingBot {
 
 
     private void handleMessage(Update update){
-        if(checkUpdateOnPost.isLastMessageAddOrder()){
+        Long idChat = update.getMessage().getChatId();
+        if(checkUpdateOnPost.waitingNumberOrder(idChat) | checkUpdateOnPost.waitingNumberInvoice(idChat)){
             answerCatcher.answerByOrder(update);
             return;
         }

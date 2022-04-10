@@ -16,7 +16,8 @@ public class AddInvoiceCommand implements Command{
 
     @Override
     public void execute(Update update) {
-//        checkUpdateOnPost.setLastMessageAddOrder(true);
-        sendMessageService.sendMessage(update.getMessage().getChatId().toString(),ADDINVOICE_MESSAGE);
+        Long chatId = update.getMessage().getChatId();
+        checkUpdateOnPost.setStatusInvoice(chatId,true);
+        sendMessageService.sendMessage(chatId.toString(),ADDINVOICE_MESSAGE);
     }
 }

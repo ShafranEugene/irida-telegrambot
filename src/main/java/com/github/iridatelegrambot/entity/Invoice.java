@@ -1,5 +1,7 @@
 package com.github.iridatelegrambot.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,16 +12,21 @@ public class Invoice {
     @Column(name = "id_invoice")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @JsonIgnore
     @Column(name = "number_invoice")
     private String number;
     @Column
     private String city;
+    @JsonIgnore
     @Column(name = "id_user")
     private Long idUser;
+    @JsonIgnore
     @Column
     private String comment;
+    @JsonIgnore
     @Column(name = "date_add")
     private String date;
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_order")
     private Order order;

@@ -4,6 +4,7 @@ import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContai
 import com.github.iridatelegrambot.service.*;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
+import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -28,12 +29,13 @@ public class IridaBot extends TelegramLongPollingBot {
     private String token;
 
     @Autowired
-    public IridaBot(UserTelegramService userTelegramService, CheckUpdateOnPost checkUpdateOnPost, OrderService orderService) {
+    public IridaBot(UserTelegramService userTelegramService, CheckUpdateOnPost checkUpdateOnPost,
+                    OrderService orderService, InvoiceService invoiceService, InlineKeyboardService inlineKeyboardService) {
         SendMessageServiceImpl userService = new SendMessageServiceImpl(this);
         this.checkUpdateOnPost = checkUpdateOnPost;
         this.container = new CommandContainer(userService,userTelegramService,checkUpdateOnPost);
-        this.callbackCommandContainer = new CallbackCommandContainer(userService,orderService);
-        this.answerCatcher = new AnswerCatcherServiceImpl(userService,orderService,checkUpdateOnPost);
+        this.callbackCommandContainer = new CallbackCommandContainer(userService,orderService,invoiceService,inlineKeyboardService);
+        this.answerCatcher = new AnswerCatcherServiceImpl(userService,orderService,checkUpdateOnPost, invoiceService,inlineKeyboardService);
     }
     @Override
     public String getBotUsername() {

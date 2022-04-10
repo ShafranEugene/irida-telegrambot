@@ -19,6 +19,7 @@ public class CommandContainer {
                 .put(CommandName.NO.getCommandName(), new NoCommand(sendMessage))
                 .put(CommandName.STAT.getCommandName(),new StatCommand(sendMessage,userTelegramService))
                 .put(CommandName.ADDORDER.getCommandName(),new AddOrderCommand(sendMessage,checkUpdateOnPost))
+                .put(CommandName.ADDINVOICE.getCommandName(),new AddInvoiceCommand(sendMessage,checkUpdateOnPost))
                 .build();
 
         unknownCommand = new UnknownCommand(sendMessage);

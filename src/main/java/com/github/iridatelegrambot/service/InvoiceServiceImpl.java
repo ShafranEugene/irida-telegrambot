@@ -5,6 +5,7 @@ import com.github.iridatelegrambot.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 @Service
 public class InvoiceServiceImpl implements InvoiceService {
@@ -23,5 +24,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public Optional<Invoice> getInvoiceById(int id) {
         return invoiceRepository.findById(id);
+    }
+
+    @Override
+    public List<Invoice> getAllInvoice(){
+        return invoiceRepository.findAll();
     }
 }

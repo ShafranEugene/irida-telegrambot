@@ -33,6 +33,7 @@ public class Order {
     @Column(name = "date_created")
     private String date;
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<Invoice> invoiceList;
 

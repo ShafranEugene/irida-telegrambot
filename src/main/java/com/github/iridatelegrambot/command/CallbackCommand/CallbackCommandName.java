@@ -1,7 +1,8 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
 public enum CallbackCommandName {
-    ADD_ORDER("add_order");
+    ADD_ORDER("add_order"),
+    ADD_INVOICE("add_invoice");
 
     private final String name;
 

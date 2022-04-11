@@ -5,6 +5,7 @@ import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class StartCommand implements Command{
@@ -34,6 +35,8 @@ public class StartCommand implements Command{
                     UserTelegram user = new UserTelegram();
                     user.setActive(true);
                     user.setChatId(chatId);
+                    user.setFirstName(update.getMessage().getChat().getFirstName());
+                    user.setUserName(update.getMessage().getChat().getUserName());
                     ConditionBot conditionBot = new ConditionBot();
                     conditionBot.setUserTelegram(user);
                     user.setConditionBot(conditionBot);

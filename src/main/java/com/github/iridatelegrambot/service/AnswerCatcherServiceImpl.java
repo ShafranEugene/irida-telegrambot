@@ -62,7 +62,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
         InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.cityButtons(order);
 
-        sendMessageService.sendMessage(chatId.toString(),"Готово! \nВведите город который сделал заказ:",inlineKeyboardMarkup);
+        sendMessageService.sendMessage(chatId.toString(),"Введите город который сделал заказ:",inlineKeyboardMarkup);
 
         checkUpdateOnPost.setStatusOrder(chatId,false);
     }
@@ -83,7 +83,6 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
     public void answerByInvoice(Update update){
         String[] textUpdate = update.getMessage().getText().split(";");
         String numberInvoice = textUpdate[0];
-        String comment = textUpdate[1];
         Long chatId = update.getMessage().getChatId();
 
         if(numberInvoice.replaceAll("[^0-9]","").isBlank()){
@@ -99,7 +98,10 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         Invoice invoice = new Invoice();
         invoice.setNumber(numberInvoice);
         invoice.setIdUser(chatId);
-        invoice.setComment(comment);
+        if(textUpdate.length>1){
+            String comment = textUpdate[1];
+            invoice.setComment(comment);
+        }
 
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -109,7 +111,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
         InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.cityButtons(invoice);
 
-        sendMessageService.sendMessage(chatId.toString(),"Готово! \nВведите город из которого была накладная:",inlineKeyboardMarkup);
+        sendMessageService.sendMessage(chatId.toString(),"Введите город из которого была накладная:",inlineKeyboardMarkup);
 
         checkUpdateOnPost.setStatusInvoice(chatId,false);
 

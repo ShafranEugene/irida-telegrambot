@@ -12,6 +12,8 @@ public interface InlineKeyboardService {
 
     InlineKeyboardMarkup markupActiveOrdersForInvoice(Invoice invoice);
 
+    InlineKeyboardMarkup closeOrder(Order order);
+
     void mainMenu();
 
     void orderMenu();

@@ -62,11 +62,14 @@ public class IridaBot extends TelegramLongPollingBot {
     private void handleMessage(Update update){
         Long idChat = update.getMessage().getChatId();
         if(checkUpdateOnPost.waitingNumberOrder(idChat) | checkUpdateOnPost.waitingNumberInvoice(idChat)){
-            answerCatcher.answerByOrder(update);
-            return;
+            if(checkUpdateOnPost.waitingNumberOrder(idChat)){
+                answerCatcher.answerByOrder(update);
+                return;
+            } else if(checkUpdateOnPost.waitingNumberInvoice(idChat)){
+                answerCatcher.answerByInvoice(update);
+                return;
+            }
         }
-
-
 
         if(update.getMessage().hasText()){
             String message = update.getMessage().getText().trim();

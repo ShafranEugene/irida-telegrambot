@@ -38,10 +38,12 @@ public class AddInvoiceCallbackCommand implements CallbackCommand {
             invoiceService.save(invoice);
             InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.markupActiveOrdersForInvoice(invoice);
             sendMessageService.sendMessage(callbackQuery.getMessage().getChatId().toString(),
-                    "Готово!\nВыберете какой это заказ:",
+                    "Выберете какой это заказ:",
                     inlineKeyboardMarkup);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+
+
     }
 }

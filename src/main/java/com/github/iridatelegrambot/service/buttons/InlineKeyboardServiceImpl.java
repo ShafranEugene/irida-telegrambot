@@ -148,6 +148,28 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         markup.setKeyboard(rows);
         return markup;
     }
+    @Override
+    public InlineKeyboardMarkup closeOrder(Order order){
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        List<InlineKeyboardButton> row = new ArrayList<>();
+
+        InlineKeyboardButton buttonYes = new InlineKeyboardButton();
+        InlineKeyboardButton buttonNo = new InlineKeyboardButton();
+
+        buttonYes.setText("Да");
+        buttonNo.setText("Нет");
+
+        buttonYes.setCallbackData("closeOrder:" + order.getId() + ":false");
+        buttonNo.setCallbackData("closeOrder:" + order.getId() + ":true");
+
+        row.add(buttonYes);
+        row.add(buttonNo);
+        rows.add(row);
+
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.setKeyboard(rows);
+        return inlineKeyboardMarkup;
+    }
 
 
 

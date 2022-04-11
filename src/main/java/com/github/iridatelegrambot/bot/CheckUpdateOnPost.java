@@ -16,36 +16,38 @@ public class CheckUpdateOnPost {
     }
 
     public boolean waitingNumberOrder(Long idChat){
-        ConditionBot conditionBot = findUserTelegram(idChat).getConditionBot();
+        if(userTelegramService.findByChatId(idChat).isEmpty()){
+            return false;
+        }
+        ConditionBot conditionBot = userTelegramService.findByChatId(idChat).get().getConditionBot();
         return conditionBot.isAnswerOrderStatus();
     }
 
     public boolean waitingNumberInvoice(Long idChat){
-        ConditionBot conditionBot = findUserTelegram(idChat).getConditionBot();
+        if(userTelegramService.findByChatId(idChat).isEmpty()){
+            return false;
+        }
+        ConditionBot conditionBot = userTelegramService.findByChatId(idChat).get().getConditionBot();
         return conditionBot.isAnswerInvoiceStatus();
     }
 
     public void setStatusOrder(Long idChat,boolean status){
-        UserTelegram userTelegram = userTelegramService.findByChatId(idChat).get();
-        userTelegram.getConditionBot().setAnswerOrderStatus(status);
-        userTelegramService.save(userTelegram);
-    }
-    public void  setStatusInvoice(Long idChat,boolean status){
-        UserTelegram userTelegram = findUserTelegram(idChat);
-        userTelegram.getConditionBot().setAnswerInvoiceStatus(status);
-        userTelegramService.save(userTelegram);
+        try {
+            UserTelegram userTelegram = userTelegramService.findByChatId(idChat).get();
+            userTelegram.getConditionBot().setAnswerOrderStatus(status);
+            userTelegramService.save(userTelegram);
+        } catch (Exception e){
+            System.out.println("Cannot find User Telegram with Id: " + idChat);
+        }
     }
 
-    private UserTelegram findUserTelegram(Long idChat){
-        if(userTelegramService.findByChatId(idChat).isEmpty()){
-                    UserTelegram user = new UserTelegram();
-                    user.setActive(true);
-                    user.setChatId(idChat);
-                    ConditionBot conditionBot = new ConditionBot();
-                    conditionBot.setUserTelegram(user);
-                    user.setConditionBot(conditionBot);
-                    userTelegramService.save(user);
-                }
-        return userTelegramService.findByChatId(idChat).get();
+    public void  setStatusInvoice(Long idChat,boolean status){
+        try {
+            UserTelegram userTelegram = userTelegramService.findByChatId(idChat).get();
+            userTelegram.getConditionBot().setAnswerInvoiceStatus(status);
+            userTelegramService.save(userTelegram);
+        } catch (Exception e){
+            System.out.println("Cannot find User Telegram with Id: " + idChat);
+        }
     }
 }

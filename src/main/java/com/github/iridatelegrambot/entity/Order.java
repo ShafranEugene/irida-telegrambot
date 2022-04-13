@@ -3,6 +3,7 @@ package com.github.iridatelegrambot.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -27,6 +28,14 @@ public class Order {
     @JsonIgnore
     @Column(name = "status")
     private boolean statusActive;
+
+    @JsonIgnore
+    @Column(name = "date_created")
+    private String date;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    private List<Invoice> invoiceList;
 
 
     public Order() {
@@ -70,6 +79,22 @@ public class Order {
 
     public void setStatusActive(boolean statusActive) {
         this.statusActive = statusActive;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public List<Invoice> getInvoiceList() {
+        return invoiceList;
+    }
+
+    public void setInvoiceList(List<Invoice> invoiceList) {
+        this.invoiceList = invoiceList;
     }
 
     @Override

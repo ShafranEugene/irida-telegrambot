@@ -1,8 +1,10 @@
 package com.github.iridatelegrambot.test.service;
 
+import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.bot.IridaBot;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -11,12 +13,16 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 class SendMessageServiceImplTest {
     private SendMessageService sendMessageService;
+    private CheckUpdateOnPost mCheck;
+    private InlineKeyboardService mInline;
     private IridaBot mIridaBot;
 
     @BeforeEach
     void init(){
         mIridaBot = Mockito.mock(IridaBot.class);
-        sendMessageService = new SendMessageServiceImpl(mIridaBot);
+        mCheck = Mockito.mock(CheckUpdateOnPost.class);
+        mInline = Mockito.mock(InlineKeyboardService.class);
+        sendMessageService = new SendMessageServiceImpl(mIridaBot,mInline,mCheck);
     }
 
     @Test

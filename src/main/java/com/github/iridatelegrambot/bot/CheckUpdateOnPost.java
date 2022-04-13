@@ -1,28 +1,47 @@
 package com.github.iridatelegrambot.bot;
 
-import org.springframework.stereotype.Component;
+import com.github.iridatelegrambot.entity.ConditionBot;
+import com.github.iridatelegrambot.entity.UserTelegram;
+import com.github.iridatelegrambot.service.UserTelegramService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class CheckUpdateOnPost {
-    private boolean lastMessageAddOrder = false;
-    private boolean lastMessageAddInvoice = false;
 
-    public CheckUpdateOnPost() {
+    private final UserTelegramService userTelegramService;
+    @Autowired
+    public CheckUpdateOnPost(UserTelegramService userTelegramService) {
+        this.userTelegramService = userTelegramService;
     }
 
-    public boolean isLastMessageAddOrder() {
-        return lastMessageAddOrder;
+    public boolean waitingNumberOrder(Long idChat){
+        if(userTelegramService.findByChatId(idChat).isEmpty()){
+            return false;
+        }
+        ConditionBot conditionBot = userTelegramService.findByChatId(idChat).get().getConditionBot();
+        return conditionBot.isAnswerOrderStatus();
     }
 
-    public void setLastMessageAddOrder(boolean lastMessageAddOrder) {
-        this.lastMessageAddOrder = lastMessageAddOrder;
+    public boolean waitingNumberInvoice(Long idChat){
+        if(userTelegramService.findByChatId(idChat).isEmpty()){
+            return false;
+        }
+        ConditionBot conditionBot = userTelegramService.findByChatId(idChat).get().getConditionBot();
+        return conditionBot.isAnswerInvoiceStatus();
     }
 
-    public boolean isLastMessageAddInvoice() {
-        return lastMessageAddInvoice;
+    public void setStatusOrder(Long idChat,boolean status){
+            if(userTelegramService.findByChatId(idChat).isEmpty()) return;
+            UserTelegram userTelegram = userTelegramService.findByChatId(idChat).get();
+            userTelegram.getConditionBot().setAnswerOrderStatus(status);
+            userTelegramService.save(userTelegram);
     }
 
-    public void setLastMessageAddInvoice(boolean lastMessageAddInvoice) {
-        this.lastMessageAddInvoice = lastMessageAddInvoice;
+    public void  setStatusInvoice(Long idChat,boolean status){
+            if(userTelegramService.findByChatId(idChat).isEmpty()) return;
+            UserTelegram userTelegram = userTelegramService.findByChatId(idChat).get();
+            userTelegram.getConditionBot().setAnswerInvoiceStatus(status);
+            userTelegramService.save(userTelegram);
     }
 }

@@ -1,61 +1,51 @@
 package com.github.iridatelegrambot.service;
 
-import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
+import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
-    private final SendMessageService sendMessageService;
     private final OrderService orderService;
-    private final CheckUpdateOnPost checkUpdateOnPost;
-    private final InlineKeyboardService inlineKeyboardService;
+    private final InvoiceService invoiceService;
 
-    public AnswerCatcherServiceImpl(SendMessageService sendMessageService, OrderService orderService, CheckUpdateOnPost checkUpdateOnPost) {
-        this.sendMessageService = sendMessageService;
+    @Autowired
+    public AnswerCatcherServiceImpl(OrderService orderService,InvoiceService invoiceService) {
         this.orderService = orderService;
-        this.checkUpdateOnPost = checkUpdateOnPost;
-        inlineKeyboardService = new InlineKeyboardServiceImpl();
+        this.invoiceService = invoiceService;
     }
 
     @Override
-    public void answerByOrder(Update update) {
-
+    public Optional<Order> answerByOrder(Update update) {
         String numberOrder = update.getMessage().getText();
         Long chatId = update.getMessage().getChatId();
 
         if(numberOrder.replaceAll("[^0-9]","").isBlank()){
-            sendMessageService.sendMessage(chatId.toString(),"Сообщение не содержит номера!\nПовторите попытку.");
-            return;
+            return Optional.empty();
         }
-
         if(checkIdentityOrder(numberOrder)){
-            sendMessageService.sendMessage(chatId.toString(),"Такой номер уже есть в базе!\nПовторите попытку.");
-            return;
+            return Optional.empty();
         }
-        Order order = new Order();
 
+        Order order = new Order();
         order.setNumber(numberOrder);
         order.setIdUser(chatId);
         order.setStatusActive(true);
 
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        order.setDate(simpleDateFormat.format(date));
         orderService.save(order);
 
-        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.cityButtons(order);
-
-        sendMessageService.sendMessage(chatId.toString(),"Готово! \nВведите город который сделал заказ:",inlineKeyboardMarkup);
-
-//        sendMessageService.sendMessage(chatId.toString(),"Готово! \nВведите город который сделал заказ:");
-
-
-        checkUpdateOnPost.setLastMessageAddOrder(false);
+        return Optional.of(order);
     }
 
 
@@ -68,5 +58,45 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
             }
         });
         return DBhasThisNumber[0];
+    }
+
+    @Override
+    public Optional<Invoice> answerByInvoice(Update update){
+        String[] textUpdate = update.getMessage().getText().split(";");
+        String numberInvoice = textUpdate[0];
+        Long chatId = update.getMessage().getChatId();
+
+        if(numberInvoice.replaceAll("[^0-9]","").isBlank()){
+            return Optional.empty();
+        }
+        if(checkIdentityInvoice(numberInvoice)){
+            return Optional.empty();
+        }
+
+        Invoice invoice = new Invoice();
+        invoice.setNumber(numberInvoice);
+        invoice.setIdUser(chatId);
+        if(textUpdate.length>1){
+            String comment = textUpdate[1];
+            invoice.setComment(comment);
+        }
+
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        invoice.setDate(simpleDateFormat.format(date));
+        invoiceService.save(invoice);
+
+        return Optional.of(invoice);
+    }
+
+    private boolean checkIdentityInvoice(String numberInvoice){
+        final boolean[] DBhasInvoice = {false};
+        List<Invoice> invoices = invoiceService.getAllInvoice();
+        invoices.forEach(invoice -> {
+            if(invoice.getNumber().equals(numberInvoice)){
+                DBhasInvoice[0] = true;
+            }
+        });
+        return DBhasInvoice[0];
     }
 }

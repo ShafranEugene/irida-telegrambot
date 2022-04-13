@@ -4,9 +4,9 @@ import com.github.iridatelegrambot.entity.ConditionBot;
 import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class CheckUpdateOnPost {
 
     private final UserTelegramService userTelegramService;
@@ -32,22 +32,16 @@ public class CheckUpdateOnPost {
     }
 
     public void setStatusOrder(Long idChat,boolean status){
-        try {
+            if(userTelegramService.findByChatId(idChat).isEmpty()) return;
             UserTelegram userTelegram = userTelegramService.findByChatId(idChat).get();
             userTelegram.getConditionBot().setAnswerOrderStatus(status);
             userTelegramService.save(userTelegram);
-        } catch (Exception e){
-            System.out.println("Cannot find User Telegram with Id: " + idChat);
-        }
     }
 
     public void  setStatusInvoice(Long idChat,boolean status){
-        try {
+            if(userTelegramService.findByChatId(idChat).isEmpty()) return;
             UserTelegram userTelegram = userTelegramService.findByChatId(idChat).get();
             userTelegram.getConditionBot().setAnswerInvoiceStatus(status);
             userTelegramService.save(userTelegram);
-        } catch (Exception e){
-            System.out.println("Cannot find User Telegram with Id: " + idChat);
-        }
     }
 }

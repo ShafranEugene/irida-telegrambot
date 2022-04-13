@@ -9,7 +9,7 @@ public class AddOrderCommand implements Command{
     private final SendMessageService sendMessageService;
     private final CheckUpdateOnPost checkUpdateOnPost;
 
-    private static final String ADDORDER_MESSAGE = "Введите номер заказа на перемещение: ";
+    public static final String ADDORDER_MESSAGE = "Введите номер заказа на перемещение: ";
     public AddOrderCommand(SendMessageService sendMessageService,CheckUpdateOnPost checkUpdateOnPost) {
         this.sendMessageService = sendMessageService;
         this.checkUpdateOnPost = checkUpdateOnPost;

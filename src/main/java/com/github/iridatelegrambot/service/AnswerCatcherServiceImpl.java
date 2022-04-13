@@ -1,55 +1,41 @@
 package com.github.iridatelegrambot.service;
 
-import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
-    private final SendMessageService sendMessageService;
     private final OrderService orderService;
     private final InvoiceService invoiceService;
-    private final CheckUpdateOnPost checkUpdateOnPost;
-    private final InlineKeyboardService inlineKeyboardService;
 
-
-    public AnswerCatcherServiceImpl(SendMessageService sendMessageService, OrderService orderService,
-                                    CheckUpdateOnPost checkUpdateOnPost, InvoiceService invoiceService,
-                                    InlineKeyboardService inlineKeyboardService) {
-        this.sendMessageService = sendMessageService;
+    @Autowired
+    public AnswerCatcherServiceImpl(OrderService orderService,InvoiceService invoiceService) {
         this.orderService = orderService;
         this.invoiceService = invoiceService;
-        this.checkUpdateOnPost = checkUpdateOnPost;
-        this.inlineKeyboardService = inlineKeyboardService;
     }
 
     @Override
-    public void answerByOrder(Update update) {
-
+    public Optional<Order> answerByOrder(Update update) {
         String numberOrder = update.getMessage().getText();
         Long chatId = update.getMessage().getChatId();
 
         if(numberOrder.replaceAll("[^0-9]","").isBlank()){
-            sendMessageService.sendMessage(chatId.toString(),"Сообщение не содержит номера!\nПовторите попытку.");
-            return;
+            return Optional.empty();
         }
-
         if(checkIdentityOrder(numberOrder)){
-            sendMessageService.sendMessage(chatId.toString(),"Такой номер уже есть в базе!\nПовторите попытку.");
-            return;
+            return Optional.empty();
         }
-        Order order = new Order();
 
+        Order order = new Order();
         order.setNumber(numberOrder);
         order.setIdUser(chatId);
         order.setStatusActive(true);
@@ -57,14 +43,9 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         order.setDate(simpleDateFormat.format(date));
-
         orderService.save(order);
 
-        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.cityButtons(order);
-
-        sendMessageService.sendMessage(chatId.toString(),"Введите город который сделал заказ:",inlineKeyboardMarkup);
-
-        checkUpdateOnPost.setStatusOrder(chatId,false);
+        return Optional.of(order);
     }
 
 
@@ -80,19 +61,16 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
     }
 
     @Override
-    public void answerByInvoice(Update update){
+    public Optional<Invoice> answerByInvoice(Update update){
         String[] textUpdate = update.getMessage().getText().split(";");
         String numberInvoice = textUpdate[0];
         Long chatId = update.getMessage().getChatId();
 
         if(numberInvoice.replaceAll("[^0-9]","").isBlank()){
-            sendMessageService.sendMessage(chatId.toString(),"Сообщение не содержит номера!\nПовторите попытку.");
-            return;
+            return Optional.empty();
         }
-
         if(checkIdentityInvoice(numberInvoice)){
-            sendMessageService.sendMessage(chatId.toString(),"Такой номер уже есть в базе!\nПовторите попытку.");
-            return;
+            return Optional.empty();
         }
 
         Invoice invoice = new Invoice();
@@ -106,17 +84,9 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         invoice.setDate(simpleDateFormat.format(date));
-
         invoiceService.save(invoice);
 
-        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.cityButtons(invoice);
-
-        sendMessageService.sendMessage(chatId.toString(),"Введите город из которого была накладная:",inlineKeyboardMarkup);
-
-        checkUpdateOnPost.setStatusInvoice(chatId,false);
-
-
-
+        return Optional.of(invoice);
     }
 
     private boolean checkIdentityInvoice(String numberInvoice){

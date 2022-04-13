@@ -1,6 +1,8 @@
 package com.github.iridatelegrambot.bot;
 
 import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContainer;
+import com.github.iridatelegrambot.entity.Invoice;
+import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.*;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
@@ -12,6 +14,8 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.Optional;
+
 @Component
 public class IridaBot extends TelegramLongPollingBot {
 
@@ -21,6 +25,7 @@ public class IridaBot extends TelegramLongPollingBot {
     private final AnswerCatcherService answerCatcher;
     private final CheckUpdateOnPost checkUpdateOnPost;
     private final CallbackCommandContainer callbackCommandContainer;
+    private final SendMessageServiceImpl sendMessageService;
 
     @Value("${bot.username}")
     private String username;
@@ -30,12 +35,13 @@ public class IridaBot extends TelegramLongPollingBot {
 
     @Autowired
     public IridaBot(UserTelegramService userTelegramService, CheckUpdateOnPost checkUpdateOnPost,
-                    OrderService orderService, InvoiceService invoiceService, InlineKeyboardService inlineKeyboardService) {
-        SendMessageServiceImpl userService = new SendMessageServiceImpl(this);
+                    OrderService orderService, InvoiceService invoiceService, InlineKeyboardService inlineKeyboardService,
+                    AnswerCatcherService answerCatcher) {
+        sendMessageService = new SendMessageServiceImpl(this,inlineKeyboardService,checkUpdateOnPost);
+        this.container = new CommandContainer(sendMessageService,userTelegramService,checkUpdateOnPost);
+        this.callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService,inlineKeyboardService);
+        this.answerCatcher = answerCatcher;
         this.checkUpdateOnPost = checkUpdateOnPost;
-        this.container = new CommandContainer(userService,userTelegramService,checkUpdateOnPost);
-        this.callbackCommandContainer = new CallbackCommandContainer(userService,orderService,invoiceService,inlineKeyboardService);
-        this.answerCatcher = new AnswerCatcherServiceImpl(userService,orderService,checkUpdateOnPost, invoiceService,inlineKeyboardService);
     }
     @Override
     public String getBotUsername() {
@@ -63,10 +69,12 @@ public class IridaBot extends TelegramLongPollingBot {
         Long idChat = update.getMessage().getChatId();
         if(checkUpdateOnPost.waitingNumberOrder(idChat) | checkUpdateOnPost.waitingNumberInvoice(idChat)){
             if(checkUpdateOnPost.waitingNumberOrder(idChat)){
-                answerCatcher.answerByOrder(update);
+                Optional<Order> order = answerCatcher.answerByOrder(update);
+                sendMessageService.sendListCityForOrder(order,idChat);
                 return;
             } else if(checkUpdateOnPost.waitingNumberInvoice(idChat)){
-                answerCatcher.answerByInvoice(update);
+                Optional<Invoice> invoice = answerCatcher.answerByInvoice(update);
+                sendMessageService.sendListCityForInvoice(invoice,idChat);
                 return;
             }
         }

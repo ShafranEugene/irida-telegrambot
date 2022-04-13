@@ -8,7 +8,7 @@ public class AddInvoiceCommand implements Command{
     private final SendMessageService sendMessageService;
     private final CheckUpdateOnPost checkUpdateOnPost;
 
-    private static final String ADDINVOICE_MESSAGE = "Введите номер накладной на перемещение: ";
+    public static final String ADDINVOICE_MESSAGE = "Введите номер накладной на перемещение: ";
     public AddInvoiceCommand(SendMessageService sendMessageService,CheckUpdateOnPost checkUpdateOnPost) {
         this.sendMessageService = sendMessageService;
         this.checkUpdateOnPost = checkUpdateOnPost;

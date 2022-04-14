@@ -4,7 +4,8 @@ public enum CallbackCommandName {
     ADD_ORDER("add_order"),
     ADD_INVOICE("add_invoice"),
     ADD_ORDER_TO_INVOICE("addOrdToInv"),
-    CLOSE_ORDER("closeOrder");
+    CLOSE_ORDER("closeOrder"),
+    CANCEL("delete");
 
     private final String name;
 

@@ -18,6 +18,7 @@ public class CallbackCommandContainer {
                 .put(CallbackCommandName.ADD_INVOICE.getName(),new AddInvoiceCallbackCommand(sendMessageService,invoiceService, inlineKeyboardService))
                 .put(CallbackCommandName.ADD_ORDER_TO_INVOICE.getName(),new AddOrderToInvoiceCallbackCommand(sendMessageService,invoiceService,orderService,inlineKeyboardService))
                 .put(CallbackCommandName.CLOSE_ORDER.getName(),new CloseOrderCallbackCommand(orderService,sendMessageService))
+                .put(CallbackCommandName.CANCEL.getName(), new CancelCallbackCommand(orderService,invoiceService,sendMessageService))
         .build();
     }
 

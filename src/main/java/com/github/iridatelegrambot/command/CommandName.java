@@ -6,8 +6,9 @@ public enum CommandName {
     STOP("/stop"),
     HELP("/help"),
     STAT("/stat"),
-    ADDORDER("/addorder"),
-    ADDINVOICE("/addinvoice"),
+    ADDORDER("/add_order"),
+    ADDINVOICE("/add_invoice"),
+    MAINMENU("/menu"),
     NO("nocommand");
 
     private final String commandName;

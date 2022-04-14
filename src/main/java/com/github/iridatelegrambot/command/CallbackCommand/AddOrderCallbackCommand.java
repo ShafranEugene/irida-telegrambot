@@ -33,7 +33,7 @@ public class AddOrderCallbackCommand implements CallbackCommand{
             Order orderJson = objectMapper.readValue(JSONData,Order.class);
             order.setCity(orderJson.getCity());
             orderService.save(order);
-            sendMessageService.sendMessage(callbackQuery.getMessage().getChatId().toString(),"Готово!");
+            sendMessageService.sendMainMenu(callbackQuery.getMessage().getChatId(),"Готово!");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

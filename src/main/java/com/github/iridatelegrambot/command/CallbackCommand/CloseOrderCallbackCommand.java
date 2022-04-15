@@ -27,6 +27,6 @@ public class CloseOrderCallbackCommand implements CallbackCommand {
 
         orderService.save(order);
 
-        sendMessageService.sendMessage(callbackQuery.getMessage().getChatId().toString(),"Готово");
+        sendMessageService.sendMainMenu(callbackQuery.getMessage().getChatId(),"Готово");
     }
 }

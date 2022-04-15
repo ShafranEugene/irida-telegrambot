@@ -12,4 +12,6 @@ public interface InvoiceService {
     Optional<Invoice> getInvoiceById(int Id);
 
     List<Invoice> getAllInvoice();
+
+    void detele(int id);
 }

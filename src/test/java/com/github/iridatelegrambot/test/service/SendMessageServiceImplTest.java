@@ -5,6 +5,7 @@ import com.github.iridatelegrambot.bot.IridaBot;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
+import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,13 +17,15 @@ class SendMessageServiceImplTest {
     private CheckUpdateOnPost mCheck;
     private InlineKeyboardService mInline;
     private IridaBot mIridaBot;
+    private MenuButtonsService mMenuButtonsService;
 
     @BeforeEach
     void init(){
         mIridaBot = Mockito.mock(IridaBot.class);
         mCheck = Mockito.mock(CheckUpdateOnPost.class);
         mInline = Mockito.mock(InlineKeyboardService.class);
-        sendMessageService = new SendMessageServiceImpl(mIridaBot,mInline,mCheck);
+        mMenuButtonsService = Mockito.mock(MenuButtonsService.class);
+        sendMessageService = new SendMessageServiceImpl(mIridaBot,mInline,mCheck,mMenuButtonsService);
     }
 
     @Test

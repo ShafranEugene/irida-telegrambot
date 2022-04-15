@@ -30,4 +30,10 @@ public class InvoiceServiceImpl implements InvoiceService {
     public List<Invoice> getAllInvoice(){
         return invoiceRepository.findAll();
     }
+
+    @Override
+    public void detele(int id) {
+        Invoice invoice = getInvoiceById(id).get();
+        invoiceRepository.delete(invoice);
+    }
 }

@@ -14,11 +14,4 @@ public interface InlineKeyboardService {
 
     InlineKeyboardMarkup closeOrder(Order order);
 
-    void mainMenu();
-
-    void orderMenu();
-
-    void invoiceMenu();
-
-    void listActualOrder();
 }

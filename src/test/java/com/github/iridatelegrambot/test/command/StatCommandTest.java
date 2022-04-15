@@ -5,6 +5,7 @@ import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.bot.IridaBot;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
+import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,7 +21,8 @@ public class StatCommandTest {
     private final IridaBot mIridaBot = Mockito.mock(IridaBot.class);
     protected InlineKeyboardService mInlineKeyboardService = Mockito.mock(InlineKeyboardService.class);
     protected CheckUpdateOnPost mCheckUpdateOnPost = Mockito.mock(CheckUpdateOnPost.class);
-    protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot,mInlineKeyboardService,mCheckUpdateOnPost);
+    protected MenuButtonsService menuButtonsService = Mockito.mock(MenuButtonsService.class);
+    protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot,mInlineKeyboardService,mCheckUpdateOnPost,menuButtonsService);
     private final StatCommand statCommand = new StatCommand(sendMessageService,mUserTelegramService);
 
     @Test

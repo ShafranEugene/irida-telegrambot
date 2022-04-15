@@ -13,7 +13,7 @@ public class StartCommand implements Command{
     private final SendMessageService sendMessage;
     private final UserTelegramService telegramService;
 
-    public final static String START_MESSAGE = "Привет! Я бот Ирида. По команде /help ты можешь узнать что я уже умею.";
+    public final static String START_MESSAGE = "Привет! Я бот Ирида. По команде /help ты можешь узнать что я умею.";
 
     public StartCommand(SendMessageService sendMessage, UserTelegramService telegramService) {
         this.sendMessage = sendMessage;
@@ -22,8 +22,6 @@ public class StartCommand implements Command{
 
     @Override
     public void execute(Update update) {
-        sendMessage.sendMessage(update.getMessage().getChatId().toString(),START_MESSAGE);
-
         Long chatId = update.getMessage().getChatId();
 
         telegramService.findByChatId(chatId).ifPresentOrElse(
@@ -42,5 +40,7 @@ public class StartCommand implements Command{
                     user.setConditionBot(conditionBot);
                     telegramService.save(user);
                 });
+
+        sendMessage.sendMainMenu(chatId,START_MESSAGE);
     }
 }

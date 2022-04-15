@@ -6,7 +6,6 @@ import com.github.iridatelegrambot.entity.BondOrderToInvoice;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -44,6 +43,9 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
             }
         }
 
+        String cancel = "delete:order:id:" + order.getId();
+        listJSONOrdersWithCity.add(cancel);
+
         inlineKeyboardMarkup = creatorMarkupWithCity(cityNamesList,listJSONOrdersWithCity);
 
         return inlineKeyboardMarkup;
@@ -68,6 +70,9 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
                 e.printStackTrace();
             }
         }
+
+        String cancel = "delete:invoice:id:" + invoice.getId();
+        listJSONOrdersWithCity.add(cancel);
 
         inlineKeyboardMarkup = creatorMarkupWithCity(cityNamesList,listJSONOrdersWithCity);
         return inlineKeyboardMarkup;
@@ -98,7 +103,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
 
         InlineKeyboardButton buttonCancel = new InlineKeyboardButton();
         buttonCancel.setText("Отмена");
-        buttonCancel.setCallbackData("Cancel");
+        buttonCancel.setCallbackData(listJSONOWithCity.get(listJSONOWithCity.size() - 1));
         rows.get(countRows - 1).add(buttonCancel);
 
         markup.setKeyboard(rows);
@@ -169,32 +174,5 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(rows);
         return inlineKeyboardMarkup;
-    }
-
-
-
-
-
-
-
-
-    @Override
-    public void mainMenu() {
-        //todo
-    }
-
-    @Override
-    public void orderMenu() {
-        //todo
-    }
-
-    @Override
-    public void invoiceMenu() {
-        //todo
-    }
-
-    @Override
-    public void listActualOrder() {
-        //todo
     }
 }

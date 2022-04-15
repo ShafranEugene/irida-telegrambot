@@ -15,4 +15,6 @@ public interface OrderService {
 
     Optional<Order> getOrderById(int Id);
 
+    void delete(int id);
+
 }

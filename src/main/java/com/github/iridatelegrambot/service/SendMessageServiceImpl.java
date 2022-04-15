@@ -99,7 +99,18 @@ public class SendMessageServiceImpl implements SendMessageService {
     @Override
     public void sendMainMenu(Long chatId, String message){
         ReplyKeyboardMarkup markup = menuButtonsService.mainMenu();
-
         sendMessage(chatId.toString(),message,markup);
+    }
+
+    @Override
+    public void sendActiveOrdersForInvoice(Long chatId, String message, Invoice invoice){
+        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.markupActiveOrdersForInvoice(invoice);
+        sendMessage(chatId.toString(),message,inlineKeyboardMarkup);
+    }
+
+    @Override
+    public void sendMessageCloseOrder(Long chatId, String message, Order order){
+        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.closeOrder(order);
+        sendMessage(chatId.toString(),message, inlineKeyboardMarkup);
     }
 }

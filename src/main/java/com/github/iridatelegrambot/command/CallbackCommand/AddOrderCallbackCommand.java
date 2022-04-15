@@ -21,11 +21,17 @@ public class AddOrderCallbackCommand implements CallbackCommand{
 
     @Override
     public void execute(CallbackQuery callbackQuery) {
+        Long chatId = callbackQuery.getMessage().getChatId();
         String query = callbackQuery.getData();
         String JSONData = query.substring(query.indexOf('{'));
 
         ObjectMapper objectMapper = new ObjectMapper();
         int id = Integer.parseInt(JSONData.replaceAll("[^0-9]",""));
+
+        if(orderService.getOrderById(id).isEmpty()){
+            sendMessageService.sendMessage(chatId.toString(),"Заказ не найден.");
+            return;
+        }
 
         try {
             Optional<Order> orderOptional = orderService.getOrderById(id);
@@ -33,7 +39,7 @@ public class AddOrderCallbackCommand implements CallbackCommand{
             Order orderJson = objectMapper.readValue(JSONData,Order.class);
             order.setCity(orderJson.getCity());
             orderService.save(order);
-            sendMessageService.sendMainMenu(callbackQuery.getMessage().getChatId(),"Готово!");
+            sendMessageService.sendMainMenu(chatId,"Готово!");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

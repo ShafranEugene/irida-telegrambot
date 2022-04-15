@@ -18,4 +18,8 @@ public interface SendMessageService {
     void sendListCityForInvoice(Optional<Invoice> invoiceOptional, Long chatId);
 
     void sendMainMenu(Long chatId, String messageText);
+
+    void sendActiveOrdersForInvoice(Long chatId, String message, Invoice invoice);
+
+    void sendMessageCloseOrder(Long chatId, String message, Order order);
 }

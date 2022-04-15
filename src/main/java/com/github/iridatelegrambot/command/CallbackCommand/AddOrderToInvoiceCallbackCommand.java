@@ -17,14 +17,12 @@ public class AddOrderToInvoiceCallbackCommand implements CallbackCommand {
     private final SendMessageService sendMessageService;
     private final InvoiceService invoiceService;
     private final OrderService orderService;
-    private final InlineKeyboardService inlineKeyboardService;
 
     public AddOrderToInvoiceCallbackCommand(SendMessageService sendMessageService, InvoiceService invoiceService,
-                                            OrderService orderService, InlineKeyboardService inlineKeyboardService) {
+                                            OrderService orderService) {
         this.sendMessageService = sendMessageService;
         this.invoiceService = invoiceService;
         this.orderService = orderService;
-        this.inlineKeyboardService = inlineKeyboardService;
     }
 
     @Override
@@ -42,9 +40,7 @@ public class AddOrderToInvoiceCallbackCommand implements CallbackCommand {
             invoice.setOrder(order);
             invoiceService.save(invoice);
 
-            InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.closeOrder(order);
-
-            sendMessageService.sendMessage(callbackQuery.getMessage().getChatId().toString(),"Заказ завершен?", inlineKeyboardMarkup);
+            sendMessageService.sendMessageCloseOrder(callbackQuery.getMessage().getChatId(),"Заказ завершен?",order);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

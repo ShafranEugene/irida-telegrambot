@@ -40,7 +40,7 @@ public class IridaBot extends TelegramLongPollingBot {
                     AnswerCatcherService answerCatcher, MenuButtonsService menuButtonsService) {
         sendMessageService = new SendMessageServiceImpl(this,inlineKeyboardService,checkUpdateOnPost,menuButtonsService);
         this.container = new CommandContainer(sendMessageService,userTelegramService,checkUpdateOnPost);
-        this.callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService,inlineKeyboardService);
+        this.callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService);
         this.answerCatcher = answerCatcher;
         this.checkUpdateOnPost = checkUpdateOnPost;
     }
@@ -96,8 +96,6 @@ public class IridaBot extends TelegramLongPollingBot {
 
     private void handleCallback(Update update){
         CallbackQuery callbackQuery = update.getCallbackQuery();
-
         callbackCommandContainer.findAnswer(callbackQuery).execute(callbackQuery);
-
         }
     }

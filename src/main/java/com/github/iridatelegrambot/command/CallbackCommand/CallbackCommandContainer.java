@@ -12,11 +12,11 @@ public class CallbackCommandContainer {
     private final ImmutableMap<String, CallbackCommand> callbackMap;
 
     public CallbackCommandContainer(SendMessageService sendMessageService, OrderService orderService,
-                                    InvoiceService invoiceService, InlineKeyboardService inlineKeyboardService){
+                                    InvoiceService invoiceService){
         callbackMap = ImmutableMap.<String,CallbackCommand>builder()
                 .put(CallbackCommandName.ADD_ORDER.getName(),new AddOrderCallbackCommand(sendMessageService,orderService))
-                .put(CallbackCommandName.ADD_INVOICE.getName(),new AddInvoiceCallbackCommand(sendMessageService,invoiceService, inlineKeyboardService))
-                .put(CallbackCommandName.ADD_ORDER_TO_INVOICE.getName(),new AddOrderToInvoiceCallbackCommand(sendMessageService,invoiceService,orderService,inlineKeyboardService))
+                .put(CallbackCommandName.ADD_INVOICE.getName(),new AddInvoiceCallbackCommand(sendMessageService,invoiceService))
+                .put(CallbackCommandName.ADD_ORDER_TO_INVOICE.getName(),new AddOrderToInvoiceCallbackCommand(sendMessageService,invoiceService,orderService))
                 .put(CallbackCommandName.CLOSE_ORDER.getName(),new CloseOrderCallbackCommand(orderService,sendMessageService))
                 .put(CallbackCommandName.CANCEL.getName(), new CancelCallbackCommand(orderService,invoiceService,sendMessageService))
         .build();

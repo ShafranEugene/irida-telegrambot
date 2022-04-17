@@ -20,6 +20,7 @@ public class CommandContainer {
                 .put(CommandName.STAT.getCommandName(),new StatCommand(sendMessage,userTelegramService))
                 .put(CommandName.ADDORDER.getCommandName(),new AddOrderCommand(sendMessage,checkUpdateOnPost))
                 .put(CommandName.ADDINVOICE.getCommandName(),new AddInvoiceCommand(sendMessage,checkUpdateOnPost))
+                .put(CommandName.SHOWACTIVEORDER.getCommandName(),new ShowActiveOrdersCommand(sendMessage))
                 .build();
 
         unknownCommand = new UnknownCommand(sendMessage);

@@ -5,6 +5,7 @@ public enum CommandNameForButtons {
 
     ADDORDER("/add_order"),
     ADDINVOICE("/add_invoice"),
+    SHOWACTIVEORDER("/show_active_orders"),
     HELP("/help");
 
     private final String name;

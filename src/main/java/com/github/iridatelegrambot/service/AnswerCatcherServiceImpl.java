@@ -2,6 +2,7 @@ package com.github.iridatelegrambot.service;
 
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
+import com.github.iridatelegrambot.entity.UserTelegram;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,17 +17,18 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
     private final OrderService orderService;
     private final InvoiceService invoiceService;
+    private final UserTelegramService userTelegramService;
 
     @Autowired
-    public AnswerCatcherServiceImpl(OrderService orderService,InvoiceService invoiceService) {
+    public AnswerCatcherServiceImpl(OrderService orderService,InvoiceService invoiceService, UserTelegramService userTelegramService) {
         this.orderService = orderService;
         this.invoiceService = invoiceService;
+        this.userTelegramService = userTelegramService;
     }
 
     @Override
     public Optional<Order> answerByOrder(Update update) {
         String numberOrder = update.getMessage().getText();
-        Long chatId = update.getMessage().getChatId();
 
         if(numberOrder.replaceAll("[^0-9]","").isBlank()){
             return Optional.empty();
@@ -34,11 +36,12 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         if(checkIdentityOrder(numberOrder)){
             return Optional.empty();
         }
+        UserTelegram userTelegram = userTelegramService.findOrCreateUser(update);
 
         Order order = new Order();
         order.setNumber(numberOrder);
-        order.setIdUser(chatId);
         order.setStatusActive(true);
+        order.setUser(userTelegram);
 
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

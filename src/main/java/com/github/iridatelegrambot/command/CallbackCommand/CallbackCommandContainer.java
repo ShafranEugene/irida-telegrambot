@@ -3,7 +3,6 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
 import com.github.iridatelegrambot.service.SendMessageService;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.google.common.collect.ImmutableMap;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
@@ -19,6 +18,7 @@ public class CallbackCommandContainer {
                 .put(CallbackCommandName.ADD_ORDER_TO_INVOICE.getName(),new AddOrderToInvoiceCallbackCommand(sendMessageService,invoiceService,orderService))
                 .put(CallbackCommandName.CLOSE_ORDER.getName(),new CloseOrderCallbackCommand(orderService,sendMessageService))
                 .put(CallbackCommandName.CANCEL.getName(), new CancelCallbackCommand(orderService,invoiceService,sendMessageService))
+                .put(CallbackCommandName.SHOW_ORDER.getName(),new ShowActiveOrdersCallbackCommand(sendMessageService,orderService))
         .build();
     }
 

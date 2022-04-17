@@ -113,4 +113,9 @@ public class SendMessageServiceImpl implements SendMessageService {
         InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.closeOrder(order);
         sendMessage(chatId.toString(),message, inlineKeyboardMarkup);
     }
+
+    @Override
+    public void sendActiveOrders(Long chatId, String message){
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showActiveOrders());
+    }
 }

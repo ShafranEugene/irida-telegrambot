@@ -1,5 +1,7 @@
 package com.github.iridatelegrambot.service.buttons;
 
+import com.github.iridatelegrambot.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -9,6 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class MenuButtonsServiceImpl implements MenuButtonsService{
+
+    private OrderService orderService;
+    @Autowired
+    public MenuButtonsServiceImpl(OrderService orderService){
+        this.orderService = orderService;
+    }
 
 
 
@@ -29,6 +37,12 @@ public class MenuButtonsServiceImpl implements MenuButtonsService{
     }
 
     @Override
+    public InlineKeyboardMarkup listActualOrder() {
+
+        return null;
+    }
+
+    @Override
     public InlineKeyboardMarkup orderMenu() {
         return null;
     }
@@ -38,8 +52,4 @@ public class MenuButtonsServiceImpl implements MenuButtonsService{
         return null;
     }
 
-    @Override
-    public InlineKeyboardMarkup listActualOrder() {
-        return null;
-    }
 }

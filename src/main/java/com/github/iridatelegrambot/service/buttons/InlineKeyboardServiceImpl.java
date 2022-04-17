@@ -124,8 +124,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
                 e.printStackTrace();
             }
         }
-        InlineKeyboardMarkup inlineKeyboardMarkup = creatorMarkupWithOrders(orders,CallbackJson);
-        return inlineKeyboardMarkup;
+        return creatorMarkupWithOrders(orders,CallbackJson);
     }
 
     private InlineKeyboardMarkup creatorMarkupWithOrders(List<Order> orders,List<String> JSONdata){
@@ -174,5 +173,17 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(rows);
         return inlineKeyboardMarkup;
+    }
+
+    @Override
+    public InlineKeyboardMarkup showActiveOrders(){
+        List<Order> orders = orderService.getAllOrdersActive();
+        List<String> callbackOrders = new ArrayList<>();
+
+        for(Order order : orders){
+            String text = "show_order:id:" + order.getId();
+            callbackOrders.add(text);
+        }
+        return creatorMarkupWithOrders(orders,callbackOrders);
     }
 }

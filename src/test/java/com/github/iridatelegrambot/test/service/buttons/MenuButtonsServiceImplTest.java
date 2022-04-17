@@ -1,11 +1,13 @@
 package com.github.iridatelegrambot.test.service.buttons;
 
+import com.github.iridatelegrambot.service.OrderServiceImpl;
 import com.github.iridatelegrambot.service.buttons.CommandNameForButtons;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
@@ -14,11 +16,13 @@ import java.util.List;
 
 public class MenuButtonsServiceImplTest {
 
+    private OrderServiceImpl orderService;
     private MenuButtonsService menuButtonsService;
 
     @BeforeEach
     void init(){
-        menuButtonsService = new MenuButtonsServiceImpl();
+        orderService = Mockito.mock(OrderServiceImpl.class);
+        menuButtonsService = new MenuButtonsServiceImpl(orderService);
     }
 
     @Test

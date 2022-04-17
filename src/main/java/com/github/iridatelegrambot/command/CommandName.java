@@ -8,6 +8,7 @@ public enum CommandName {
     STAT("/stat"),
     ADDORDER("/add_order"),
     ADDINVOICE("/add_invoice"),
+    SHOWACTIVEORDER("/show_active_orders"),
     NO("nocommand");
 
     private final String commandName;

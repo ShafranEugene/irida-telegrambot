@@ -22,4 +22,6 @@ public interface SendMessageService {
     void sendActiveOrdersForInvoice(Long chatId, String message, Invoice invoice);
 
     void sendMessageCloseOrder(Long chatId, String message, Order order);
+
+    void sendActiveOrders(Long chatId, String message);
 }

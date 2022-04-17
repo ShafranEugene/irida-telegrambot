@@ -14,4 +14,5 @@ public interface InlineKeyboardService {
 
     InlineKeyboardMarkup closeOrder(Order order);
 
+    InlineKeyboardMarkup showActiveOrders();
 }

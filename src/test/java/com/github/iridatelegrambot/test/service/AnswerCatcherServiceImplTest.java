@@ -2,12 +2,12 @@ package com.github.iridatelegrambot.test.service;
 
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
-import com.github.iridatelegrambot.service.AnswerCatcherServiceImpl;
-import com.github.iridatelegrambot.service.InvoiceService;
-import com.github.iridatelegrambot.service.OrderService;
+import com.github.iridatelegrambot.entity.UserTelegram;
+import com.github.iridatelegrambot.service.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -20,13 +20,15 @@ public class AnswerCatcherServiceImplTest {
 
     private OrderService orderService;
     private InvoiceService invoiceService;
+    private UserTelegramServiceImpl userTelegramService;
     private AnswerCatcherServiceImpl answerCatcherService;
 
     @BeforeEach
     void init(){
         orderService = Mockito.mock(OrderService.class);
         invoiceService = Mockito.mock(InvoiceService.class);
-        answerCatcherService = new AnswerCatcherServiceImpl(orderService,invoiceService);
+        userTelegramService = Mockito.mock(UserTelegramServiceImpl.class);
+        answerCatcherService = new AnswerCatcherServiceImpl(orderService,invoiceService,userTelegramService);
     }
 
     @Test
@@ -41,8 +43,11 @@ public class AnswerCatcherServiceImplTest {
 
         Order order = new Order();
         order.setNumber("500");
-        order.setIdUser(12345678L);
         order.setStatusActive(true);
+
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        order.setDate(simpleDateFormat.format(date));
 
         //when
         Optional<Order> orderOptional = answerCatcherService.answerByOrder(update);

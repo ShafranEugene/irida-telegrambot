@@ -27,7 +27,7 @@ public class Invoice {
     @Column(name = "date_add")
     private String date;
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_order")
     private Order order;
 
@@ -72,6 +72,7 @@ public class Invoice {
 
     public void setOrder(Order order) {
         this.order = order;
+        order.addInvoice(this);
     }
 
     public String getComment() {

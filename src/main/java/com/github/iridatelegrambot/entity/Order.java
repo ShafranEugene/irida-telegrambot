@@ -3,6 +3,7 @@ package com.github.iridatelegrambot.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,8 +23,9 @@ public class Order {
     private String city;
 
     @JsonIgnore
-    @Column(name = "id_user")
-    private Long idUser;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_user")
+    private UserTelegram user;
 
     @JsonIgnore
     @Column(name = "status")
@@ -34,8 +36,8 @@ public class Order {
     private String date;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
-    private List<Invoice> invoiceList;
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    private List<Invoice> invoiceList = new ArrayList<>();
 
 
     public Order() {
@@ -65,12 +67,16 @@ public class Order {
         this.city = city;
     }
 
-    public Long getIdUser() {
-        return idUser;
+    public UserTelegram getUser() {
+        return user;
     }
 
-    public void setIdUser(Long id_user) {
-        this.idUser = id_user;
+    public void setUser(UserTelegram user) {
+        if(user == null){
+            return;
+        }
+        this.user = user;
+        user.addOrder(this);
     }
 
     public boolean isStatusActive() {
@@ -93,8 +99,11 @@ public class Order {
         return invoiceList;
     }
 
-    public void setInvoiceList(List<Invoice> invoiceList) {
-        this.invoiceList = invoiceList;
+    public void addInvoice(Invoice invoice){
+        if(invoiceList.contains(invoice)){
+            return;
+        }
+        invoiceList.add(invoice);
     }
 
     @Override
@@ -104,23 +113,53 @@ public class Order {
         Order order = (Order) object;
         return id == order.id &&
                 statusActive == order.statusActive &&
-                number.equals(order.number) &&
+                Objects.equals(number, order.number) &&
                 Objects.equals(city, order.city) &&
-                idUser.equals(order.idUser);
+                Objects.equals(user, order.user) &&
+                Objects.equals(date, order.date) &&
+                Objects.equals(invoiceList, order.invoiceList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, number, city, idUser, statusActive);
+        return Objects.hash(id, number, city, user, statusActive, date, invoiceList);
     }
 
     @Override
     public String toString() {
         return "Order{" +
-                "number='" + number + '\'' +
+                "id=" + id +
+                ", number='" + number + '\'' +
                 ", city='" + city + '\'' +
-                ", id_user=" + idUser +
-                ", status=" + statusActive +
+                ", user=" + user +
+                ", statusActive=" + statusActive +
+                ", date='" + date + '\'' +
+                ", invoiceList=" + invoiceList +
                 '}';
+    }
+
+    public String toStringForUsers(){
+        String text = "Заказ на перемещение:\n" +
+                "Номер = " + number + "\n" +
+                "Город = " + city;
+
+        if(user==null) {
+            text += "\nПользователь добавил = Пользователь не известен.\n" +
+                    "Время добавления = " + date + "\n" +
+                    "Накладные на перемещение, подвязынные к заказу:";
+        } else {
+            text += "\nПользователь добавил = " + user.getFirstName() + ", " + user.getUserName() + "\n" +
+                    "Время добавления = " + date + "\n" +
+                    "Накладные на перемещение, подвязынные к заказу:";
+        }
+
+        if(invoiceList.size() == 0){
+            text += "Накладных нет.";
+        } else {
+            for (Invoice invoice : invoiceList){
+                text += "\n\t- " + invoice.getNumber() + ", из " + invoice.getCity();
+            }
+        }
+        return text;
     }
 }

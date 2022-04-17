@@ -13,7 +13,7 @@ public class ConditionBot {
     private boolean answerOrderStatus;
     @Column(name = "answer_invoice_status")
     private boolean answerInvoiceStatus;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user")
     private UserTelegram userTelegram;
 

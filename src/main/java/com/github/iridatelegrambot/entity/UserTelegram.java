@@ -1,6 +1,8 @@
 package com.github.iridatelegrambot.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,8 +20,10 @@ public class UserTelegram {
 
     @Column
     private boolean active;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "userTelegram")
+    @OneToOne(cascade = CascadeType.ALL,mappedBy = "userTelegram")
     private ConditionBot conditionBot;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private List<Order> orderList = new ArrayList<>();
 
     public UserTelegram() {
     }
@@ -70,6 +74,18 @@ public class UserTelegram {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void addOrder(Order order) {
+        if(orderList.contains(order)){
+            return;
+        }
+        orderList.add(order);
+        order.setUser(this);
     }
 
     @Override

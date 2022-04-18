@@ -1,7 +1,10 @@
 package com.github.iridatelegrambot.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.bot.IridaBot;
+import com.github.iridatelegrambot.entity.BondOrderToInvoice;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
@@ -9,6 +12,10 @@ import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Chat;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -104,6 +111,33 @@ public class SendMessageServiceImpl implements SendMessageService {
 
     @Override
     public void sendActiveOrdersForInvoice(Long chatId, String message, Invoice invoice){
+        if(checkUpdateOnPost.checkWaitToInvoice(chatId)){
+            Optional<BondOrderToInvoice> bondOptional = checkUpdateOnPost.getBond(chatId);
+            if(bondOptional.isEmpty()){
+                InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.markupActiveOrdersForInvoice(invoice);
+                sendMessage(chatId.toString(),message,inlineKeyboardMarkup);
+                return;
+            }
+            BondOrderToInvoice bond = bondOptional.get();
+            bond.setIdInvoice(invoice.getId());
+            ObjectMapper objectMapper = new ObjectMapper();
+            CallbackQuery callbackQuery = new CallbackQuery();
+            try {
+                String data = "addOrdToInv:" + objectMapper.writeValueAsString(bond);
+                callbackQuery.setData(data);
+                Message messageToData = new Message();
+                Chat chat = new Chat();
+                chat.setId(chatId);
+                messageToData.setChat(chat);
+                callbackQuery.setMessage(messageToData);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+            Update update = new Update();
+            update.setCallbackQuery(callbackQuery);
+            iridaBot.onUpdateReceived(update);
+            return;
+        }
         InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.markupActiveOrdersForInvoice(invoice);
         sendMessage(chatId.toString(),message,inlineKeyboardMarkup);
     }
@@ -117,5 +151,11 @@ public class SendMessageServiceImpl implements SendMessageService {
     @Override
     public void sendActiveOrders(Long chatId, String message){
         sendMessage(chatId.toString(),message,inlineKeyboardService.showActiveOrders());
+    }
+
+    @Override
+    public void sendMenuOrder(Long chatId,String message,Order order){
+        InlineKeyboardMarkup markup = inlineKeyboardService.showMenuOrder(order);
+        sendMessage(chatId.toString(),message,markup);
     }
 }

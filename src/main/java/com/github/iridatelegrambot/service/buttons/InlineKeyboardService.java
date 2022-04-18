@@ -15,4 +15,6 @@ public interface InlineKeyboardService {
     InlineKeyboardMarkup closeOrder(Order order);
 
     InlineKeyboardMarkup showActiveOrders();
+
+    InlineKeyboardMarkup showMenuOrder(Order order);
 }

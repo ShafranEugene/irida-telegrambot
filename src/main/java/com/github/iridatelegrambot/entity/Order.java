@@ -37,7 +37,7 @@ public class Order {
 
     @JsonIgnore
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
-    private List<Invoice> invoiceList = new ArrayList<>();
+    private final List<Invoice> invoiceList = new ArrayList<>();
 
 
     public Order() {
@@ -154,10 +154,10 @@ public class Order {
         }
 
         if(invoiceList.size() == 0){
-            text += "Накладных нет.";
+            text += "\n\t-Накладных нет.";
         } else {
             for (Invoice invoice : invoiceList){
-                text += "\n\t- " + invoice.getNumber() + ", из " + invoice.getCity();
+                text += "\n\t- НП " + invoice.getNumber() + ", Откуда: " + invoice.getCity();
             }
         }
         return text;

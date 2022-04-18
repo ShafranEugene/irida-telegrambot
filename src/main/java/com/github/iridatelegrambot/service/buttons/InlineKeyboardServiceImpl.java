@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class InlineKeyboardServiceImpl implements InlineKeyboardService{
@@ -185,5 +183,26 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
             callbackOrders.add(text);
         }
         return creatorMarkupWithOrders(orders,callbackOrders);
+    }
+
+    @Override
+    public InlineKeyboardMarkup showMenuOrder(Order order){
+        HashMap<String,String> buttonsMap = new HashMap<>();
+        int idOrder = order.getId();
+        buttonsMap.put("Добавить накладную на перемещение","order:addinvoice:id:" + idOrder);
+        buttonsMap.put("Удалить заказ","order:delete:id:" + idOrder);
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+
+        for(Map.Entry<String,String> entry : buttonsMap.entrySet()){
+            List<InlineKeyboardButton> row = new ArrayList<>();
+            InlineKeyboardButton button = new InlineKeyboardButton();
+            button.setText(entry.getKey());
+            button.setCallbackData(entry.getValue());
+            row.add(button);
+            rows.add(row);
+        }
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+        return markup;
     }
 }

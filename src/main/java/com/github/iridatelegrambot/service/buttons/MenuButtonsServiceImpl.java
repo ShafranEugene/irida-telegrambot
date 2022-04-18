@@ -12,12 +12,8 @@ import java.util.List;
 @Service
 public class MenuButtonsServiceImpl implements MenuButtonsService{
 
-    private OrderService orderService;
-    @Autowired
-    public MenuButtonsServiceImpl(OrderService orderService){
-        this.orderService = orderService;
+    public MenuButtonsServiceImpl() {
     }
-
 
 
     @Override
@@ -34,22 +30,6 @@ public class MenuButtonsServiceImpl implements MenuButtonsService{
 
         replyKeyboardMarkup.setKeyboard(rows);
         return replyKeyboardMarkup;
-    }
-
-    @Override
-    public InlineKeyboardMarkup listActualOrder() {
-
-        return null;
-    }
-
-    @Override
-    public InlineKeyboardMarkup orderMenu() {
-        return null;
-    }
-
-    @Override
-    public InlineKeyboardMarkup invoiceMenu() {
-        return null;
     }
 
 }

@@ -40,7 +40,7 @@ public class IridaBot extends TelegramLongPollingBot {
                     AnswerCatcherService answerCatcher, MenuButtonsService menuButtonsService) {
         sendMessageService = new SendMessageServiceImpl(this,inlineKeyboardService,checkUpdateOnPost,menuButtonsService);
         this.container = new CommandContainer(sendMessageService,userTelegramService,checkUpdateOnPost);
-        this.callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService);
+        this.callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService,checkUpdateOnPost);
         this.answerCatcher = answerCatcher;
         this.checkUpdateOnPost = checkUpdateOnPost;
     }

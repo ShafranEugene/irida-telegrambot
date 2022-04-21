@@ -2,7 +2,10 @@ package com.github.iridatelegrambot.command;
 
 import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.ADD;
 
 public class AddInvoiceCommand implements Command{
     private final SendMessageService sendMessageService;
@@ -17,7 +20,7 @@ public class AddInvoiceCommand implements Command{
     @Override
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
-        checkUpdateOnPost.setStatusInvoice(chatId,true);
+        WaitDocument.INVOICE.setWaitNumber(chatId,true,ADD);
         sendMessageService.sendMessage(chatId.toString(),ADDINVOICE_MESSAGE);
     }
 }

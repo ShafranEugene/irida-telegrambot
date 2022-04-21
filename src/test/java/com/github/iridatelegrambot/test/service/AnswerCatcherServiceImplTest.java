@@ -7,7 +7,6 @@ import com.github.iridatelegrambot.service.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -50,7 +49,7 @@ public class AnswerCatcherServiceImplTest {
         order.setDate(simpleDateFormat.format(date));
 
         //when
-        Optional<Order> orderOptional = answerCatcherService.answerByOrder(update);
+        Optional<Order> orderOptional = answerCatcherService.answerByAddOrder(update);
 
         //then
         Assertions.assertTrue(orderOptional.isPresent());
@@ -68,14 +67,14 @@ public class AnswerCatcherServiceImplTest {
         update.setMessage(message);
 
         Invoice invoice = new Invoice();
-        invoice.setIdUser(12345678L);
+        invoice.setUser(new UserTelegram());
         invoice.setNumber("1000");
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         invoice.setDate(simpleDateFormat.format(date));
 
         //when
-        Optional<Invoice> invoiceOptional = answerCatcherService.answerByInvoice(update);
+        Optional<Invoice> invoiceOptional = answerCatcherService.answerByAddInvoice(update);
 
         //then
         Assertions.assertTrue(invoiceOptional.isPresent());
@@ -92,8 +91,8 @@ public class AnswerCatcherServiceImplTest {
         Mockito.when(message.getText()).thenReturn("aboba");
         update.setMessage(message);
         //when
-        Optional<Invoice> invoiceOptional = answerCatcherService.answerByInvoice(update);
-        Optional<Order> orderOptional = answerCatcherService.answerByOrder(update);
+        Optional<Invoice> invoiceOptional = answerCatcherService.answerByAddInvoice(update);
+        Optional<Order> orderOptional = answerCatcherService.answerByAddOrder(update);
         //then
         Assertions.assertTrue(invoiceOptional.isEmpty());
         Assertions.assertTrue(orderOptional.isEmpty());

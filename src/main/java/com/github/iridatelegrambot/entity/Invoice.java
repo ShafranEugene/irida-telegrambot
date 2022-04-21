@@ -18,8 +18,9 @@ public class Invoice {
     @Column
     private String city;
     @JsonIgnore
-    @Column(name = "id_user")
-    private Long idUser;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_user")
+    private UserTelegram user;
     @JsonIgnore
     @Column
     private String comment;
@@ -58,12 +59,16 @@ public class Invoice {
         this.city = city;
     }
 
-    public Long getIdUser() {
-        return idUser;
+    public UserTelegram getUser() {
+        return user;
     }
 
-    public void setIdUser(Long idUser) {
-        this.idUser = idUser;
+    public void setUser(UserTelegram user) {
+        if(user == null){
+            return;
+        }
+        user.addInvoice(this);
+        this.user = user;
     }
 
     public Order getOrder() {
@@ -72,7 +77,9 @@ public class Invoice {
 
     public void setOrder(Order order) {
         this.order = order;
-        order.addInvoice(this);
+        if(order!=null){
+            order.addInvoice(this);
+        }
     }
 
     public String getComment() {
@@ -97,9 +104,10 @@ public class Invoice {
                 "id=" + id +
                 ", number='" + number + '\'' +
                 ", city='" + city + '\'' +
-                ", idUser=" + idUser +
+                ", user=" + user +
                 ", comment='" + comment + '\'' +
                 ", date='" + date + '\'' +
+                ", order=" + order +
                 '}';
     }
 
@@ -111,13 +119,35 @@ public class Invoice {
         return id == invoice.id &&
                 Objects.equals(number, invoice.number) &&
                 Objects.equals(city, invoice.city) &&
-                Objects.equals(idUser, invoice.idUser) &&
+                Objects.equals(user, invoice.user) &&
                 Objects.equals(comment, invoice.comment) &&
-                Objects.equals(date, invoice.date);
+                Objects.equals(date, invoice.date) &&
+                Objects.equals(order, invoice.order);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, number, city, idUser, comment, date);
+        return Objects.hash(id, number, city, user, comment, date, order);
+    }
+
+    public String toStringForUser(){
+        String text = "Накладная на перемещение:\n" +
+                "Номер = " + number + "\n" +
+                "Город = " + city;
+
+        if(user==null) {
+            text += "\nПользователь добавил = Не найдено.\n" +
+                    "Время добавления = " + date;
+        } else {
+            text += "\nПользователь добавил = " + user.getFirstName() + ", " + user.getUserName() + "\n" +
+                    "Время добавления = " + date;
+        }
+
+        if(order == null){
+            text += "\nЗаказ для которого создавалась накладная не найден.";
+        } else {
+            text += "\nЗаказ для которого создавлась накладная: " + order.getNumber();
+        }
+        return text;
     }
 }

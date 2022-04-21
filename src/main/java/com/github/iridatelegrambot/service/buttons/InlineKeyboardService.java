@@ -17,4 +17,8 @@ public interface InlineKeyboardService {
     InlineKeyboardMarkup showActiveOrders();
 
     InlineKeyboardMarkup showMenuOrder(Order order);
+
+    InlineKeyboardMarkup showMenuStat();
+
+    InlineKeyboardMarkup showMenuStatDetails(String typeDocument);
 }

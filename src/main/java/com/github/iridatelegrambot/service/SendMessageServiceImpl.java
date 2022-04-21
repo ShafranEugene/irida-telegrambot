@@ -9,6 +9,8 @@ import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
+import com.github.iridatelegrambot.service.statuswait.WaitDocument;
+import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -87,7 +89,6 @@ public class SendMessageServiceImpl implements SendMessageService {
         Order order = orderOptional.get();
         InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.cityButtons(order);
         sendMessage(chatId.toString(),"Введите город который сделал заказ:",inlineKeyboardMarkup);
-        checkUpdateOnPost.setStatusOrder(chatId,false);
     }
     @Override
     public void sendListCityForInvoice(Optional<Invoice> invoiceOptional, Long chatId){
@@ -100,7 +101,6 @@ public class SendMessageServiceImpl implements SendMessageService {
         Invoice invoice = invoiceOptional.get();
         InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.cityButtons(invoice);
         sendMessage(chatId.toString(),"Введите город из которого была накладная:",inlineKeyboardMarkup);
-        checkUpdateOnPost.setStatusInvoice(chatId,false);
     }
 
     @Override
@@ -111,35 +111,33 @@ public class SendMessageServiceImpl implements SendMessageService {
 
     @Override
     public void sendActiveOrdersForInvoice(Long chatId, String message, Invoice invoice){
-        if(checkUpdateOnPost.checkWaitToInvoice(chatId)){
-            Optional<BondOrderToInvoice> bondOptional = checkUpdateOnPost.getBond(chatId);
-            if(bondOptional.isEmpty()){
-                InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.markupActiveOrdersForInvoice(invoice);
-                sendMessage(chatId.toString(),message,inlineKeyboardMarkup);
-                return;
-            }
-            BondOrderToInvoice bond = bondOptional.get();
-            bond.setIdInvoice(invoice.getId());
-            ObjectMapper objectMapper = new ObjectMapper();
-            CallbackQuery callbackQuery = new CallbackQuery();
-            try {
-                String data = "addOrdToInv:" + objectMapper.writeValueAsString(bond);
-                callbackQuery.setData(data);
-                Message messageToData = new Message();
-                Chat chat = new Chat();
-                chat.setId(chatId);
-                messageToData.setChat(chat);
-                callbackQuery.setMessage(messageToData);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-            Update update = new Update();
-            update.setCallbackQuery(callbackQuery);
-            iridaBot.onUpdateReceived(update);
-            return;
+        if(WaitDocument.INVOICE.invoiceHaveIdOrder(chatId)){
+            sendMessegeCloseOrderIfInvoiceHaveOrder(chatId,invoice);
         }
         InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.markupActiveOrdersForInvoice(invoice);
         sendMessage(chatId.toString(),message,inlineKeyboardMarkup);
+    }
+
+    private void sendMessegeCloseOrderIfInvoiceHaveOrder(Long chatId, Invoice invoice){
+        BondOrderToInvoice bond = new BondOrderToInvoice();
+        bond.setIdInvoice(invoice.getId());
+        bond.setIdOrder(WaitDocument.INVOICE.getIdOrderForInvoice(chatId));
+        ObjectMapper objectMapper = new ObjectMapper();
+        CallbackQuery callbackQuery = new CallbackQuery();
+        try {
+            String data = "addOrdToInv:" + objectMapper.writeValueAsString(bond);
+            callbackQuery.setData(data);
+            Message messageToData = new Message();
+            Chat chat = new Chat();
+            chat.setId(chatId);
+            messageToData.setChat(chat);
+            callbackQuery.setMessage(messageToData);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        Update update = new Update();
+        update.setCallbackQuery(callbackQuery);
+        iridaBot.onUpdateReceived(update);
     }
 
     @Override
@@ -156,6 +154,18 @@ public class SendMessageServiceImpl implements SendMessageService {
     @Override
     public void sendMenuOrder(Long chatId,String message,Order order){
         InlineKeyboardMarkup markup = inlineKeyboardService.showMenuOrder(order);
+        sendMessage(chatId.toString(),message,markup);
+    }
+
+    @Override
+    public void sendMenuStat(Long chatId, String message){
+        InlineKeyboardMarkup markup = inlineKeyboardService.showMenuStat();
+        sendMessage(chatId.toString(),message,markup);
+    }
+
+    @Override
+    public void sendMenuStatDetails(Long chatId, String message, String typeDocument){
+        InlineKeyboardMarkup markup = inlineKeyboardService.showMenuStatDetails(typeDocument);
         sendMessage(chatId.toString(),message,markup);
     }
 }

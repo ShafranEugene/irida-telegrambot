@@ -21,6 +21,7 @@ public class CallbackCommandContainer {
                 .put(CallbackCommandName.CANCEL.getName(), new CancelCallbackCommand(orderService,invoiceService,sendMessageService))
                 .put(CallbackCommandName.SHOW_ORDER.getName(),new ShowActiveOrdersCallbackCommand(sendMessageService,orderService))
                 .put(CallbackCommandName.ORDER_MENU.getName(),new OrderMenuCallbackCommand(orderService,sendMessageService,checkUpdateOnPost))
+                .put(CallbackCommandName.STAT_MENU.getName(),new StatMenuCallbackCommand(sendMessageService, orderService, invoiceService))
         .build();
     }
 

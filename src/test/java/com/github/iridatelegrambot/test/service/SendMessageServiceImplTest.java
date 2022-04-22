@@ -1,6 +1,5 @@
 package com.github.iridatelegrambot.test.service;
 
-import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.bot.IridaBot;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
@@ -14,7 +13,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 class SendMessageServiceImplTest {
     private SendMessageService sendMessageService;
-    private CheckUpdateOnPost mCheck;
     private InlineKeyboardService mInline;
     private IridaBot mIridaBot;
     private MenuButtonsService mMenuButtonsService;
@@ -22,10 +20,9 @@ class SendMessageServiceImplTest {
     @BeforeEach
     void init(){
         mIridaBot = Mockito.mock(IridaBot.class);
-        mCheck = Mockito.mock(CheckUpdateOnPost.class);
         mInline = Mockito.mock(InlineKeyboardService.class);
         mMenuButtonsService = Mockito.mock(MenuButtonsService.class);
-        sendMessageService = new SendMessageServiceImpl(mIridaBot,mInline,mCheck,mMenuButtonsService);
+        sendMessageService = new SendMessageServiceImpl(mIridaBot,mInline,mMenuButtonsService);
     }
 
     @Test

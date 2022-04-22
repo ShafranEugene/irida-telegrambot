@@ -15,4 +15,10 @@ public interface InlineKeyboardService {
     InlineKeyboardMarkup closeOrder(Order order);
 
     InlineKeyboardMarkup showActiveOrders();
+
+    InlineKeyboardMarkup showMenuOrder(Order order);
+
+    InlineKeyboardMarkup showMenuStat();
+
+    InlineKeyboardMarkup showMenuStatDetails(String typeDocument);
 }

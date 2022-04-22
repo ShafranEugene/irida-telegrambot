@@ -19,6 +19,6 @@ public class AddOrderCommandTest extends AbstractCommandTest {
 
     @Override
     Command getCommand() {
-        return new AddOrderCommand(sendMessageService,mCheckUpdateOnPost);
+        return new AddOrderCommand(sendMessageService);
     }
 }

@@ -1,13 +1,14 @@
 package com.github.iridatelegrambot.bot;
 
 import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContainer;
-import com.github.iridatelegrambot.entity.Invoice;
-import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.*;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
+import com.github.iridatelegrambot.service.statuswait.HandleWaitNumber;
+import com.github.iridatelegrambot.service.statuswait.HandleWaitNumberImpl;
+import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.Optional;
 
 @Component
 public class IridaBot extends TelegramLongPollingBot {
@@ -24,9 +24,9 @@ public class IridaBot extends TelegramLongPollingBot {
 
     private final CommandContainer container;
     private final AnswerCatcherService answerCatcher;
-    private final CheckUpdateOnPost checkUpdateOnPost;
     private final CallbackCommandContainer callbackCommandContainer;
     private final SendMessageServiceImpl sendMessageService;
+    private final HandleWaitNumber handleWaitNumber;
 
     @Value("${bot.username}")
     private String username;
@@ -35,14 +35,14 @@ public class IridaBot extends TelegramLongPollingBot {
     private String token;
 
     @Autowired
-    public IridaBot(UserTelegramService userTelegramService, CheckUpdateOnPost checkUpdateOnPost,
+    public IridaBot(UserTelegramService userTelegramService,
                     OrderService orderService, InvoiceService invoiceService, InlineKeyboardService inlineKeyboardService,
                     AnswerCatcherService answerCatcher, MenuButtonsService menuButtonsService) {
-        sendMessageService = new SendMessageServiceImpl(this,inlineKeyboardService,checkUpdateOnPost,menuButtonsService);
-        this.container = new CommandContainer(sendMessageService,userTelegramService,checkUpdateOnPost);
-        this.callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService);
+        sendMessageService = new SendMessageServiceImpl(this,inlineKeyboardService,menuButtonsService);
+        container = new CommandContainer(sendMessageService,userTelegramService);
+        callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService);
+        handleWaitNumber = new HandleWaitNumberImpl(sendMessageService,answerCatcher);
         this.answerCatcher = answerCatcher;
-        this.checkUpdateOnPost = checkUpdateOnPost;
     }
     @Override
     public String getBotUsername() {
@@ -68,16 +68,10 @@ public class IridaBot extends TelegramLongPollingBot {
 
     private void handleMessage(Update update){
         Long idChat = update.getMessage().getChatId();
-        if(checkUpdateOnPost.waitingNumberOrder(idChat) | checkUpdateOnPost.waitingNumberInvoice(idChat)){
-            if(checkUpdateOnPost.waitingNumberOrder(idChat)){
-                Optional<Order> order = answerCatcher.answerByOrder(update);
-                sendMessageService.sendListCityForOrder(order,idChat);
-                return;
-            } else if(checkUpdateOnPost.waitingNumberInvoice(idChat)){
-                Optional<Invoice> invoice = answerCatcher.answerByInvoice(update);
-                sendMessageService.sendListCityForInvoice(invoice,idChat);
-                return;
-            }
+
+        if(WaitDocument.getWaitAllStatus(idChat)){
+            handleWaitNumber.handle(update);
+            return;
         }
 
         if(update.getMessage().hasText()){

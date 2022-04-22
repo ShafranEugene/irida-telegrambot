@@ -1,23 +1,23 @@
 package com.github.iridatelegrambot.command;
 
-import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.ADD;
 
 public class AddInvoiceCommand implements Command{
     private final SendMessageService sendMessageService;
-    private final CheckUpdateOnPost checkUpdateOnPost;
 
     public static final String ADDINVOICE_MESSAGE = "Введите номер накладной на перемещение: ";
-    public AddInvoiceCommand(SendMessageService sendMessageService,CheckUpdateOnPost checkUpdateOnPost) {
+    public AddInvoiceCommand(SendMessageService sendMessageService ) {
         this.sendMessageService = sendMessageService;
-        this.checkUpdateOnPost = checkUpdateOnPost;
     }
 
     @Override
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
-        checkUpdateOnPost.setStatusInvoice(chatId,true);
+        WaitDocument.INVOICE.setWaitNumber(chatId,true,ADD);
         sendMessageService.sendMessage(chatId.toString(),ADDINVOICE_MESSAGE);
     }
 }

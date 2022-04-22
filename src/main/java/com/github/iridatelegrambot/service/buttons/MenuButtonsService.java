@@ -6,10 +6,4 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 public interface MenuButtonsService {
 
     ReplyKeyboardMarkup mainMenu();
-
-    InlineKeyboardMarkup orderMenu();
-
-    InlineKeyboardMarkup invoiceMenu();
-
-    InlineKeyboardMarkup listActualOrder();
 }

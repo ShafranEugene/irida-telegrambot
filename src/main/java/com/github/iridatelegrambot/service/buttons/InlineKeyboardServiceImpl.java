@@ -6,14 +6,16 @@ import com.github.iridatelegrambot.entity.BondOrderToInvoice;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
+import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.DELETE;
+import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.INFO;
 
 @Service
 public class InlineKeyboardServiceImpl implements InlineKeyboardService{
@@ -185,5 +187,44 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
             callbackOrders.add(text);
         }
         return creatorMarkupWithOrders(orders,callbackOrders);
+    }
+
+    @Override
+    public InlineKeyboardMarkup showMenuOrder(Order order){
+        HashMap<String,String> buttonsMap = new HashMap<>();
+        int idOrder = order.getId();
+        buttonsMap.put("Добавить накладную на перемещение","order:addinvoice:id:" + idOrder);
+        buttonsMap.put("Удалить заказ","order:delete:id:" + idOrder);
+        return createMenu(buttonsMap);
+    }
+
+    @Override
+    public InlineKeyboardMarkup showMenuStat(){
+        HashMap<String,String> buttonsMap = new HashMap<>();
+        buttonsMap.put("Информация о всех заказах","stat:infoAllOrders");
+        buttonsMap.put("Информация о всех накладных на перемещение","stat:infoAllInvoice");
+        return createMenu(buttonsMap);
+    }
+
+    private InlineKeyboardMarkup createMenu(HashMap<String,String> TextAndCallbackData){
+        List<List<InlineKeyboardButton>> rows = new ArrayList<>();
+        for(Map.Entry<String,String> entry : TextAndCallbackData.entrySet()){
+            List<InlineKeyboardButton> row = new ArrayList<>();
+            InlineKeyboardButton button = new InlineKeyboardButton();
+            button.setText(entry.getKey());
+            button.setCallbackData(entry.getValue());
+            row.add(button);
+            rows.add(row);
+        }
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+        markup.setKeyboard(rows);
+        return markup;
+    }
+    @Override
+    public InlineKeyboardMarkup showMenuStatDetails(String typeDocument){
+        HashMap<String,String> buttonsMap = new HashMap<>();
+        buttonsMap.put("Получить более детальную информацию по накладной","stat:" + typeDocument + ":" + INFO.getName());
+        buttonsMap.put("Удалить накладную","stat:" + typeDocument + ":" + DELETE.getName());
+        return createMenu(buttonsMap);
     }
 }

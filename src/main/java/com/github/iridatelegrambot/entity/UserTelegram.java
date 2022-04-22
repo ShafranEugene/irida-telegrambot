@@ -1,5 +1,8 @@
 package com.github.iridatelegrambot.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +23,11 @@ public class UserTelegram {
 
     @Column
     private boolean active;
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "userTelegram")
-    private ConditionBot conditionBot;
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Order> orderList = new ArrayList<>();
+    private final List<Order> orderList = new ArrayList<>();
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private final List<Invoice> invoiceList = new ArrayList<>();
 
     public UserTelegram() {
     }
@@ -42,14 +46,6 @@ public class UserTelegram {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public ConditionBot getConditionBot() {
-        return conditionBot;
-    }
-
-    public void setConditionBot(ConditionBot conditionBot) {
-        this.conditionBot = conditionBot;
     }
 
     public String getFirstName() {
@@ -86,6 +82,18 @@ public class UserTelegram {
         }
         orderList.add(order);
         order.setUser(this);
+    }
+
+    public List<Invoice> getInvoiceList() {
+        return invoiceList;
+    }
+
+    public void addInvoice(Invoice invoice) {
+        if(invoiceList.contains(invoice)){
+            return;
+        }
+        invoiceList.add(invoice);
+        invoice.setUser(this);
     }
 
     @Override

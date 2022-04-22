@@ -1,7 +1,5 @@
 package com.github.iridatelegrambot.command;
 
-import com.github.iridatelegrambot.entity.ConditionBot;
-import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import org.telegram.telegrambots.meta.api.objects.Update;

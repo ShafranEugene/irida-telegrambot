@@ -1,5 +1,4 @@
 package com.github.iridatelegrambot.test.command;
-import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.command.StatCommand;
 import com.github.iridatelegrambot.service.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
@@ -20,9 +19,8 @@ public class StatCommandTest {
     private final UserTelegramService mUserTelegramService = Mockito.mock(UserTelegramService.class);
     private final IridaBot mIridaBot = Mockito.mock(IridaBot.class);
     protected InlineKeyboardService mInlineKeyboardService = Mockito.mock(InlineKeyboardService.class);
-    protected CheckUpdateOnPost mCheckUpdateOnPost = Mockito.mock(CheckUpdateOnPost.class);
     protected MenuButtonsService menuButtonsService = Mockito.mock(MenuButtonsService.class);
-    protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot,mInlineKeyboardService,mCheckUpdateOnPost,menuButtonsService);
+    protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot,mInlineKeyboardService,menuButtonsService);
     private final StatCommand statCommand = new StatCommand(sendMessageService,mUserTelegramService);
 
     @Test

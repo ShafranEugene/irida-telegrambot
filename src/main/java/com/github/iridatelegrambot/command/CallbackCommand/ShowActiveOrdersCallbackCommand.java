@@ -9,8 +9,8 @@ import java.util.Optional;
 
 public class ShowActiveOrdersCallbackCommand implements CallbackCommand {
 
-    private SendMessageService sendMessageService;
-    private OrderService orderService;
+    private final SendMessageService sendMessageService;
+    private final OrderService orderService;
 
     public ShowActiveOrdersCallbackCommand(SendMessageService sendMessageService, OrderService orderService) {
         this.sendMessageService = sendMessageService;
@@ -25,9 +25,9 @@ public class ShowActiveOrdersCallbackCommand implements CallbackCommand {
 
         if(orderOptional.isEmpty()){
             sendMessageService.sendMessage(chatId.toString(),"Заказ не найден.");
+            return;
         }
         Order order = orderOptional.get();
-        String message = order.toStringForUsers();
-        sendMessageService.sendMessage(chatId.toString(),message);
+        sendMessageService.sendMenuOrder(chatId,order);
     }
 }

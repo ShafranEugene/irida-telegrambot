@@ -1,6 +1,5 @@
 package com.github.iridatelegrambot.test.command;
 
-import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.command.Command;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
@@ -19,14 +18,12 @@ class CommandContainerTest {
     private CommandContainer container;
     private SendMessageService mSendMessageService;
     private UserTelegramService mUserTelegramService;
-    private CheckUpdateOnPost mCheckUpdateOnPost;
 
     @BeforeEach
     void init(){
         mSendMessageService = Mockito.mock(SendMessageServiceImpl.class);
         mUserTelegramService = Mockito.mock(UserTelegramService.class);
-        mCheckUpdateOnPost = Mockito.mock(CheckUpdateOnPost.class);
-        container = new CommandContainer(mSendMessageService,mUserTelegramService,mCheckUpdateOnPost);
+        container = new CommandContainer(mSendMessageService,mUserTelegramService);
     }
 
     @Test

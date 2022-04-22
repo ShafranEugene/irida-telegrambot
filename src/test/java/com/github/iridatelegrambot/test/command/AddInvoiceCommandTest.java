@@ -19,6 +19,6 @@ public class AddInvoiceCommandTest extends AbstractCommandTest {
 
     @Override
     Command getCommand() {
-        return new AddInvoiceCommand(sendMessageService,mCheckUpdateOnPost);
+        return new AddInvoiceCommand(sendMessageService);
     }
 }

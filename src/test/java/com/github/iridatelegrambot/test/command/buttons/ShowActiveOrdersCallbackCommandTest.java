@@ -29,12 +29,31 @@ public class ShowActiveOrdersCallbackCommandTest extends AbstractCallbackCommand
         order.setId(5);
         order.setNumber("500");
         Mockito.when(mOrderService.getOrderById(5)).thenReturn(Optional.of(order));
-        ArgumentCaptor<String> messageArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Long> longArgumentCaptor = ArgumentCaptor.forClass(Long.class);
+        ArgumentCaptor<Order> orderArgumentCaptor = ArgumentCaptor.forClass(Order.class);
 
         //when
         showActiveOrdersCallbackCommand.execute(callbackQuery);
-        Mockito.verify(mSendMessageService).sendMessage(eq(callbackQuery.getMessage().getChatId().toString()),messageArgumentCaptor.capture());
+        Mockito.verify(mSendMessageService).sendMenuOrder(longArgumentCaptor.capture(),orderArgumentCaptor.capture());
         //then
-        Assertions.assertEquals(order.toStringForUsers(),messageArgumentCaptor.getValue());
+        Assertions.assertEquals(order.toStringForUsers(),orderArgumentCaptor.getValue().toStringForUsers());
+        Assertions.assertEquals(callbackQuery.getMessage().getChatId(),longArgumentCaptor.getValue());
+    }
+
+    @Test
+    void shouldCantFindOrder(){
+        //given
+        CallbackQuery callbackQuery = createCallbackQuery("show_order:id:5");
+        Mockito.when(mOrderService.getOrderById(5)).thenReturn(Optional.empty());
+
+        ArgumentCaptor<String> chatIdCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
+
+        //when
+        showActiveOrdersCallbackCommand.execute(callbackQuery);
+        Mockito.verify(mSendMessageService).sendMessage(chatIdCaptor.capture(),messageCaptor.capture());
+        //then
+        Assertions.assertEquals("Заказ не найден.",messageCaptor.getValue());
+        Assertions.assertEquals(String.valueOf(12345678L),chatIdCaptor.getValue());
     }
 }

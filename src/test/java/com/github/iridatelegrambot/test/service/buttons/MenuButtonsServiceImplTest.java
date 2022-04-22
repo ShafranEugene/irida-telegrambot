@@ -16,13 +16,11 @@ import java.util.List;
 
 public class MenuButtonsServiceImplTest {
 
-    private OrderServiceImpl orderService;
     private MenuButtonsService menuButtonsService;
 
     @BeforeEach
     void init(){
-        orderService = Mockito.mock(OrderServiceImpl.class);
-        menuButtonsService = new MenuButtonsServiceImpl(orderService);
+        menuButtonsService = new MenuButtonsServiceImpl();
     }
 
     @Test

@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface AnswerCatcherService {
 
-    Optional<Order> answerByAddOrder(Update update);
+    Optional<Order> addOrder(Update update);
 
-    Optional<Invoice> answerByAddInvoice(Update update);
+    Optional<Invoice> addInvoice(Update update);
 
     String deleteOrder(Update update);
 

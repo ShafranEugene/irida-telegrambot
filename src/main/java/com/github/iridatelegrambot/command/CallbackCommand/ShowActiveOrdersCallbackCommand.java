@@ -25,8 +25,9 @@ public class ShowActiveOrdersCallbackCommand implements CallbackCommand {
 
         if(orderOptional.isEmpty()){
             sendMessageService.sendMessage(chatId.toString(),"Заказ не найден.");
+            return;
         }
         Order order = orderOptional.get();
-        sendMessageService.sendMenuOrder(chatId,order.toStringForUsers(),order);
+        sendMessageService.sendMenuOrder(chatId,order);
     }
 }

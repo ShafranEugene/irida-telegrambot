@@ -2,7 +2,6 @@ package com.github.iridatelegrambot.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.bot.IridaBot;
 import com.github.iridatelegrambot.entity.BondOrderToInvoice;
 import com.github.iridatelegrambot.entity.Invoice;
@@ -10,7 +9,6 @@ import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
-import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -32,15 +30,13 @@ public class SendMessageServiceImpl implements SendMessageService {
 
     private final IridaBot iridaBot;
     private final InlineKeyboardService inlineKeyboardService;
-    private final CheckUpdateOnPost checkUpdateOnPost;
     private final MenuButtonsService menuButtonsService;
 
     @Autowired
     public SendMessageServiceImpl(IridaBot iridaBot,InlineKeyboardService inlineKeyboardService,
-                                  CheckUpdateOnPost checkUpdateOnPost, MenuButtonsService menuButtonsService) {
+                                  MenuButtonsService menuButtonsService) {
         this.iridaBot = iridaBot;
         this.inlineKeyboardService = inlineKeyboardService;
-        this.checkUpdateOnPost = checkUpdateOnPost;
         this.menuButtonsService = menuButtonsService;
     }
 
@@ -112,13 +108,14 @@ public class SendMessageServiceImpl implements SendMessageService {
     @Override
     public void sendActiveOrdersForInvoice(Long chatId, String message, Invoice invoice){
         if(WaitDocument.INVOICE.invoiceHaveIdOrder(chatId)){
-            sendMessegeCloseOrderIfInvoiceHaveOrder(chatId,invoice);
+            sendMessageCloseOrderIfInvoiceHaveOrder(chatId,invoice);
+            return;
         }
         InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.markupActiveOrdersForInvoice(invoice);
         sendMessage(chatId.toString(),message,inlineKeyboardMarkup);
     }
 
-    private void sendMessegeCloseOrderIfInvoiceHaveOrder(Long chatId, Invoice invoice){
+    private void sendMessageCloseOrderIfInvoiceHaveOrder(Long chatId, Invoice invoice){
         BondOrderToInvoice bond = new BondOrderToInvoice();
         bond.setIdInvoice(invoice.getId());
         bond.setIdOrder(WaitDocument.INVOICE.getIdOrderForInvoice(chatId));
@@ -152,9 +149,9 @@ public class SendMessageServiceImpl implements SendMessageService {
     }
 
     @Override
-    public void sendMenuOrder(Long chatId,String message,Order order){
+    public void sendMenuOrder(Long chatId,Order order){
         InlineKeyboardMarkup markup = inlineKeyboardService.showMenuOrder(order);
-        sendMessage(chatId.toString(),message,markup);
+        sendMessage(chatId.toString(),order.toStringForUsers(),markup);
     }
 
     @Override

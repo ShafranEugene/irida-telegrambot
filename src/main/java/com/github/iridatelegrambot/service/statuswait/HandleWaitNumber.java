@@ -7,9 +7,4 @@ public interface HandleWaitNumber {
 
     void handle(Update update);
 
-    void addDocument(Update update);
-
-    void infoDocument(Update update);
-
-    void deleteDocument(Update update);
 }

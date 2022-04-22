@@ -37,7 +37,7 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
         }
 
         if (waitType != WaitTypeStatus.ADD){
-            if(answer.substring(0,17).equals("Повторите попытку.")){
+            if(answer.startsWith("Повторите попытку.")){
                 comeBackDocumentStatus();
             }
         }
@@ -58,24 +58,24 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
         }
         waitType = typeStatusOptional.get();
     }
-    @Override
-    public void addDocument(Update update){
+
+    private void addDocument(Update update){
         if(document == WaitDocument.ORDER){
-            Optional<Order> order = answerCatcherService.answerByAddOrder(update);
+            Optional<Order> order = answerCatcherService.addOrder(update);
             if(order.isEmpty()){
                 comeBackDocumentStatus();
             }
             sendMessageService.sendListCityForOrder(order,chatId);
         } else if(document == WaitDocument.INVOICE){
-            Optional<Invoice> invoice = answerCatcherService.answerByAddInvoice(update);
+            Optional<Invoice> invoice = answerCatcherService.addInvoice(update);
             if(invoice.isEmpty()){
                 comeBackDocumentStatus();
             }
             sendMessageService.sendListCityForInvoice(invoice,chatId);
         }
     }
-    @Override
-    public void infoDocument(Update update){
+
+    private void infoDocument(Update update){
         if(document == WaitDocument.ORDER){
             answer = answerCatcherService.infoOrder(update);
             sendMessageService.sendMessage(chatId.toString(),answer);
@@ -84,8 +84,8 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
             sendMessageService.sendMessage(chatId.toString(),answer);
         }
     }
-    @Override
-    public void deleteDocument(Update update){
+
+    private void deleteDocument(Update update){
         if(document == WaitDocument.ORDER){
             answer = answerCatcherService.deleteOrder(update);
             sendMessageService.sendMessage(chatId.toString(),answer);

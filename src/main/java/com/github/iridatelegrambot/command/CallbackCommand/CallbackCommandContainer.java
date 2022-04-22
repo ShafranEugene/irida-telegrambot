@@ -1,6 +1,5 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
-import com.github.iridatelegrambot.bot.CheckUpdateOnPost;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
 import com.github.iridatelegrambot.service.SendMessageService;
@@ -12,7 +11,7 @@ public class CallbackCommandContainer {
     private final ImmutableMap<String, CallbackCommand> callbackMap;
 
     public CallbackCommandContainer(SendMessageService sendMessageService, OrderService orderService,
-                                    InvoiceService invoiceService, CheckUpdateOnPost checkUpdateOnPost){
+                                    InvoiceService invoiceService){
         callbackMap = ImmutableMap.<String,CallbackCommand>builder()
                 .put(CallbackCommandName.ADD_ORDER.getName(),new AddOrderCallbackCommand(sendMessageService,orderService))
                 .put(CallbackCommandName.ADD_INVOICE.getName(),new AddInvoiceCallbackCommand(sendMessageService,invoiceService))
@@ -20,7 +19,7 @@ public class CallbackCommandContainer {
                 .put(CallbackCommandName.CLOSE_ORDER.getName(),new CloseOrderCallbackCommand(orderService,sendMessageService))
                 .put(CallbackCommandName.CANCEL.getName(), new CancelCallbackCommand(orderService,invoiceService,sendMessageService))
                 .put(CallbackCommandName.SHOW_ORDER.getName(),new ShowActiveOrdersCallbackCommand(sendMessageService,orderService))
-                .put(CallbackCommandName.ORDER_MENU.getName(),new OrderMenuCallbackCommand(orderService,sendMessageService,checkUpdateOnPost))
+                .put(CallbackCommandName.ORDER_MENU.getName(),new OrderMenuCallbackCommand(orderService,sendMessageService))
                 .put(CallbackCommandName.STAT_MENU.getName(),new StatMenuCallbackCommand(sendMessageService, orderService, invoiceService))
         .build();
     }

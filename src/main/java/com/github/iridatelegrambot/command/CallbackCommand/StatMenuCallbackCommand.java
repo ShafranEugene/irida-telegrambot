@@ -6,7 +6,6 @@ import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
-import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.List;

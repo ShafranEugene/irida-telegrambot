@@ -27,7 +27,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
     }
 
     @Override
-    public Optional<Order> answerByAddOrder(Update update) {
+    public Optional<Order> addOrder(Update update) {
         String numberOrder = update.getMessage().getText();
 
         if(numberOrder.replaceAll("[^0-9]","").isBlank()){
@@ -64,7 +64,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
     }
 
     @Override
-    public Optional<Invoice> answerByAddInvoice(Update update){
+    public Optional<Invoice> addInvoice(Update update){
         String[] textUpdate = update.getMessage().getText().split(";");
         String numberInvoice = textUpdate[0];
 

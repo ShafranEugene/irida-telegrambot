@@ -25,7 +25,7 @@ public interface SendMessageService {
 
     void sendActiveOrders(Long chatId, String message);
 
-    void sendMenuOrder(Long chatId, String message, Order order);
+    void sendMenuOrder(Long chatId, Order order);
 
     void sendMenuStat(Long chatId, String message);
 

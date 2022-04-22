@@ -1,8 +1,6 @@
 package com.github.iridatelegrambot.bot;
 
 import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContainer;
-import com.github.iridatelegrambot.entity.Invoice;
-import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.*;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
@@ -18,7 +16,6 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.Optional;
 
 @Component
 public class IridaBot extends TelegramLongPollingBot {
@@ -27,7 +24,6 @@ public class IridaBot extends TelegramLongPollingBot {
 
     private final CommandContainer container;
     private final AnswerCatcherService answerCatcher;
-    private final CheckUpdateOnPost checkUpdateOnPost;
     private final CallbackCommandContainer callbackCommandContainer;
     private final SendMessageServiceImpl sendMessageService;
     private final HandleWaitNumber handleWaitNumber;
@@ -39,15 +35,14 @@ public class IridaBot extends TelegramLongPollingBot {
     private String token;
 
     @Autowired
-    public IridaBot(UserTelegramService userTelegramService, CheckUpdateOnPost checkUpdateOnPost,
+    public IridaBot(UserTelegramService userTelegramService,
                     OrderService orderService, InvoiceService invoiceService, InlineKeyboardService inlineKeyboardService,
                     AnswerCatcherService answerCatcher, MenuButtonsService menuButtonsService) {
-        sendMessageService = new SendMessageServiceImpl(this,inlineKeyboardService,checkUpdateOnPost,menuButtonsService);
-        container = new CommandContainer(sendMessageService,userTelegramService,checkUpdateOnPost);
-        callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService,checkUpdateOnPost);
+        sendMessageService = new SendMessageServiceImpl(this,inlineKeyboardService,menuButtonsService);
+        container = new CommandContainer(sendMessageService,userTelegramService);
+        callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService);
         handleWaitNumber = new HandleWaitNumberImpl(sendMessageService,answerCatcher);
         this.answerCatcher = answerCatcher;
-        this.checkUpdateOnPost = checkUpdateOnPost;
     }
     @Override
     public String getBotUsername() {

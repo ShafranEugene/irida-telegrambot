@@ -1,6 +1,5 @@
 package com.github.iridatelegrambot.service;
 
-import com.github.iridatelegrambot.entity.ConditionBot;
 import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.repository.UserTelegramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +50,6 @@ public class UserTelegramServiceImpl implements UserTelegramService {
             user.setChatId(chatId);
             user.setFirstName(update.getMessage().getChat().getFirstName());
             user.setUserName(update.getMessage().getChat().getUserName());
-            ConditionBot conditionBot = new ConditionBot();
-            conditionBot.setUserTelegram(user);
-            user.setConditionBot(conditionBot);
             save(user);
             return user;
         } else {

@@ -23,8 +23,6 @@ public class UserTelegram {
 
     @Column
     private boolean active;
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "userTelegram")
-    private ConditionBot conditionBot;
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private final List<Order> orderList = new ArrayList<>();
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
@@ -48,14 +46,6 @@ public class UserTelegram {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public ConditionBot getConditionBot() {
-        return conditionBot;
-    }
-
-    public void setConditionBot(ConditionBot conditionBot) {
-        this.conditionBot = conditionBot;
     }
 
     public String getFirstName() {

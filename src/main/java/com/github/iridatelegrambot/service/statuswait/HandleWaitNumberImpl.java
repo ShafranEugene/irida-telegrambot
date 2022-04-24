@@ -4,6 +4,7 @@ import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.AnswerCatcherService;
 import com.github.iridatelegrambot.service.SendMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -18,7 +19,7 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
     private WaitTypeStatus waitType;
     private Long chatId;
     private String answer;
-
+    @Autowired
     public HandleWaitNumberImpl(SendMessageService sendMessageService, AnswerCatcherService answerCatcherService) {
         this.sendMessageService = sendMessageService;
         this.answerCatcherService = answerCatcherService;

@@ -1,13 +1,9 @@
 package com.github.iridatelegrambot.bot;
 
 import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContainer;
-import com.github.iridatelegrambot.service.*;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
-import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import com.github.iridatelegrambot.service.statuswait.HandleWaitNumber;
-import com.github.iridatelegrambot.service.statuswait.HandleWaitNumberImpl;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +19,7 @@ public class IridaBot extends TelegramLongPollingBot {
     private final static String COMMAND_PREFIX = "/";
 
     private final CommandContainer container;
-    private final AnswerCatcherService answerCatcher;
     private final CallbackCommandContainer callbackCommandContainer;
-    private final SendMessageServiceImpl sendMessageService;
     private final HandleWaitNumber handleWaitNumber;
 
     @Value("${bot.username}")
@@ -35,15 +29,12 @@ public class IridaBot extends TelegramLongPollingBot {
     private String token;
 
     @Autowired
-    public IridaBot(UserTelegramService userTelegramService,
-                    OrderService orderService, InvoiceService invoiceService, InlineKeyboardService inlineKeyboardService,
-                    AnswerCatcherService answerCatcher, MenuButtonsService menuButtonsService) {
-        sendMessageService = new SendMessageServiceImpl(this,inlineKeyboardService,menuButtonsService);
-        container = new CommandContainer(sendMessageService,userTelegramService);
-        callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService);
-        handleWaitNumber = new HandleWaitNumberImpl(sendMessageService,answerCatcher);
-        this.answerCatcher = answerCatcher;
+    public IridaBot(CommandContainer container, CallbackCommandContainer callbackCommandContainer, HandleWaitNumber handleWaitNumber) {
+        this.container = container;
+        this.callbackCommandContainer = callbackCommandContainer;
+        this.handleWaitNumber = handleWaitNumber;
     }
+
     @Override
     public String getBotUsername() {
         return username;
@@ -56,6 +47,7 @@ public class IridaBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+
 
         if(update.hasCallbackQuery()){
             handleCallback(update);

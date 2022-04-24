@@ -19,4 +19,8 @@ public enum CallbackCommandName {
     public String getName() {
         return name;
     }
+
+    public String getNameForService(){
+        return name + ":";
+    }
 }

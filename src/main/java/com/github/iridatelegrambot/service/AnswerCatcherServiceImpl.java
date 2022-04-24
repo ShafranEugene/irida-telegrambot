@@ -54,7 +54,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
     private boolean checkIdentityOrder(String numberOrder){
         final boolean[] DBhasThisNumber = {false};
-        List<Order> orders = orderService.getAllOrdersActive();
+        List<Order> orders = orderService.getAllOrders();
         orders.forEach(order -> {
             if(order.getNumber().equals(numberOrder)){
                 DBhasThisNumber[0] = true;

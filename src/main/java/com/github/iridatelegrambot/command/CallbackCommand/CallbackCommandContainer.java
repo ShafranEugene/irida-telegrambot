@@ -4,12 +4,14 @@ import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
 import com.github.iridatelegrambot.service.SendMessageService;
 import com.google.common.collect.ImmutableMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-
+@Component
 public class CallbackCommandContainer {
 
     private final ImmutableMap<String, CallbackCommand> callbackMap;
-
+    @Autowired
     public CallbackCommandContainer(SendMessageService sendMessageService, OrderService orderService,
                                     InvoiceService invoiceService){
         callbackMap = ImmutableMap.<String,CallbackCommand>builder()
@@ -23,6 +25,8 @@ public class CallbackCommandContainer {
                 .put(CallbackCommandName.STAT_MENU.getName(),new StatMenuCallbackCommand(sendMessageService, orderService, invoiceService))
         .build();
     }
+
+
 
 
     public CallbackCommand findAnswer(CallbackQuery callbackQuery) {

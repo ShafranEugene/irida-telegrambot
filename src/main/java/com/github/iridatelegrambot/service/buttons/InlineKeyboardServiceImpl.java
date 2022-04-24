@@ -2,11 +2,11 @@ package com.github.iridatelegrambot.service.buttons;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName;
 import com.github.iridatelegrambot.entity.BondOrderToInvoice;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.*;
 
+import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.*;
 import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.DELETE;
 import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.INFO;
 
@@ -38,14 +39,14 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
             order.setCity(cityName.getNameCity());
 
             try {
-                String orderInJSON = "add_order:" + objectMapper.writeValueAsString(order);
+                String orderInJSON = ADD_ORDER.getNameForService() + objectMapper.writeValueAsString(order);
                 listJSONOrdersWithCity.add(orderInJSON);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         }
 
-        String cancel = "delete:order:id:" + order.getId();
+        String cancel = CallbackCommandName.CANCEL.getNameForService() + "order:id:" + order.getId();
         listJSONOrdersWithCity.add(cancel);
 
         inlineKeyboardMarkup = creatorMarkupWithCity(cityNamesList,listJSONOrdersWithCity);
@@ -66,14 +67,14 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
             invoice.setCity(cityName.getNameCity());
 
             try {
-                String orderInJSON = "add_invoice:" + objectMapper.writeValueAsString(invoice);
+                String orderInJSON = ADD_INVOICE.getNameForService() + objectMapper.writeValueAsString(invoice);
                 listJSONOrdersWithCity.add(orderInJSON);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         }
 
-        String cancel = "delete:invoice:id:" + invoice.getId();
+        String cancel = CANCEL.getNameForService() + "invoice:id:" + invoice.getId();
         listJSONOrdersWithCity.add(cancel);
 
         inlineKeyboardMarkup = creatorMarkupWithCity(cityNamesList,listJSONOrdersWithCity);
@@ -120,7 +121,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         for(Order order : orders){
             try {
                 BondOrderToInvoice bond = new BondOrderToInvoice(order.getId(),invoice.getId());
-                String orderJson = "addOrdToInv:" + objectMapper.writeValueAsString(bond);
+                String orderJson = ADD_ORDER_TO_INVOICE.getNameForService() + objectMapper.writeValueAsString(bond);
                 CallbackJson.add(orderJson);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -165,8 +166,8 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         buttonYes.setText("Да");
         buttonNo.setText("Нет");
 
-        buttonYes.setCallbackData("closeOrder:" + order.getId() + ":false");
-        buttonNo.setCallbackData("closeOrder:" + order.getId() + ":true");
+        buttonYes.setCallbackData(CLOSE_ORDER.getNameForService() + order.getId() + ":false");
+        buttonNo.setCallbackData(CLOSE_ORDER.getNameForService() + order.getId() + ":true");
 
         row.add(buttonYes);
         row.add(buttonNo);
@@ -183,7 +184,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         List<String> callbackOrders = new ArrayList<>();
 
         for(Order order : orders){
-            String text = "show_order:id:" + order.getId();
+            String text = SHOW_ORDER.getNameForService() + "id:" + order.getId();
             callbackOrders.add(text);
         }
         return creatorMarkupWithOrders(orders,callbackOrders);
@@ -193,16 +194,16 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
     public InlineKeyboardMarkup showMenuOrder(Order order){
         HashMap<String,String> buttonsMap = new HashMap<>();
         int idOrder = order.getId();
-        buttonsMap.put("Добавить накладную на перемещение","order:addinvoice:id:" + idOrder);
-        buttonsMap.put("Удалить заказ","order:delete:id:" + idOrder);
+        buttonsMap.put("Добавить накладную на перемещение",ORDER_MENU.getNameForService() + "addinvoice:id:" + idOrder);
+        buttonsMap.put("Удалить заказ",ORDER_MENU.getNameForService() + "delete:id:" + idOrder);
         return createMenu(buttonsMap);
     }
 
     @Override
     public InlineKeyboardMarkup showMenuStat(){
         HashMap<String,String> buttonsMap = new HashMap<>();
-        buttonsMap.put("Информация о всех заказах","stat:infoAllOrders");
-        buttonsMap.put("Информация о всех накладных на перемещение","stat:infoAllInvoice");
+        buttonsMap.put("Информация о всех заказах", STAT_MENU.getNameForService() + "infoAllOrders");
+        buttonsMap.put("Информация о всех накладных на перемещение", STAT_MENU.getNameForService() + "infoAllInvoice");
         return createMenu(buttonsMap);
     }
 
@@ -223,8 +224,8 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
     @Override
     public InlineKeyboardMarkup showMenuStatDetails(String typeDocument){
         HashMap<String,String> buttonsMap = new HashMap<>();
-        buttonsMap.put("Получить более детальную информацию по накладной","stat:" + typeDocument + ":" + INFO.getName());
-        buttonsMap.put("Удалить накладную","stat:" + typeDocument + ":" + DELETE.getName());
+        buttonsMap.put("Получить более детальную информацию по накладной",STAT_MENU.getNameForService() + typeDocument + ":" + INFO.getName());
+        buttonsMap.put("Удалить накладную",STAT_MENU.getNameForService() + typeDocument + ":" + DELETE.getName());
         return createMenu(buttonsMap);
     }
 }

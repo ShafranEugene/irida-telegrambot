@@ -10,6 +10,7 @@ import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -33,12 +34,14 @@ public class SendMessageServiceImpl implements SendMessageService {
     private final MenuButtonsService menuButtonsService;
 
     @Autowired
-    public SendMessageServiceImpl(IridaBot iridaBot,InlineKeyboardService inlineKeyboardService,
+    public SendMessageServiceImpl(@Lazy IridaBot iridaBot, InlineKeyboardService inlineKeyboardService,
                                   MenuButtonsService menuButtonsService) {
         this.iridaBot = iridaBot;
         this.inlineKeyboardService = inlineKeyboardService;
         this.menuButtonsService = menuButtonsService;
     }
+
+
 
     @Override
     public void sendMessage(String chatId, String message) {

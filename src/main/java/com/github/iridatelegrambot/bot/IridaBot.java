@@ -3,6 +3,7 @@ package com.github.iridatelegrambot.bot;
 import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContainer;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
+import com.github.iridatelegrambot.service.statususer.CheckStatusUserService;
 import com.github.iridatelegrambot.service.statuswait.HandleWaitNumber;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class IridaBot extends TelegramLongPollingBot {
     private final CommandContainer container;
     private final CallbackCommandContainer callbackCommandContainer;
     private final HandleWaitNumber handleWaitNumber;
+    private final CheckStatusUserService checkStatusUserService;
 
     @Value("${bot.username}")
     private String username;
@@ -29,10 +31,12 @@ public class IridaBot extends TelegramLongPollingBot {
     private String token;
 
     @Autowired
-    public IridaBot(CommandContainer container, CallbackCommandContainer callbackCommandContainer, HandleWaitNumber handleWaitNumber) {
+    public IridaBot(CommandContainer container, CallbackCommandContainer callbackCommandContainer,
+                    HandleWaitNumber handleWaitNumber, CheckStatusUserService checkStatusUserService) {
         this.container = container;
         this.callbackCommandContainer = callbackCommandContainer;
         this.handleWaitNumber = handleWaitNumber;
+        this.checkStatusUserService = checkStatusUserService;
     }
 
     @Override
@@ -48,6 +52,9 @@ public class IridaBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
+        if(!checkStatusUserService.check(update)){
+            return;
+        }
 
         if(update.hasCallbackQuery()){
             handleCallback(update);

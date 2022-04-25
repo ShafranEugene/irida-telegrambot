@@ -30,4 +30,6 @@ public interface SendMessageService {
     void sendMenuStat(Long chatId, String message);
 
     void sendMenuStatDetails(Long chatId, String message, String typeDocument);
+
+    void sendInviteToAdmin(Long chatIdAdmin, Long chatIdUser, String message);
 }

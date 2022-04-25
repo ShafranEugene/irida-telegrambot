@@ -16,5 +16,7 @@ public interface UserTelegramService {
 
     Optional<UserTelegram> findByChatId(Long ChatId);
 
+    List<UserTelegram> findAllAdmin();
+
     UserTelegram findOrCreateUser(Update update);
 }

@@ -203,7 +203,8 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
     public InlineKeyboardMarkup showMenuStat(){
         HashMap<String,String> buttonsMap = new HashMap<>();
         buttonsMap.put("Информация о всех заказах", STAT_MENU.getNameForService() + "infoAllOrders");
-        buttonsMap.put("Информация о всех накладных на перемещение", STAT_MENU.getNameForService() + "infoAllInvoice");
+        buttonsMap.put("Информация о всех накладных", STAT_MENU.getNameForService() + "infoAllInvoice");
+        buttonsMap.put("Информация для администратора", ADMIN_MENU.getName() + "mainAdminMenu");
         return createMenu(buttonsMap);
     }
 
@@ -226,6 +227,14 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         HashMap<String,String> buttonsMap = new HashMap<>();
         buttonsMap.put("Получить более детальную информацию по накладной",STAT_MENU.getNameForService() + typeDocument + ":" + INFO.getName());
         buttonsMap.put("Удалить накладную",STAT_MENU.getNameForService() + typeDocument + ":" + DELETE.getName());
+        return createMenu(buttonsMap);
+    }
+
+    @Override
+    public InlineKeyboardMarkup inviteForAdmin(Long chatIdUser){
+        HashMap<String,String> buttonsMap = new HashMap<>();
+        buttonsMap.put("Дать доступ",ADD_STATUS_USER.getNameForService() + "chatId:" + chatIdUser + ":true");
+        buttonsMap.put("Отклонить",ADD_STATUS_USER.getNameForService() + "chatId:" + chatIdUser + ":false");
         return createMenu(buttonsMap);
     }
 }

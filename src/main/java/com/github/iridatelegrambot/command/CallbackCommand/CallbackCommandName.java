@@ -8,7 +8,9 @@ public enum CallbackCommandName {
     SHOW_ORDER("show_order"),
     ORDER_MENU("order"),
     STAT_MENU("stat"),
-    CANCEL("delete");
+    CANCEL("delete"),
+    ADD_STATUS_USER("setStatusUser"),
+    ADMIN_MENU("adminMenu");
 
     private final String name;
 

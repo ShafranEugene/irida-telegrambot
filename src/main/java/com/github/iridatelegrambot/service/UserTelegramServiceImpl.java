@@ -3,6 +3,7 @@ package com.github.iridatelegrambot.service;
 import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.repository.UserTelegramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -13,10 +14,12 @@ import java.util.Optional;
 public class UserTelegramServiceImpl implements UserTelegramService {
 
     private final UserTelegramRepository repository;
+    private final List<String> adminList;
 
     @Autowired
-    public UserTelegramServiceImpl(UserTelegramRepository repository) {
+    public UserTelegramServiceImpl(UserTelegramRepository repository, @Value("#{'${bot.admin}'.split(',')}") List<String> adminList) {
         this.repository = repository;
+        this.adminList = adminList;
     }
 
     @Override
@@ -40,23 +43,48 @@ public class UserTelegramServiceImpl implements UserTelegramService {
     }
 
     @Override
+    public List<UserTelegram> findAllAdmin(){
+        return repository.findAllByAdminTrue();
+    }
+
+    @Override
     public UserTelegram findOrCreateUser(Update update){
-        Long chatId = update.getMessage().getChatId();
+        Long chatId;
+        if(update.hasCallbackQuery()){
+            chatId = update.getCallbackQuery().getMessage().getChatId();
+        } else {
+            chatId = update.getMessage().getChatId();
+        }
+
         Optional<UserTelegram> userTelegramOptional = findByChatId(chatId);
 
         if(userTelegramOptional.isEmpty()){
             UserTelegram user = new UserTelegram();
-            user.setActive(true);
+            user.setActive(false);
             user.setChatId(chatId);
             user.setFirstName(update.getMessage().getChat().getFirstName());
             user.setUserName(update.getMessage().getChat().getUserName());
+            if(checkForAdmin(update.getMessage().getChat().getUserName())){
+                user.setAdmin(true);
+            }
             save(user);
             return user;
         } else {
             UserTelegram userTelegram = userTelegramOptional.get();
-            userTelegram.setActive(true);
+            if(checkForAdmin(update.getMessage().getChat().getUserName())){
+                userTelegram.setAdmin(true);
+            }
             save(userTelegram);
             return userTelegram;
         }
+    }
+
+    private boolean checkForAdmin(String userName){
+        for(String name : adminList){
+            if(name.equals(userName)){
+                return true;
+            }
+        }
+        return false;
     }
 }

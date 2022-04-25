@@ -3,6 +3,7 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
 import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.UserTelegramService;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ public class CallbackCommandContainer {
     private final ImmutableMap<String, CallbackCommand> callbackMap;
     @Autowired
     public CallbackCommandContainer(SendMessageService sendMessageService, OrderService orderService,
-                                    InvoiceService invoiceService){
+                                    InvoiceService invoiceService, UserTelegramService userTelegramService){
         callbackMap = ImmutableMap.<String,CallbackCommand>builder()
                 .put(CallbackCommandName.ADD_ORDER.getName(),new AddOrderCallbackCommand(sendMessageService,orderService))
                 .put(CallbackCommandName.ADD_INVOICE.getName(),new AddInvoiceCallbackCommand(sendMessageService,invoiceService))
@@ -23,6 +24,7 @@ public class CallbackCommandContainer {
                 .put(CallbackCommandName.SHOW_ORDER.getName(),new ShowActiveOrdersCallbackCommand(sendMessageService,orderService))
                 .put(CallbackCommandName.ORDER_MENU.getName(),new OrderMenuCallbackCommand(orderService,sendMessageService))
                 .put(CallbackCommandName.STAT_MENU.getName(),new StatMenuCallbackCommand(sendMessageService, orderService, invoiceService))
+                .put(CallbackCommandName.ADD_STATUS_USER.getName(),new AddStatusUserCallbackCommand(sendMessageService,userTelegramService))
         .build();
     }
 

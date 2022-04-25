@@ -20,7 +20,6 @@ public class StartCommand implements Command{
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         telegramService.findOrCreateUser(update);
-
         sendMessage.sendMainMenu(chatId,START_MESSAGE);
     }
 }

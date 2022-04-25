@@ -168,4 +168,9 @@ public class SendMessageServiceImpl implements SendMessageService {
         InlineKeyboardMarkup markup = inlineKeyboardService.showMenuStatDetails(typeDocument);
         sendMessage(chatId.toString(),message,markup);
     }
+
+    @Override
+    public void sendInviteToAdmin(Long chatIdAdmin,Long chatIdUser, String message){
+        sendMessage(chatIdAdmin.toString(),message, inlineKeyboardService.inviteForAdmin(chatIdUser));
+    }
 }

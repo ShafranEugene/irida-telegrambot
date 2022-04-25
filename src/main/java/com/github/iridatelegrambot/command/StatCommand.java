@@ -22,10 +22,11 @@ public class StatCommand implements Command{
 
     @Override
     public void execute(Update update) {
-        List<UserTelegram> userTelegramList = telegramService.getAllUser();
+        List<UserTelegram> userTelegramList = telegramService.getAllActiveUser();
         String text = STAT_MESSAGE;
         for(UserTelegram user : userTelegramList){
-            text += "\n\t - " + user.getUserName() + ", " + user.getFirstName() + ", Id:" + user.getChatId() + ";";
+            text += "\n\t - " + user.getUserName() + ", " + user.getFirstName() + ", Id:" + user.getChatId() +
+                    ", Админ: " + user.isAdmin() + ";";
         }
         int quantityUsers = telegramService.getAllActiveUser().size();
         sendMessage.sendMenuStat(update.getMessage().getChatId(),String.format(text,quantityUsers));

@@ -3,8 +3,8 @@ package com.github.iridatelegrambot.service.buttons;
 public enum CommandNameForButtons {
 
 
-    ADDORDER("/add_order",1),
-    ADDINVOICE("/add_invoice",1),
+    ADDORDER("/add_order",2),
+    ADDINVOICE("/add_invoice",2),
     SHOWACTIVEORDER("/show_active_orders",1),
     STAT("/stat",1),
     HELP("/help",1);

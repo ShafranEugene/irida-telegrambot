@@ -21,4 +21,6 @@ public interface InlineKeyboardService {
     InlineKeyboardMarkup showMenuStat();
 
     InlineKeyboardMarkup showMenuStatDetails(String typeDocument);
+
+    InlineKeyboardMarkup inviteForAdmin(Long chatIdUser);
 }

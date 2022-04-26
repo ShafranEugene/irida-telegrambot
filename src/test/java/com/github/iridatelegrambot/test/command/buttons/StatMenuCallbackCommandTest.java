@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 public class StatMenuCallbackCommandTest extends AbstractCallbackCommandTest {
     private final StatMenuCallbackCommand statMenuCallbackCommand =
-            new StatMenuCallbackCommand(mSendMessageService,mOrderService,mInvoiceService);
+            new StatMenuCallbackCommand(mSendMessageService,mOrderService,mInvoiceService,mUserTelegramService);
 
     @Test
     void shouldProperlyAllInfoOrders(){
@@ -20,7 +20,7 @@ public class StatMenuCallbackCommandTest extends AbstractCallbackCommandTest {
         //when
         statMenuCallbackCommand.execute(callbackQuery);
         //then
-        Mockito.verify(mSendMessageService).sendMenuStatDetails(12345678L,"Список всех заказов:","order");
+        Mockito.verify(mSendMessageService).sendMenuStatDetails(12345678L,"Список всех заказов:",WaitDocument.ORDER);
     }
 
     @Test

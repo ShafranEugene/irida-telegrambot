@@ -6,6 +6,7 @@ import com.github.iridatelegrambot.entity.BondOrderToInvoice;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
+import com.github.iridatelegrambot.service.UserTelegramServiceImpl;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardServiceImpl;
 import org.aspectj.weaver.ast.Or;
@@ -21,12 +22,14 @@ import java.util.List;
 
 public class InlineKeyboardServiceImplTest {
     private OrderService orderService;
+    private UserTelegramServiceImpl userTelegramService;
     private InlineKeyboardService inlineKeyboardService;
 
     @BeforeEach
     void init(){
         orderService = Mockito.mock(OrderService.class);
-        inlineKeyboardService = new InlineKeyboardServiceImpl(orderService);
+        userTelegramService = Mockito.mock(UserTelegramServiceImpl.class);
+        inlineKeyboardService = new InlineKeyboardServiceImpl(orderService,userTelegramService);
     }
 
     @Test

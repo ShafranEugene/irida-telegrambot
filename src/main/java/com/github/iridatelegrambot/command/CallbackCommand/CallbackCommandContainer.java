@@ -23,8 +23,11 @@ public class CallbackCommandContainer {
                 .put(CallbackCommandName.CANCEL.getName(), new CancelCallbackCommand(orderService,invoiceService,sendMessageService))
                 .put(CallbackCommandName.SHOW_ORDER.getName(),new ShowActiveOrdersCallbackCommand(sendMessageService,orderService))
                 .put(CallbackCommandName.ORDER_MENU.getName(),new OrderMenuCallbackCommand(orderService,sendMessageService))
-                .put(CallbackCommandName.STAT_MENU.getName(),new StatMenuCallbackCommand(sendMessageService, orderService, invoiceService))
+                .put(CallbackCommandName.STAT_MENU.getName(),new StatMenuCallbackCommand(sendMessageService, orderService, invoiceService, userTelegramService))
                 .put(CallbackCommandName.ADD_STATUS_USER.getName(),new AddStatusUserCallbackCommand(sendMessageService,userTelegramService))
+                .put(CallbackCommandName.STAT_DOCUMENT.getName(),new StatDocumentCallbackCommand(sendMessageService))
+                .put(CallbackCommandName.ADMIN_MENU.getName(),new AdminMenuCallbackCommand(sendMessageService, userTelegramService))
+                .put(CallbackCommandName.ADMIN_MENU_SET_STATUS.getName(),new AdminSetStatusCallbackCommand(sendMessageService, userTelegramService))
         .build();
     }
 

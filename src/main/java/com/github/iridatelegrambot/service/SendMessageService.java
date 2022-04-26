@@ -2,6 +2,7 @@ package com.github.iridatelegrambot.service;
 
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
+import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 
@@ -29,7 +30,11 @@ public interface SendMessageService {
 
     void sendMenuStat(Long chatId, String message);
 
-    void sendMenuStatDetails(Long chatId, String message, String typeDocument);
+    void sendMenuStatDetails(Long chatId, String message, WaitDocument waitDocument);
 
     void sendInviteToAdmin(Long chatIdAdmin, Long chatIdUser, String message);
+
+    void sendAdminMenu(Long chatId, String message);
+
+    void sendAdminSetStatus(Long chatId, boolean status, String message);
 }

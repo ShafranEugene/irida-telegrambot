@@ -164,13 +164,23 @@ public class SendMessageServiceImpl implements SendMessageService {
     }
 
     @Override
-    public void sendMenuStatDetails(Long chatId, String message, String typeDocument){
-        InlineKeyboardMarkup markup = inlineKeyboardService.showMenuStatDetails(typeDocument);
+    public void sendMenuStatDetails(Long chatId, String message, WaitDocument waitDocument){
+        InlineKeyboardMarkup markup = inlineKeyboardService.showMenuStatDetails(waitDocument);
         sendMessage(chatId.toString(),message,markup);
     }
 
     @Override
     public void sendInviteToAdmin(Long chatIdAdmin,Long chatIdUser, String message){
         sendMessage(chatIdAdmin.toString(),message, inlineKeyboardService.inviteForAdmin(chatIdUser));
+    }
+
+    @Override
+    public void sendAdminMenu(Long chatId, String message){
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showMenuAdmin());
+    }
+
+    @Override
+    public void sendAdminSetStatus(Long chatId, boolean status, String message){
+        sendMessage(chatId.toString(),message, inlineKeyboardService.showAllUsersForSetStatus(chatId,status));
     }
 }

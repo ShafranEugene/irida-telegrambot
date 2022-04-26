@@ -6,7 +6,10 @@ import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName;
 import com.github.iridatelegrambot.entity.BondOrderToInvoice;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
+import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.OrderService;
+import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -22,9 +25,11 @@ import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.INFO
 public class InlineKeyboardServiceImpl implements InlineKeyboardService{
 
     private final OrderService orderService;
+    private final UserTelegramService userTelegramService;
     @Autowired
-    public InlineKeyboardServiceImpl(OrderService orderService) {
+    public InlineKeyboardServiceImpl(OrderService orderService,UserTelegramService userTelegramService) {
         this.orderService = orderService;
+        this.userTelegramService = userTelegramService;
     }
 
     @Override
@@ -47,6 +52,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         }
 
         String cancel = CallbackCommandName.CANCEL.getNameForService() + "order:id:" + order.getId();
+        CANCEL.setSubCommand("order");
         listJSONOrdersWithCity.add(cancel);
 
         inlineKeyboardMarkup = creatorMarkupWithCity(cityNamesList,listJSONOrdersWithCity);
@@ -75,6 +81,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         }
 
         String cancel = CANCEL.getNameForService() + "invoice:id:" + invoice.getId();
+        CANCEL.setSubCommand("invoice");
         listJSONOrdersWithCity.add(cancel);
 
         inlineKeyboardMarkup = creatorMarkupWithCity(cityNamesList,listJSONOrdersWithCity);
@@ -196,6 +203,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         int idOrder = order.getId();
         buttonsMap.put("Добавить накладную на перемещение",ORDER_MENU.getNameForService() + "addinvoice:id:" + idOrder);
         buttonsMap.put("Удалить заказ",ORDER_MENU.getNameForService() + "delete:id:" + idOrder);
+        ORDER_MENU.setSubCommands(new String[]{"addinvoice","delete"});
         return createMenu(buttonsMap);
     }
 
@@ -204,7 +212,8 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         HashMap<String,String> buttonsMap = new HashMap<>();
         buttonsMap.put("Информация о всех заказах", STAT_MENU.getNameForService() + "infoAllOrders");
         buttonsMap.put("Информация о всех накладных", STAT_MENU.getNameForService() + "infoAllInvoice");
-        buttonsMap.put("Информация для администратора", ADMIN_MENU.getName() + "mainAdminMenu");
+        buttonsMap.put("Информация для администратора", STAT_MENU.getNameForService() + "mainAdminMenu");
+        STAT_MENU.setSubCommands(new String[]{"infoAllOrders","infoAllInvoice","mainAdminMenu"});
         return createMenu(buttonsMap);
     }
 
@@ -222,11 +231,14 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         markup.setKeyboard(rows);
         return markup;
     }
+
     @Override
-    public InlineKeyboardMarkup showMenuStatDetails(String typeDocument){
+    public InlineKeyboardMarkup showMenuStatDetails(WaitDocument waitDocument){
         HashMap<String,String> buttonsMap = new HashMap<>();
-        buttonsMap.put("Получить более детальную информацию по накладной",STAT_MENU.getNameForService() + typeDocument + ":" + INFO.getName());
-        buttonsMap.put("Удалить накладную",STAT_MENU.getNameForService() + typeDocument + ":" + DELETE.getName());
+        buttonsMap.put("Получить более детальную информацию по накладной",STAT_DOCUMENT.getNameForService() +
+                waitDocument.getName() + ":" + INFO.getName());
+        buttonsMap.put("Удалить накладную",STAT_DOCUMENT.getNameForService() +
+                waitDocument.getName() + ":" + DELETE.getName());
         return createMenu(buttonsMap);
     }
 
@@ -235,6 +247,36 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         HashMap<String,String> buttonsMap = new HashMap<>();
         buttonsMap.put("Дать доступ",ADD_STATUS_USER.getNameForService() + "chatId:" + chatIdUser + ":true");
         buttonsMap.put("Отклонить",ADD_STATUS_USER.getNameForService() + "chatId:" + chatIdUser + ":false");
+        return createMenu(buttonsMap);
+    }
+
+    @Override
+    public InlineKeyboardMarkup showMenuAdmin(){
+        HashMap<String,String> buttonsMap = new HashMap<>();
+        buttonsMap.put("Закрыть доступ пользователю",ADMIN_MENU.getNameForService() + "closeStatusUser");
+        buttonsMap.put("Открыть доступ пользователю",ADMIN_MENU.getNameForService() + "openStatusUser");
+        buttonsMap.put("Выдать права администратора пользователю",ADMIN_MENU.getNameForService() + "setAdmin");
+        ADMIN_MENU.setSubCommands(new String[]{"closeStatusUser","openStatusUser","setAdmin"});
+        return createMenu(buttonsMap);
+    }
+
+    @Override
+    public InlineKeyboardMarkup showAllUsersForSetStatus(Long chatId, boolean status) {
+        HashMap<String, String> buttonsMap = new HashMap<>();
+        for (UserTelegram userTelegram : userTelegramService.getAllUser()) {
+            if (status) {
+                if (!userTelegram.isActive()) {
+                    buttonsMap.put(userTelegram.getUserName(), ADMIN_MENU_SET_STATUS.getNameForService() + "setActive:" +
+                            userTelegram.getChatId() + ":true");
+                }
+            } else {
+                if (userTelegram.isActive()) {
+                    buttonsMap.put(userTelegram.getUserName(), ADMIN_MENU_SET_STATUS.getNameForService() + "setActive:" +
+                            userTelegram.getChatId() + ":false");
+                }
+            }
+        }
+        // TODO: 26.04.2022  
         return createMenu(buttonsMap);
     }
 }

@@ -1,6 +1,6 @@
 package com.github.iridatelegrambot.command;
 
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.telegram.telegrambots.meta.api.objects.Update;
 

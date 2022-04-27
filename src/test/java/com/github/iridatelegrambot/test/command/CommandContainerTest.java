@@ -4,8 +4,7 @@ import com.github.iridatelegrambot.command.Command;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
 import com.github.iridatelegrambot.command.UnknownCommand;
-import com.github.iridatelegrambot.service.SendMessageService;
-import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.send.*;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +17,18 @@ class CommandContainerTest {
     private CommandContainer container;
     private SendMessageService mSendMessageService;
     private UserTelegramService mUserTelegramService;
+    private SendMessageMainMenuService sendMainMenu;
+    private SendMessageStatMenuService sendMessageStatMenuService;
+    private SendMessageOrderMenuService sendMessageOrderMenuService;
 
     @BeforeEach
     void init(){
         mSendMessageService = Mockito.mock(SendMessageServiceImpl.class);
         mUserTelegramService = Mockito.mock(UserTelegramService.class);
-        container = new CommandContainer(mSendMessageService,mUserTelegramService);
+        sendMainMenu = Mockito.mock(SendMessageServiceImpl.class);
+        sendMessageStatMenuService = Mockito.mock(SendMessageServiceImpl.class);
+        sendMessageOrderMenuService = Mockito.mock(SendMessageServiceImpl.class);
+        container = new CommandContainer(mSendMessageService,mUserTelegramService,sendMainMenu,sendMessageStatMenuService,sendMessageOrderMenuService);
     }
 
     @Test

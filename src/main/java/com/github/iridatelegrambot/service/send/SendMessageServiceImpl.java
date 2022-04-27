@@ -1,4 +1,4 @@
-package com.github.iridatelegrambot.service;
+package com.github.iridatelegrambot.service.send;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,9 @@ import java.util.Optional;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
-public class SendMessageServiceImpl implements SendMessageService {
+public class SendMessageServiceImpl implements SendMessageCitiesService,SendMessageMainMenuService, SendMessageWithOrderService,
+                                            SendMessageOrderMenuService,SendMessageStatMenuService,SendMessageInviteForAdminService,
+                                            SendMessageAdminMenuService{
 
     private final IridaBot iridaBot;
     private final InlineKeyboardService inlineKeyboardService;
@@ -181,6 +183,11 @@ public class SendMessageServiceImpl implements SendMessageService {
 
     @Override
     public void sendAdminSetStatus(Long chatId, boolean status, String message){
-        sendMessage(chatId.toString(),message, inlineKeyboardService.showAllUsersForSetStatus(chatId,status));
+        sendMessage(chatId.toString(),message, inlineKeyboardService.showAllUsersForSetStatus(status));
+    }
+
+    @Override
+    public void sendUsersForAdmin(Long chatId, String message){
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showAllUsersForSetAdmin());
     }
 }

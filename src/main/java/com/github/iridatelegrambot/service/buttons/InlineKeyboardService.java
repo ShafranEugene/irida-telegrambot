@@ -27,5 +27,7 @@ public interface InlineKeyboardService {
 
     InlineKeyboardMarkup showMenuAdmin();
 
-    InlineKeyboardMarkup showAllUsersForSetStatus(Long chatId, boolean status);
+    InlineKeyboardMarkup showAllUsersForSetStatus(boolean status);
+
+    InlineKeyboardMarkup showAllUsersForSetAdmin();
 }

@@ -4,15 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.service.InvoiceService;
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageWithOrderService;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 public class AddInvoiceCallbackCommand implements CallbackCommand {
 
-    private final SendMessageService sendMessageService;
+    private final SendMessageWithOrderService sendMessageService;
     private final InvoiceService invoiceService;
 
-    public AddInvoiceCallbackCommand(SendMessageService sendMessageService,InvoiceService invoiceService){
+    public AddInvoiceCallbackCommand(SendMessageWithOrderService sendMessageService,InvoiceService invoiceService){
         this.sendMessageService = sendMessageService;
         this.invoiceService = invoiceService;
     }

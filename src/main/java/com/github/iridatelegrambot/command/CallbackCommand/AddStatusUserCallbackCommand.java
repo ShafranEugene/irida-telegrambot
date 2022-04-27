@@ -1,7 +1,7 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
 import com.github.iridatelegrambot.entity.UserTelegram;
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageService;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 

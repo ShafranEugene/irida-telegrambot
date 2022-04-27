@@ -3,8 +3,10 @@ package com.github.iridatelegrambot.test.service.statuswait;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.AnswerCatcherService;
 import com.github.iridatelegrambot.service.AnswerCatcherServiceImpl;
-import com.github.iridatelegrambot.service.SendMessageService;
-import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.send.SendMessageCitiesService;
+import com.github.iridatelegrambot.service.send.SendMessageInviteForAdminService;
+import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.statuswait.HandleWaitNumberImpl;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
@@ -19,7 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.util.Optional;
 
 public class HandleWaitNumberImplTest {
-    private SendMessageService sendMessageService;
+    private SendMessageCitiesService sendMessageService;
     private AnswerCatcherService answerCatcherService;
     private HandleWaitNumberImpl handleWaitNumber;
     private final Long chatId = 12345678L;

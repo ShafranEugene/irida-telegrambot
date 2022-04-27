@@ -4,17 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageMainMenuService;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.Optional;
 
 public class AddOrderCallbackCommand implements CallbackCommand{
 
-    private final SendMessageService sendMessageService;
+    private final SendMessageMainMenuService sendMessageService;
     private final OrderService orderService;
 
-    public AddOrderCallbackCommand(SendMessageService sendMessageService, OrderService orderService) {
+    public AddOrderCallbackCommand(SendMessageMainMenuService sendMessageService, OrderService orderService) {
         this.sendMessageService = sendMessageService;
         this.orderService = orderService;
     }

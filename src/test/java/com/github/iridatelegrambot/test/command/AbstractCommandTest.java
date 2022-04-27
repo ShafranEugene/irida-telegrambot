@@ -1,7 +1,7 @@
 package com.github.iridatelegrambot.test.command;
 
 import com.github.iridatelegrambot.command.Command;
-import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.bot.IridaBot;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;

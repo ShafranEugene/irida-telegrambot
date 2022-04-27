@@ -256,12 +256,13 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         buttonsMap.put("Закрыть доступ пользователю",ADMIN_MENU.getNameForService() + "closeStatusUser");
         buttonsMap.put("Открыть доступ пользователю",ADMIN_MENU.getNameForService() + "openStatusUser");
         buttonsMap.put("Выдать права администратора пользователю",ADMIN_MENU.getNameForService() + "setAdmin");
+        buttonsMap.put("Снять с меня правад администратора",ADMIN_MENU.getNameForService() + "pullOffAdmin");
         ADMIN_MENU.setSubCommands(new String[]{"closeStatusUser","openStatusUser","setAdmin"});
         return createMenu(buttonsMap);
     }
 
     @Override
-    public InlineKeyboardMarkup showAllUsersForSetStatus(Long chatId, boolean status) {
+    public InlineKeyboardMarkup showAllUsersForSetStatus(boolean status) {
         HashMap<String, String> buttonsMap = new HashMap<>();
         for (UserTelegram userTelegram : userTelegramService.getAllUser()) {
             if (status) {
@@ -277,6 +278,16 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
             }
         }
         // TODO: 26.04.2022  
+        return createMenu(buttonsMap);
+    }
+
+    @Override
+    public InlineKeyboardMarkup showAllUsersForSetAdmin(){
+        HashMap<String,String> buttonsMap = new HashMap<>();
+        for(UserTelegram userTelegram : userTelegramService.getAllUser()){
+            buttonsMap.put(userTelegram.getUserName(),ADMIN_MENU_SET_STATUS.getNameForService() + "setAdmin:" +
+                    userTelegram.getChatId() + ":true");
+        }
         return createMenu(buttonsMap);
     }
 }

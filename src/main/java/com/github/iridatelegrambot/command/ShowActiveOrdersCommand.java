@@ -1,13 +1,14 @@
 package com.github.iridatelegrambot.command;
 
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageOrderMenuService;
+import com.github.iridatelegrambot.service.send.SendMessageService;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 public class ShowActiveOrdersCommand implements Command {
-    private final SendMessageService sendMessageService;
+    private final SendMessageOrderMenuService sendMessageService;
     public static final String SHOW_ACTIVE_ORDERS_MESSAGE = "Все активные заказы:";
 
-    public ShowActiveOrdersCommand(SendMessageService sendMessageService) {
+    public ShowActiveOrdersCommand(SendMessageOrderMenuService sendMessageService) {
         this.sendMessageService = sendMessageService;
     }
 

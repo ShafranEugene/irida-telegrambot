@@ -3,7 +3,7 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 import com.github.iridatelegrambot.command.AddInvoiceCommand;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageService;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;

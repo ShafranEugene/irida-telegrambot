@@ -2,6 +2,7 @@ package com.github.iridatelegrambot.test.command.buttons;
 
 import com.github.iridatelegrambot.service.*;
 
+import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;

@@ -7,18 +7,16 @@ import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.SendMessageService;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
+import com.github.iridatelegrambot.service.send.SendMessageWithOrderService;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 public class AddOrderToInvoiceCallbackCommand implements CallbackCommand {
 
-    private final SendMessageService sendMessageService;
+    private final SendMessageWithOrderService sendMessageService;
     private final InvoiceService invoiceService;
     private final OrderService orderService;
 
-    public AddOrderToInvoiceCallbackCommand(SendMessageService sendMessageService, InvoiceService invoiceService,
+    public AddOrderToInvoiceCallbackCommand(SendMessageWithOrderService sendMessageService, InvoiceService invoiceService,
                                             OrderService orderService) {
         this.sendMessageService = sendMessageService;
         this.invoiceService = invoiceService;
@@ -27,6 +25,7 @@ public class AddOrderToInvoiceCallbackCommand implements CallbackCommand {
 
     @Override
     public void execute(CallbackQuery callbackQuery) {
+        Long chatId = callbackQuery.getMessage().getChatId();
         String query = callbackQuery.getData();
         String JsonBond = query.substring(query.indexOf('{'));
 
@@ -35,6 +34,9 @@ public class AddOrderToInvoiceCallbackCommand implements CallbackCommand {
             BondOrderToInvoice bond = objectMapper.readValue(JsonBond,BondOrderToInvoice.class);
             int idOrder = bond.getIdOrder();
             int idInvoice = bond.getIdInvoice();
+            if(invoiceService.getInvoiceById(idInvoice).isEmpty() || orderService.getOrderById(idOrder).isEmpty()){
+                sendMessageService.sendMessage(chatId.toString(),"Заказ или накладную с таким номер не найдено.");
+            }
             Invoice invoice = invoiceService.getInvoiceById(idInvoice).get();
             Order order = orderService.getOrderById(idOrder).get();
             invoice.setOrder(order);

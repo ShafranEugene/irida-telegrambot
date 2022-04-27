@@ -5,8 +5,9 @@ import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageAdminMenuService;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.service.send.SendMessageStatMenuService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
@@ -15,14 +16,17 @@ import java.util.Optional;
 
 public class StatMenuCallbackCommand implements CallbackCommand {
 
-    private final SendMessageService sendMessageService;
+    private final SendMessageStatMenuService sendMessageService;
+    private final SendMessageAdminMenuService sendAdminMenu;
     private final OrderService orderService;
     private final InvoiceService invoiceService;
     private final UserTelegramService userTelegramService;
 
-    public StatMenuCallbackCommand(SendMessageService sendMessageService, OrderService orderService,
-                                   InvoiceService invoiceService, UserTelegramService userTelegramService) {
+    public StatMenuCallbackCommand(SendMessageStatMenuService sendMessageService, OrderService orderService,
+                                   InvoiceService invoiceService, UserTelegramService userTelegramService,
+                                   SendMessageAdminMenuService sendAdminMenu) {
         this.sendMessageService = sendMessageService;
+        this.sendAdminMenu = sendAdminMenu;
         this.orderService = orderService;
         this.invoiceService = invoiceService;
         this.userTelegramService = userTelegramService;
@@ -65,7 +69,7 @@ public class StatMenuCallbackCommand implements CallbackCommand {
         Optional<UserTelegram> userOptional = userTelegramService.findByChatId(chatId);
         if(userOptional.isPresent()){
             if(userOptional.get().isAdmin()) {
-                sendMessageService.sendAdminMenu(chatId, "Меню администратора:");
+                sendAdminMenu.sendAdminMenu(chatId, "Меню администратора:");
             } else {
                 sendMessageService.sendMessage(chatId.toString(),"У Вас нет прав администратора.");
             }

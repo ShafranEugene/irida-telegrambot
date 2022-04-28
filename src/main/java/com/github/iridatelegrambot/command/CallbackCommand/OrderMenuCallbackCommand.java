@@ -4,16 +4,20 @@ import com.github.iridatelegrambot.command.AddInvoiceCommand;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
 import com.github.iridatelegrambot.service.send.SendMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Optional;
-
+@Component
 public class OrderMenuCallbackCommand implements CallbackCommand {
     private final OrderService orderService;
     private final SendMessageService sendMessageService;
+    private final CallbackCommandName commandName = CallbackCommandName.ORDER_MENU;
 
+    @Autowired
     public OrderMenuCallbackCommand(OrderService orderService, SendMessageService sendMessageService) {
         this.orderService = orderService;
         this.sendMessageService = sendMessageService;
@@ -45,5 +49,10 @@ public class OrderMenuCallbackCommand implements CallbackCommand {
             sendMessageService.sendMessage(chatId.toString(),"Заказ с номером \"" + order.getNumber() +
                     "\" был удален.");
         }
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 }

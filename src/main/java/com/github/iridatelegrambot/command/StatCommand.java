@@ -4,14 +4,16 @@ import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.send.SendMessageService;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.service.send.SendMessageStatMenuService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
-
+@Component
 public class StatCommand implements Command{
 
     private final SendMessageStatMenuService sendMessage;
     private final UserTelegramService telegramService;
+    private final CommandName commandName = CommandName.STAT;
 
     public final static String STAT_MESSAGE ="Количество активных пользователей : %s\nАктивные пользователеи:";
 
@@ -30,5 +32,10 @@ public class StatCommand implements Command{
         }
         int quantityUsers = telegramService.getAllActiveUser().size();
         sendMessage.sendMenuStat(update.getMessage().getChatId(),String.format(text,quantityUsers));
+    }
+
+    @Override
+    public CommandName getCommand() {
+        return commandName;
     }
 }

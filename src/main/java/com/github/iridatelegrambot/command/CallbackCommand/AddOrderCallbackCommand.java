@@ -5,15 +5,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
 import com.github.iridatelegrambot.service.send.SendMessageMainMenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.Optional;
 
+@Component
 public class AddOrderCallbackCommand implements CallbackCommand{
 
     private final SendMessageMainMenuService sendMessageService;
     private final OrderService orderService;
+    private final CallbackCommandName commandName = CallbackCommandName.ADD_ORDER;
 
+    @Autowired
     public AddOrderCallbackCommand(SendMessageMainMenuService sendMessageService, OrderService orderService) {
         this.sendMessageService = sendMessageService;
         this.orderService = orderService;
@@ -45,5 +50,10 @@ public class AddOrderCallbackCommand implements CallbackCommand{
         }
 
 
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 }

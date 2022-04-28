@@ -1,8 +1,9 @@
 package com.github.iridatelegrambot.command;
 
 import com.github.iridatelegrambot.service.send.SendMessageService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
+@Component
 public class UnknownCommand implements Command{
 
     private final SendMessageService sendMessage;
@@ -16,5 +17,15 @@ public class UnknownCommand implements Command{
     @Override
     public void execute(Update update) {
         sendMessage.sendMessage(update.getMessage().getChatId().toString(),UNKNOWN_MESSAGE);
+    }
+
+    @Override
+    public CommandName getCommand() {
+        return null;
+    }
+
+    @Override
+    public void containerFiller(CommandContainer commandContainer) {
+        commandContainer.setUnknownCommand(this);
     }
 }

@@ -74,7 +74,7 @@ public class InlineKeyboardServiceImplTest {
         String bondJson = "null";
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            bondJson = "addOrdToInv:" + objectMapper.writeValueAsString(bondOrderToInvoice);
+            bondJson = "add_ord_to_inv:" + objectMapper.writeValueAsString(bondOrderToInvoice);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

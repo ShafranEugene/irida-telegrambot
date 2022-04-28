@@ -5,13 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.send.SendMessageWithOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
+@Component
 public class AddInvoiceCallbackCommand implements CallbackCommand {
 
     private final SendMessageWithOrderService sendMessageService;
     private final InvoiceService invoiceService;
+    private final CallbackCommandName commandName = CallbackCommandName.ADD_INVOICE;
 
+    @Autowired
     public AddInvoiceCallbackCommand(SendMessageWithOrderService sendMessageService,InvoiceService invoiceService){
         this.sendMessageService = sendMessageService;
         this.invoiceService = invoiceService;
@@ -42,5 +47,10 @@ public class AddInvoiceCallbackCommand implements CallbackCommand {
         }
 
 
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 }

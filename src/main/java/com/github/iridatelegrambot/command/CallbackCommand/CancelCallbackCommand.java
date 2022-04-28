@@ -3,15 +3,18 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
 import com.github.iridatelegrambot.service.send.SendMessageMainMenuService;
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-
+@Component
 public class CancelCallbackCommand implements CallbackCommand{
 
     private final OrderService orderService;
     private final InvoiceService invoiceService;
     private final SendMessageMainMenuService sendMessageService;
+    private final CallbackCommandName commandName = CallbackCommandName.CANCEL;
 
+    @Autowired
     public CancelCallbackCommand(OrderService orderService,InvoiceService invoiceService, SendMessageMainMenuService sendMessageService){
         this.orderService = orderService;
         this.invoiceService = invoiceService;
@@ -33,5 +36,10 @@ public class CancelCallbackCommand implements CallbackCommand{
             sendMessageService.sendMainMenu(chatId,"Накладная была отменена.");
         }
 
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 }

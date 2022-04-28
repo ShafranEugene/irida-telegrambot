@@ -3,14 +3,16 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.send.SendMessageService;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.Optional;
-
+@Component
 public class AdminSetStatusCallbackCommand implements CallbackCommand {
     private final SendMessageService sendMessageService;
     private final UserTelegramService userTelegramService;
     private Long chatId;
+    private final CallbackCommandName commandName = CallbackCommandName.ADMIN_MENU_SET_STATUS;
 
     public AdminSetStatusCallbackCommand(SendMessageService sendMessageService, UserTelegramService userTelegramService) {
         this.sendMessageService = sendMessageService;
@@ -27,6 +29,11 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
         } else if(data[1].equals("setAdmin")){
             setAdmin(Long.valueOf(data[2]));
         }
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 
     private void setStatusUser(Long chatIdUser, boolean status){

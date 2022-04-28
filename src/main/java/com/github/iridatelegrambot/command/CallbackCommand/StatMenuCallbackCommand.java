@@ -9,11 +9,13 @@ import com.github.iridatelegrambot.service.send.SendMessageAdminMenuService;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.service.send.SendMessageStatMenuService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.List;
 import java.util.Optional;
-
+@Component
 public class StatMenuCallbackCommand implements CallbackCommand {
 
     private final SendMessageStatMenuService sendMessageService;
@@ -21,7 +23,9 @@ public class StatMenuCallbackCommand implements CallbackCommand {
     private final OrderService orderService;
     private final InvoiceService invoiceService;
     private final UserTelegramService userTelegramService;
+    private final CallbackCommandName commandName = CallbackCommandName.STAT_MENU;
 
+    @Autowired
     public StatMenuCallbackCommand(SendMessageStatMenuService sendMessageService, OrderService orderService,
                                    InvoiceService invoiceService, UserTelegramService userTelegramService,
                                    SendMessageAdminMenuService sendAdminMenu) {
@@ -45,6 +49,11 @@ public class StatMenuCallbackCommand implements CallbackCommand {
         } else if(text.equals("mainAdminMenu")){
             sendAdminMenu(chatId);
         }
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 
     private void sendInfoAllOrders(Long chatId){

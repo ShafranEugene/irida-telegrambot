@@ -3,15 +3,19 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.send.SendMessageAdminMenuService;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.Optional;
-
+@Component
 public class AdminMenuCallbackCommand implements CallbackCommand {
     private final SendMessageAdminMenuService sendMessageService;
     private final UserTelegramService userTelegramService;
     private Long chatId;
+    private final CallbackCommandName commandName = CallbackCommandName.ADMIN_MENU;
 
+    @Autowired
     public AdminMenuCallbackCommand(SendMessageAdminMenuService sendMessageService, UserTelegramService userTelegramService) {
         this.sendMessageService = sendMessageService;
         this.userTelegramService = userTelegramService;
@@ -32,6 +36,11 @@ public class AdminMenuCallbackCommand implements CallbackCommand {
         } else if(command.equals("pullOffAdmin")){
             pullOffAdmin();
         }
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 
     private void sendListUsersForCloseStatus(){

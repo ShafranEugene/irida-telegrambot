@@ -73,7 +73,7 @@ public enum WaitDocument {
         return name;
     }
 
-    public void addWaitInvoiceForOrder(Long chatId, Integer idOrder){
+    public void setIdOrderToInvoice(Long chatId, Integer idOrder){
         if(this == INVOICE){
             INVOICE.setWaitNumber(chatId,true,WaitTypeStatus.ADD);
             INVOICE.idOrderForInvoice.put(chatId,idOrder);

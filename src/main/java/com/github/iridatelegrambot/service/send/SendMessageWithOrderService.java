@@ -5,7 +5,7 @@ import com.github.iridatelegrambot.entity.Order;
 
 public interface SendMessageWithOrderService extends SendMessageService{
 
-    void sendActiveOrdersForInvoice(Long chatId, String message, Invoice invoice);
+    void sendActiveOrdersForInvoice(Long chatId, String message,Integer messageId, Invoice invoice);
 
-    void sendMessageCloseOrder(Long chatId, String message, Order order);
+    void sendMessageCloseOrder(Long chatId, Integer messageId, String message, Order order);
 }

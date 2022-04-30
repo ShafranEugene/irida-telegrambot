@@ -12,6 +12,7 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
     private final SendMessageService sendMessageService;
     private final UserTelegramService userTelegramService;
     private Long chatId;
+    private Integer messageId;
     private final CallbackCommandName commandName = CallbackCommandName.ADMIN_MENU_SET_STATUS;
 
     public AdminSetStatusCallbackCommand(SendMessageService sendMessageService, UserTelegramService userTelegramService) {
@@ -21,6 +22,7 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
 
     @Override
     public void execute(CallbackQuery callbackQuery) {
+        messageId = callbackQuery.getMessage().getMessageId();
         chatId = callbackQuery.getMessage().getChatId();
         String[] data = callbackQuery.getData().split(":");
 
@@ -42,7 +44,7 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
             UserTelegram userTelegram = userOptional.get();
             userTelegram.setActive(status);
             userTelegramService.save(userTelegram);
-            sendMessageService.sendMessage(chatId.toString(),"Готво");
+            sendMessageService.editMessage(chatId,messageId,"Готово, статус пользователя был изменен.");
         } else {
             sendMessageService.sendMessage(chatId.toString(),"Не смог найти такого пользователя.");
         }
@@ -54,7 +56,7 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
             UserTelegram userTelegram = userOptional.get();
             userTelegram.setAdmin(true);
             userTelegramService.save(userTelegram);
-            sendMessageService.sendMessage(chatId.toString(),"Готово");
+            sendMessageService.editMessage(chatId,messageId,"Готово. Пользователю были выданы права администратора.");
             sendMessageService.sendMessage(chatIdUser.toString(),"Вам было выдано права администратора");
         } else {
             sendMessageService.sendMessage(chatId.toString(),"Не смог найти такого пользователя.");

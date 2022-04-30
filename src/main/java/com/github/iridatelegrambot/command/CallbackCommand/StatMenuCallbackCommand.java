@@ -24,6 +24,7 @@ public class StatMenuCallbackCommand implements CallbackCommand {
     private final InvoiceService invoiceService;
     private final UserTelegramService userTelegramService;
     private final CallbackCommandName commandName = CallbackCommandName.STAT_MENU;
+    private Integer idMessage;
 
     @Autowired
     public StatMenuCallbackCommand(SendMessageStatMenuService sendMessageService, OrderService orderService,
@@ -38,6 +39,7 @@ public class StatMenuCallbackCommand implements CallbackCommand {
 
     @Override
     public void execute(CallbackQuery callbackQuery) {
+        idMessage = callbackQuery.getMessage().getMessageId();
         Long chatId = callbackQuery.getMessage().getChatId();
         String[] data = callbackQuery.getData().split(":");
         String text = data[1];
@@ -78,7 +80,7 @@ public class StatMenuCallbackCommand implements CallbackCommand {
         Optional<UserTelegram> userOptional = userTelegramService.findByChatId(chatId);
         if(userOptional.isPresent()){
             if(userOptional.get().isAdmin()) {
-                sendAdminMenu.sendAdminMenu(chatId, "Меню администратора:");
+                sendAdminMenu.sendAdminMenu(chatId, "Меню администратора:",idMessage);
             } else {
                 sendMessageService.sendMessage(chatId.toString(),"У Вас нет прав администратора.");
             }

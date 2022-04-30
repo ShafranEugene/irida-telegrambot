@@ -27,6 +27,7 @@ public class AddInvoiceCallbackCommand implements CallbackCommand {
     @Override
     public void execute(CallbackQuery callbackQuery) {
         Long chatId = callbackQuery.getMessage().getChatId();
+        Integer messageId = callbackQuery.getMessage().getMessageId();
         String query = callbackQuery.getData();
         String JSONData = query.substring(query.indexOf('{'));
 
@@ -41,7 +42,8 @@ public class AddInvoiceCallbackCommand implements CallbackCommand {
             Invoice invoiceJson = objectMapper.readValue(JSONData,Invoice.class);
             invoice.setCity(invoiceJson.getCity());
             invoiceService.save(invoice);
-            sendMessageService.sendActiveOrdersForInvoice(chatId,"Выберете заказ:",invoice);
+            sendMessageService.sendActiveOrdersForInvoice(chatId,"Выберете заказ:",callbackQuery.getMessage().getMessageId(),
+                    invoice);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

@@ -30,6 +30,7 @@ public class AddOrderToInvoiceCallbackCommand implements CallbackCommand {
 
     @Override
     public void execute(CallbackQuery callbackQuery) {
+        Integer messageId = callbackQuery.getMessage().getMessageId();
         Long chatId = callbackQuery.getMessage().getChatId();
         String query = callbackQuery.getData();
         String JsonBond = query.substring(query.indexOf('{'));
@@ -47,7 +48,7 @@ public class AddOrderToInvoiceCallbackCommand implements CallbackCommand {
             invoice.setOrder(order);
             invoiceService.save(invoice);
 
-            sendMessageService.sendMessageCloseOrder(callbackQuery.getMessage().getChatId(),"Заказ завершен?",order);
+            sendMessageService.sendMessageCloseOrder(callbackQuery.getMessage().getChatId(), messageId,"Заказ завершен?",order);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

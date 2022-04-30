@@ -14,6 +14,7 @@ public class AdminMenuCallbackCommand implements CallbackCommand {
     private final UserTelegramService userTelegramService;
     private Long chatId;
     private final CallbackCommandName commandName = CallbackCommandName.ADMIN_MENU;
+    private Integer messageId;
 
     @Autowired
     public AdminMenuCallbackCommand(SendMessageAdminMenuService sendMessageService, UserTelegramService userTelegramService) {
@@ -24,6 +25,7 @@ public class AdminMenuCallbackCommand implements CallbackCommand {
     @Override
     public void execute(CallbackQuery callbackQuery) {
         chatId = callbackQuery.getMessage().getChatId();
+        messageId = callbackQuery.getMessage().getMessageId();
         String[] data = callbackQuery.getData().split(":");
         String command = data[1];
 
@@ -44,15 +46,15 @@ public class AdminMenuCallbackCommand implements CallbackCommand {
     }
 
     private void sendListUsersForCloseStatus(){
-        sendMessageService.sendAdminSetStatus(chatId,false,"Выберете пользователя которому хотите закрыть доступ.");
+        sendMessageService.sendAdminSetStatus(chatId,false,"Выберете пользователя которому хотите закрыть доступ.",messageId);
     }
 
     private void sendListUsersForOpenStatus(){
-        sendMessageService.sendAdminSetStatus(chatId,true,"Выберете пользователя которому хотите открыть доступ.");
+        sendMessageService.sendAdminSetStatus(chatId,true,"Выберете пользователя которому хотите открыть доступ.",messageId);
     }
 
     private void sendListUsersForSetAdmin(){
-        sendMessageService.sendUsersForAdmin(chatId,"Выберете пользователю которому хотите выдать права администратора");
+        sendMessageService.sendUsersForAdmin(chatId,"Выберете пользователю которому хотите выдать права администратора", messageId);
     }
 
     private void pullOffAdmin(){

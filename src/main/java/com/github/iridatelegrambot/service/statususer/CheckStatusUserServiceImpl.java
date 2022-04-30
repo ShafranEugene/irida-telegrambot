@@ -32,6 +32,8 @@ public class CheckStatusUserServiceImpl implements CheckStatusUserService {
         Long chatId;
         if(update.hasCallbackQuery()){
             chatId = update.getCallbackQuery().getMessage().getChatId();
+        } else if(update.hasEditedMessage()) {
+            chatId = update.getEditedMessage().getChat().getId();
         } else {
             chatId = update.getMessage().getChatId();
         }

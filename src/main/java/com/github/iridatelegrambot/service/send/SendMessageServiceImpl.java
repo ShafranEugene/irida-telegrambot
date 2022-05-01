@@ -159,8 +159,8 @@ public class SendMessageServiceImpl implements SendMessageCitiesService,SendMess
             sendMessageCloseOrderIfInvoiceHaveOrder(chatId,invoice,messageId);
             return;
         }
-        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.markupActiveOrdersForInvoice(invoice);
-        sendMessage(chatId.toString(),message,inlineKeyboardMarkup);
+        deleteMessage(chatId,messageId);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.markupActiveOrdersForInvoice(invoice));
     }
 
     private void sendMessageCloseOrderIfInvoiceHaveOrder(Long chatId, Invoice invoice, Integer messageId){
@@ -188,8 +188,8 @@ public class SendMessageServiceImpl implements SendMessageCitiesService,SendMess
 
     @Override
     public void sendMessageCloseOrder(Long chatId, Integer messageId, String message, Order order){
-        editMessage(chatId,messageId,message);
-        editButtons(chatId,messageId,inlineKeyboardService.closeOrder(order));
+        deleteMessage(chatId,messageId);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.closeOrder(order));
     }
 
     @Override
@@ -210,9 +210,9 @@ public class SendMessageServiceImpl implements SendMessageCitiesService,SendMess
     }
 
     @Override
-    public void sendMenuStatDetails(Long chatId, String message, WaitDocument waitDocument){
-        InlineKeyboardMarkup markup = inlineKeyboardService.showMenuStatDetails(waitDocument);
-        sendMessage(chatId.toString(),message,markup);
+    public void sendMenuStatDetails(Long chatId, String message,Integer messageId, WaitDocument waitDocument){
+        deleteMessage(chatId,messageId);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showMenuStatDetails(waitDocument));
     }
 
     @Override
@@ -222,19 +222,19 @@ public class SendMessageServiceImpl implements SendMessageCitiesService,SendMess
 
     @Override
     public void sendAdminMenu(Long chatId, String message, Integer idMessage){
-        editMessage(chatId,idMessage,message);
-        editButtons(chatId,idMessage,inlineKeyboardService.showMenuAdmin());
+        deleteMessage(chatId,idMessage);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showMenuAdmin());
     }
 
     @Override
     public void sendAdminSetStatus(Long chatId, boolean status, String message, Integer messageId){
-        editMessage(chatId,messageId,message);
-        editButtons(chatId,messageId,inlineKeyboardService.showAllUsersForSetStatus(status));
+        deleteMessage(chatId,messageId);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showAllUsersForSetStatus(status));
     }
 
     @Override
     public void sendUsersForAdmin(Long chatId, String message, Integer messageId){
-        editMessage(chatId,messageId,message);
-        editButtons(chatId,messageId,inlineKeyboardService.showAllUsersForSetAdmin());
+        deleteMessage(chatId,messageId);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showAllUsersForSetAdmin());
     }
 }

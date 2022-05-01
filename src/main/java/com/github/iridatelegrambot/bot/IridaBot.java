@@ -3,6 +3,7 @@ package com.github.iridatelegrambot.bot;
 import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContainer;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
+import com.github.iridatelegrambot.service.buttons.CommandNameForButtons;
 import com.github.iridatelegrambot.service.statususer.CheckStatusUserService;
 import com.github.iridatelegrambot.service.statuswait.HandleWaitNumber;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.util.Objects;
 
 
 @Component
@@ -80,9 +83,11 @@ public class IridaBot extends TelegramLongPollingBot {
                 String commandIdentifier = message.split(" ")[0].toLowerCase();
 
                 container.findCommand(commandIdentifier).execute(update);
+            } else if(CommandNameForButtons.hasMainCommand(message)) {
+                    container.findCommand(Objects.requireNonNull(CommandNameForButtons.findCommandName(message)).getCommandName()).execute(update);
             } else {
-                container.findCommand(CommandName.NO.getCommandName()).execute(update);
-            }
+                    container.findCommand(CommandName.NO.getCommandName()).execute(update);
+                }
         }
     }
 

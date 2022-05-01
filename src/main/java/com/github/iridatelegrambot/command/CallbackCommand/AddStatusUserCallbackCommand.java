@@ -3,6 +3,7 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.send.SendMessageService;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.service.statususer.MuteInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -14,11 +15,13 @@ public class AddStatusUserCallbackCommand implements CallbackCommand {
     private final SendMessageService sendMessageService;
     private final UserTelegramService userTelegramService;
     private final CallbackCommandName commandName = CallbackCommandName.ADD_STATUS_USER;
+    private final MuteInviteService muteInviteService;
 
     @Autowired
-    public AddStatusUserCallbackCommand(SendMessageService sendMessageService, UserTelegramService userTelegramService) {
+    public AddStatusUserCallbackCommand(SendMessageService sendMessageService,MuteInviteService muteInviteService, UserTelegramService userTelegramService) {
         this.sendMessageService = sendMessageService;
         this.userTelegramService = userTelegramService;
+        this.muteInviteService = muteInviteService;
     }
 
     @Override
@@ -43,6 +46,7 @@ public class AddStatusUserCallbackCommand implements CallbackCommand {
             UserTelegram userTelegram = optionalUserTelegram.get();
             userTelegram.setActive(false);
             userTelegramService.save(userTelegram);
+            muteInviteService.setMuteOfDay(Long.valueOf(chatIdUser));
             sendMessageService.sendMessage(chatId.toString(),
                     "Пользователю \"" + userTelegram.getUserName() + "\" закрыт доступ к боту.");
             sendMessageService.sendMessage(chatIdUser,"Администратор закрыл Вам доступ к боту.");

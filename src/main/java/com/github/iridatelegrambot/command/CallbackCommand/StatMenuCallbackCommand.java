@@ -62,18 +62,18 @@ public class StatMenuCallbackCommand implements CallbackCommand {
         List<Order> orderList = orderService.getAllOrders();
         StringBuilder info = new StringBuilder("Список всех заказов:");
         for(Order order : orderList){
-            info.append("\n\t- Номер - ").append(order.getNumber()).append("; Дата добавления - ").append(order.getDate()).append(";");
+            info.append("\n\t- Номер - ").append(order.getNumber()).append("; Город - ").append(order.getCity()).append("; Добавлен - ").append(order.getDate()).append(";");
         }
-        sendMessageService.sendMenuStatDetails(chatId,info.toString(),WaitDocument.ORDER);
+        sendMessageService.sendMenuStatDetails(chatId,info.toString(),idMessage, WaitDocument.ORDER);
     }
 
     private void sendInfoAllInvoice(Long chatId){
         List<Invoice> invoices = invoiceService.getAllInvoice();
         StringBuilder info = new StringBuilder("Список всех накладных на перемещение:");
         for (Invoice invoice : invoices){
-            info.append("\n\t- Номер - ").append(invoice.getNumber()).append("; Дата добавления - ").append(invoice.getDate()).append(";");
+            info.append("\n\t- Номер - ").append(invoice.getNumber()).append("; Город - ").append(invoice.getCity()).append("; Добавлен - ").append(invoice.getDate()).append(";");
         }
-        sendMessageService.sendMenuStatDetails(chatId,info.toString(),WaitDocument.INVOICE);
+        sendMessageService.sendMenuStatDetails(chatId,info.toString(),idMessage,WaitDocument.INVOICE);
     }
 
     private void sendAdminMenu(Long chatId){

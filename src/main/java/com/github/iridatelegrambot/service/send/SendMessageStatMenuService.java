@@ -6,5 +6,5 @@ public interface SendMessageStatMenuService extends SendMessageService {
 
     void sendMenuStat(Long chatId, String message);
 
-    void sendMenuStatDetails(Long chatId, String message, WaitDocument waitDocument);
+    void sendMenuStatDetails(Long chatId, String message, Integer messageId, WaitDocument waitDocument);
 }

@@ -228,8 +228,14 @@ public class SendMessageServiceImpl implements SendMessageCitiesService,SendMess
 
     @Override
     public void sendAdminSetStatus(Long chatId, boolean status, String message, Integer messageId){
-        deleteMessage(chatId,messageId);
-        sendMessage(chatId.toString(),message,inlineKeyboardService.showAllUsersForSetStatus(status));
+        Optional<InlineKeyboardMarkup> markup = inlineKeyboardService.showAllUsersForSetStatus(status);
+        if(markup.isPresent()) {
+            deleteMessage(chatId, messageId);
+            sendMessage(chatId.toString(), message, markup.get());
+        } else {
+            deleteMessage(chatId, messageId);
+            sendMessage(chatId.toString(), "Подходящих пользователей не найдено.");
+        }
     }
 
     @Override

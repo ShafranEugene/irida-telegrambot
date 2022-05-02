@@ -2,6 +2,7 @@ package com.github.iridatelegrambot.test.command.buttons;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.command.CallbackCommand.AddOrderToInvoiceCallbackCommand;
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommand;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import org.junit.jupiter.api.Assertions;
@@ -44,4 +45,8 @@ public class AddOrderToInvoiceCallbackCommandTest extends AbstractCallbackComman
     }
 
 
+    @Override
+    protected CallbackCommand getCallbackCommand() {
+        return addOrderToInvoiceCallbackCommand;
+    }
 }

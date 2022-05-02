@@ -21,7 +21,7 @@ public class UnknownCommand implements Command{
 
     @Override
     public CommandName getCommand() {
-        return null;
+        return CommandName.NO;
     }
 
     @Override

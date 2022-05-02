@@ -1,5 +1,6 @@
 package com.github.iridatelegrambot.test.command.buttons;
 
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommand;
 import com.github.iridatelegrambot.command.CallbackCommand.StatDocumentCallbackCommand;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
@@ -19,5 +20,10 @@ public class StatDocumentCallbackCommandTest extends AbstractCallbackCommandTest
         //then
         Assertions.assertTrue(WaitDocument.ORDER.getWaitStatus(12345678L));
         Assertions.assertTrue(WaitTypeStatus.INFO.getStatus(12345678L));
+    }
+
+    @Override
+    protected CallbackCommand getCallbackCommand() {
+        return statDocument;
     }
 }

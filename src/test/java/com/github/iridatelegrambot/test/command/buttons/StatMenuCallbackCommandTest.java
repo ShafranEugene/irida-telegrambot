@@ -1,5 +1,6 @@
 package com.github.iridatelegrambot.test.command.buttons;
 
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommand;
 import com.github.iridatelegrambot.command.CallbackCommand.StatMenuCallbackCommand;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
@@ -20,6 +21,11 @@ public class StatMenuCallbackCommandTest extends AbstractCallbackCommandTest {
         //when
         statMenuCallbackCommand.execute(callbackQuery);
         //then
-        Mockito.verify(mSendMessageService).sendMenuStatDetails(12345678L,"Список всех заказов:",12345,WaitDocument.ORDER);
+        Mockito.verify(mSendMessageService).sendMenuStatDetails(12345678L,"Список всех заказов:",0,WaitDocument.ORDER);
+    }
+
+    @Override
+    protected CallbackCommand getCallbackCommand() {
+        return statMenuCallbackCommand;
     }
 }

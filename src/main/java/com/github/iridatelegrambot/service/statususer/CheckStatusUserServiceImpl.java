@@ -43,9 +43,11 @@ public class CheckStatusUserServiceImpl implements CheckStatusUserService {
             UserTelegram userTelegram = userTelegramService.findOrCreateUser(update);
             if(userTelegramService.getAllActiveUser().size() == 0){
                 userTelegram.setAdmin(true);
+                userTelegramService.save(userTelegram);
+                return true;
             }
             sendFalseAnswer(userTelegram);
-            return true;
+            return false;
         }
 
         UserTelegram userTelegram = optionalUserTelegram.get();

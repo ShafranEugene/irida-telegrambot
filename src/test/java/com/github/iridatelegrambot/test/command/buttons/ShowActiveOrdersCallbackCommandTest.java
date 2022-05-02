@@ -1,5 +1,6 @@
 package com.github.iridatelegrambot.test.command.buttons;
 
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommand;
 import com.github.iridatelegrambot.command.CallbackCommand.ShowActiveOrdersCallbackCommand;
 import com.github.iridatelegrambot.entity.Order;
 import org.junit.jupiter.api.Assertions;
@@ -55,5 +56,10 @@ public class ShowActiveOrdersCallbackCommandTest extends AbstractCallbackCommand
         //then
         Assertions.assertEquals("Заказ не найден.",messageCaptor.getValue());
         Assertions.assertEquals(String.valueOf(12345678L),chatIdCaptor.getValue());
+    }
+
+    @Override
+    protected CallbackCommand getCallbackCommand() {
+        return showActiveOrdersCallbackCommand;
     }
 }

@@ -18,7 +18,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InlineKeyboardServiceImplTest {
     private OrderService orderService;
@@ -93,5 +95,19 @@ public class InlineKeyboardServiceImplTest {
         InlineKeyboardButton buttonOfMarkup = rows.get(0).get(0);
         //then
         Assertions.assertEquals(button,buttonOfMarkup);
+    }
+
+    @Test
+    void shouldProperlyCreateMenu(){
+        //given
+        Map<String,String> dataButtons = new HashMap<>();
+        dataButtons.put("text","callback");
+        //when
+        InlineKeyboardMarkup markup = inlineKeyboardService.createMenu(dataButtons);
+        List<List<InlineKeyboardButton>> buttons = markup.getKeyboard();
+        InlineKeyboardButton button = buttons.get(0).get(0);
+        //then
+        Assertions.assertEquals("text",button.getText());
+        Assertions.assertEquals("callback",button.getCallbackData());
     }
 }

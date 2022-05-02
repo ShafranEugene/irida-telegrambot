@@ -199,7 +199,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
 
     @Override
     public InlineKeyboardMarkup showMenuOrder(Order order){
-        HashMap<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new HashMap<>();
         int idOrder = order.getId();
         buttonsMap.put("Добавить накладную на перемещение",ORDER_MENU.getNameForService() + "addinvoice:id:" + idOrder);
         buttonsMap.put("Удалить заказ",ORDER_MENU.getNameForService() + "delete:id:" + idOrder);
@@ -209,7 +209,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
 
     @Override
     public InlineKeyboardMarkup showMenuStat(){
-        HashMap<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new HashMap<>();
         buttonsMap.put("Информация о всех заказах", STAT_MENU.getNameForService() + "infoAllOrders");
         buttonsMap.put("Информация о всех накладных", STAT_MENU.getNameForService() + "infoAllInvoice");
         buttonsMap.put("Информация для администратора", STAT_MENU.getNameForService() + "mainAdminMenu");
@@ -217,7 +217,8 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         return createMenu(buttonsMap);
     }
 
-    private InlineKeyboardMarkup createMenu(HashMap<String,String> TextAndCallbackData){
+    @Override
+    public InlineKeyboardMarkup createMenu(Map<String, String> TextAndCallbackData){
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         for(Map.Entry<String,String> entry : TextAndCallbackData.entrySet()){
             List<InlineKeyboardButton> row = new ArrayList<>();
@@ -234,7 +235,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
 
     @Override
     public InlineKeyboardMarkup showMenuStatDetails(WaitDocument waitDocument){
-        HashMap<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new HashMap<>();
         buttonsMap.put("Получить более детальную информацию по накладной",STAT_DOCUMENT.getNameForService() +
                 waitDocument.getName() + ":" + INFO.getName());
         buttonsMap.put("Удалить накладную",STAT_DOCUMENT.getNameForService() +
@@ -244,7 +245,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
 
     @Override
     public InlineKeyboardMarkup inviteForAdmin(Long chatIdUser){
-        HashMap<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new HashMap<>();
         buttonsMap.put("Дать доступ",ADD_STATUS_USER.getNameForService() + "chatId:" + chatIdUser + ":true");
         buttonsMap.put("Отклонить",ADD_STATUS_USER.getNameForService() + "chatId:" + chatIdUser + ":false");
         return createMenu(buttonsMap);
@@ -252,7 +253,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
 
     @Override
     public InlineKeyboardMarkup showMenuAdmin(){
-        HashMap<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new HashMap<>();
         buttonsMap.put("Закрыть доступ пользователю",ADMIN_MENU.getNameForService() + "closeStatusUser");
         buttonsMap.put("Открыть доступ пользователю",ADMIN_MENU.getNameForService() + "openStatusUser");
         buttonsMap.put("Выдать права администратора пользователю",ADMIN_MENU.getNameForService() + "setAdmin");
@@ -262,8 +263,8 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
     }
 
     @Override
-    public InlineKeyboardMarkup showAllUsersForSetStatus(boolean status) {
-        HashMap<String, String> buttonsMap = new HashMap<>();
+    public Optional<InlineKeyboardMarkup> showAllUsersForSetStatus(boolean status) {
+        Map<String, String> buttonsMap = new HashMap<>();
         for (UserTelegram userTelegram : userTelegramService.getAllUser()) {
             if (status) {
                 if (!userTelegram.isActive()) {
@@ -277,13 +278,15 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
                 }
             }
         }
-        // TODO: 26.04.2022  
-        return createMenu(buttonsMap);
+        if(buttonsMap.size() == 0){
+            return Optional.empty();
+        }
+        return Optional.of(createMenu(buttonsMap));
     }
 
     @Override
     public InlineKeyboardMarkup showAllUsersForSetAdmin(){
-        HashMap<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new HashMap<>();
         for(UserTelegram userTelegram : userTelegramService.getAllUser()){
             buttonsMap.put(userTelegram.getUserName(),ADMIN_MENU_SET_STATUS.getNameForService() + "setAdmin:" +
                     userTelegram.getChatId() + ":true");

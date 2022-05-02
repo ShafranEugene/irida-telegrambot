@@ -5,6 +5,9 @@ import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
+import java.util.Map;
+import java.util.Optional;
+
 public interface InlineKeyboardService {
 
     InlineKeyboardMarkup cityButtons(Order order);
@@ -21,13 +24,15 @@ public interface InlineKeyboardService {
 
     InlineKeyboardMarkup showMenuStat();
 
+    InlineKeyboardMarkup createMenu(Map<String, String> TextAndCallbackData);
+
     InlineKeyboardMarkup showMenuStatDetails(WaitDocument waitDocument);
 
     InlineKeyboardMarkup inviteForAdmin(Long chatIdUser);
 
     InlineKeyboardMarkup showMenuAdmin();
 
-    InlineKeyboardMarkup showAllUsersForSetStatus(boolean status);
+    Optional<InlineKeyboardMarkup> showAllUsersForSetStatus(boolean status);
 
     InlineKeyboardMarkup showAllUsersForSetAdmin();
 }

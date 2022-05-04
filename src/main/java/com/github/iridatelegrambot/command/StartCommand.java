@@ -1,17 +1,19 @@
 package com.github.iridatelegrambot.command;
 
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageMainMenuService;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
+@Component
 public class StartCommand implements Command{
 
-    private final SendMessageService sendMessage;
+    private final SendMessageMainMenuService sendMessage;
     private final UserTelegramService telegramService;
+    private final CommandName commandName = CommandName.START;
 
     public final static String START_MESSAGE = "Привет! Я бот Ирида. По команде /help ты можешь узнать что я умею.";
 
-    public StartCommand(SendMessageService sendMessage, UserTelegramService telegramService) {
+    public StartCommand(SendMessageMainMenuService sendMessage, UserTelegramService telegramService) {
         this.sendMessage = sendMessage;
         this.telegramService = telegramService;
     }
@@ -20,7 +22,11 @@ public class StartCommand implements Command{
     public void execute(Update update) {
         Long chatId = update.getMessage().getChatId();
         telegramService.findOrCreateUser(update);
-
         sendMessage.sendMainMenu(chatId,START_MESSAGE);
+    }
+
+    @Override
+    public CommandName getCommand() {
+        return commandName;
     }
 }

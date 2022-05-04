@@ -1,12 +1,8 @@
 package com.github.iridatelegrambot.test.command;
 
-import com.github.iridatelegrambot.command.Command;
-import com.github.iridatelegrambot.command.CommandContainer;
-import com.github.iridatelegrambot.command.CommandName;
-import com.github.iridatelegrambot.command.UnknownCommand;
-import com.github.iridatelegrambot.service.SendMessageService;
-import com.github.iridatelegrambot.service.SendMessageServiceImpl;
-import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.command.*;
+import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,41 +12,36 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommandContainerTest {
 
     private CommandContainer container;
-    private SendMessageService mSendMessageService;
-    private UserTelegramService mUserTelegramService;
+    private SendMessageService sendMessageService;
 
     @BeforeEach
     void init(){
-        mSendMessageService = Mockito.mock(SendMessageServiceImpl.class);
-        mUserTelegramService = Mockito.mock(UserTelegramService.class);
-        container = new CommandContainer(mSendMessageService,mUserTelegramService);
+        container = new CommandContainer();
+        sendMessageService = Mockito.mock(SendMessageServiceImpl.class);
+    }
+
+    @Test
+    void shouldSetCommand(){
+        //given
+        Command helpCommand = new HelpCommand(sendMessageService);
+        //when
+        container.setCommand(helpCommand);
+        Command command = container.findCommand("/help");
+        //then
+        assertEquals(helpCommand,command);
     }
 
     @Test
     void shouldGetUnknownCommand(){
         //given
         String commandIdentifier = "/aboba";
-
+        Command unknownCommand = new UnknownCommand(sendMessageService);
+        container.setUnknownCommand(unknownCommand);
         //when
-        Command unknownCommand = container.findCommand(commandIdentifier);
+        Command unknown = container.findCommand(commandIdentifier);
 
         //then
         assertEquals(UnknownCommand.class,unknownCommand.getClass());
     }
-
-    @Test
-    void shouldGetAnyExistingCommand(){
-        //given
-        CommandName[] allCommand = CommandName.values();
-
-        for(CommandName commandName : allCommand){
-            //when
-            Command command = container.findCommand(commandName.getCommandName());
-            //then
-            assertNotEquals(UnknownCommand.class,command.getClass());
-        }
-    }
-
-
 
 }

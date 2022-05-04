@@ -1,6 +1,7 @@
 package com.github.iridatelegrambot.test.command.buttons;
 
 import com.github.iridatelegrambot.command.CallbackCommand.AddOrderCallbackCommand;
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommand;
 import com.github.iridatelegrambot.entity.Order;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,5 +32,10 @@ public class AddOrderCallbackCommandTest extends AbstractCallbackCommandTest{
         //then
         Mockito.verify(mOrderService).save(orderArgumentCaptor.capture());
         Assertions.assertEquals("Днепр",orderArgumentCaptor.getValue().getCity());
+    }
+
+    @Override
+    protected CallbackCommand getCallbackCommand() {
+        return addOrderCallbackCommand;
     }
 }

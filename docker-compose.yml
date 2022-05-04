@@ -23,4 +23,5 @@ services:
       BOT_NAME: irida_recom_test_bot
       BOT_TOKEN: 5127901141:AAF_5wRZtWTYSZyyJT-5FkBNPQ9hI3ijgro
       SPRING_DATABASE_URL: jdbc:mysql://iridaDB:3306/telegram_bot_irida
+      BOT_ADMIN: ZloyShafran
     restart: always

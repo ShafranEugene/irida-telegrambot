@@ -4,15 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.service.InvoiceService;
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageWithOrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
+@Component
 public class AddInvoiceCallbackCommand implements CallbackCommand {
 
-    private final SendMessageService sendMessageService;
+    private final SendMessageWithOrderService sendMessageService;
     private final InvoiceService invoiceService;
+    private final CallbackCommandName commandName = CallbackCommandName.ADD_INVOICE;
 
-    public AddInvoiceCallbackCommand(SendMessageService sendMessageService,InvoiceService invoiceService){
+    @Autowired
+    public AddInvoiceCallbackCommand(SendMessageWithOrderService sendMessageService,InvoiceService invoiceService){
         this.sendMessageService = sendMessageService;
         this.invoiceService = invoiceService;
     }
@@ -22,6 +27,7 @@ public class AddInvoiceCallbackCommand implements CallbackCommand {
     @Override
     public void execute(CallbackQuery callbackQuery) {
         Long chatId = callbackQuery.getMessage().getChatId();
+        Integer messageId = callbackQuery.getMessage().getMessageId();
         String query = callbackQuery.getData();
         String JSONData = query.substring(query.indexOf('{'));
 
@@ -36,11 +42,17 @@ public class AddInvoiceCallbackCommand implements CallbackCommand {
             Invoice invoiceJson = objectMapper.readValue(JSONData,Invoice.class);
             invoice.setCity(invoiceJson.getCity());
             invoiceService.save(invoice);
-            sendMessageService.sendActiveOrdersForInvoice(chatId,"Выберете заказ:",invoice);
+            sendMessageService.sendActiveOrdersForInvoice(chatId,"Выберете заказ:",callbackQuery.getMessage().getMessageId(),
+                    invoice);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
 
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 }

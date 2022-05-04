@@ -1,4 +1,4 @@
-package com.github.iridatelegrambot.service;
+package com.github.iridatelegrambot.service.send;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,8 +10,12 @@ import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -23,22 +27,27 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Optional;
 
+import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.ADD_ORDER_TO_INVOICE;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
-public class SendMessageServiceImpl implements SendMessageService {
+public class SendMessageServiceImpl implements SendMessageCitiesService,SendMessageMainMenuService, SendMessageWithOrderService,
+                                            SendMessageOrderMenuService,SendMessageStatMenuService,SendMessageInviteForAdminService,
+                                            SendMessageAdminMenuService{
 
     private final IridaBot iridaBot;
     private final InlineKeyboardService inlineKeyboardService;
     private final MenuButtonsService menuButtonsService;
 
     @Autowired
-    public SendMessageServiceImpl(IridaBot iridaBot,InlineKeyboardService inlineKeyboardService,
+    public SendMessageServiceImpl(@Lazy IridaBot iridaBot, InlineKeyboardService inlineKeyboardService,
                                   MenuButtonsService menuButtonsService) {
         this.iridaBot = iridaBot;
         this.inlineKeyboardService = inlineKeyboardService;
         this.menuButtonsService = menuButtonsService;
     }
+
+
 
     @Override
     public void sendMessage(String chatId, String message) {
@@ -69,6 +78,45 @@ public class SendMessageServiceImpl implements SendMessageService {
 
         try {
             iridaBot.execute(sendMessage);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void editMessage(Long chatId,Integer messageId, String message){
+        EditMessageText editMessageText = new EditMessageText();
+        editMessageText.setChatId(chatId.toString());
+        editMessageText.setMessageId(messageId);
+        editMessageText.setText(message);
+
+        try {
+            iridaBot.execute(editMessageText);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void editButtons(Long chatId, Integer messageId, InlineKeyboardMarkup markup){
+        EditMessageReplyMarkup editMessageReplyMarkup = new EditMessageReplyMarkup();
+        editMessageReplyMarkup.setChatId(chatId.toString());
+        editMessageReplyMarkup.setReplyMarkup(markup);
+        editMessageReplyMarkup.setMessageId(messageId);
+        try {
+            iridaBot.execute(editMessageReplyMarkup);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteMessage(Long chatId,Integer messageId){
+        DeleteMessage deleteMessage = new DeleteMessage();
+        deleteMessage.setChatId(chatId.toString());
+        deleteMessage.setMessageId(messageId);
+        try {
+            iridaBot.execute(deleteMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -106,28 +154,29 @@ public class SendMessageServiceImpl implements SendMessageService {
     }
 
     @Override
-    public void sendActiveOrdersForInvoice(Long chatId, String message, Invoice invoice){
+    public void sendActiveOrdersForInvoice(Long chatId, String message,Integer messageId, Invoice invoice){
         if(WaitDocument.INVOICE.invoiceHaveIdOrder(chatId)){
-            sendMessageCloseOrderIfInvoiceHaveOrder(chatId,invoice);
+            sendMessageCloseOrderIfInvoiceHaveOrder(chatId,invoice,messageId);
             return;
         }
-        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.markupActiveOrdersForInvoice(invoice);
-        sendMessage(chatId.toString(),message,inlineKeyboardMarkup);
+        deleteMessage(chatId,messageId);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.markupActiveOrdersForInvoice(invoice));
     }
 
-    private void sendMessageCloseOrderIfInvoiceHaveOrder(Long chatId, Invoice invoice){
+    private void sendMessageCloseOrderIfInvoiceHaveOrder(Long chatId, Invoice invoice, Integer messageId){
         BondOrderToInvoice bond = new BondOrderToInvoice();
         bond.setIdInvoice(invoice.getId());
         bond.setIdOrder(WaitDocument.INVOICE.getIdOrderForInvoice(chatId));
         ObjectMapper objectMapper = new ObjectMapper();
         CallbackQuery callbackQuery = new CallbackQuery();
         try {
-            String data = "addOrdToInv:" + objectMapper.writeValueAsString(bond);
+            String data = ADD_ORDER_TO_INVOICE.getNameForService() + objectMapper.writeValueAsString(bond);
             callbackQuery.setData(data);
             Message messageToData = new Message();
             Chat chat = new Chat();
             chat.setId(chatId);
             messageToData.setChat(chat);
+            messageToData.setMessageId(messageId);
             callbackQuery.setMessage(messageToData);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -138,9 +187,9 @@ public class SendMessageServiceImpl implements SendMessageService {
     }
 
     @Override
-    public void sendMessageCloseOrder(Long chatId, String message, Order order){
-        InlineKeyboardMarkup inlineKeyboardMarkup = inlineKeyboardService.closeOrder(order);
-        sendMessage(chatId.toString(),message, inlineKeyboardMarkup);
+    public void sendMessageCloseOrder(Long chatId, Integer messageId, String message, Order order){
+        deleteMessage(chatId,messageId);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.closeOrder(order));
     }
 
     @Override
@@ -161,8 +210,37 @@ public class SendMessageServiceImpl implements SendMessageService {
     }
 
     @Override
-    public void sendMenuStatDetails(Long chatId, String message, String typeDocument){
-        InlineKeyboardMarkup markup = inlineKeyboardService.showMenuStatDetails(typeDocument);
-        sendMessage(chatId.toString(),message,markup);
+    public void sendMenuStatDetails(Long chatId, String message,Integer messageId, WaitDocument waitDocument){
+        deleteMessage(chatId,messageId);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showMenuStatDetails(waitDocument));
+    }
+
+    @Override
+    public void sendInviteToAdmin(Long chatIdAdmin,Long chatIdUser, String message){
+        sendMessage(chatIdAdmin.toString(),message, inlineKeyboardService.inviteForAdmin(chatIdUser));
+    }
+
+    @Override
+    public void sendAdminMenu(Long chatId, String message, Integer idMessage){
+        deleteMessage(chatId,idMessage);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showMenuAdmin());
+    }
+
+    @Override
+    public void sendAdminSetStatus(Long chatId, boolean status, String message, Integer messageId){
+        Optional<InlineKeyboardMarkup> markup = inlineKeyboardService.showAllUsersForSetStatus(status);
+        if(markup.isPresent()) {
+            deleteMessage(chatId, messageId);
+            sendMessage(chatId.toString(), message, markup.get());
+        } else {
+            deleteMessage(chatId, messageId);
+            sendMessage(chatId.toString(), "Подходящих пользователей не найдено.");
+        }
+    }
+
+    @Override
+    public void sendUsersForAdmin(Long chatId, String message, Integer messageId){
+        deleteMessage(chatId,messageId);
+        sendMessage(chatId.toString(),message,inlineKeyboardService.showAllUsersForSetAdmin());
     }
 }

@@ -2,14 +2,23 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageMainMenuService;
+import org.hibernate.dialect.Ingres9Dialect;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
+import java.util.ArrayList;
+
+@Component
 public class CloseOrderCallbackCommand implements CallbackCommand {
     private final OrderService orderService;
-    private final SendMessageService sendMessageService;
+    private final SendMessageMainMenuService sendMessageService;
+    private final CallbackCommandName commandName = CallbackCommandName.CLOSE_ORDER;
 
-    public CloseOrderCallbackCommand(OrderService orderService, SendMessageService sendMessageService) {
+    @Autowired
+    public CloseOrderCallbackCommand(OrderService orderService, SendMessageMainMenuService sendMessageService) {
         this.orderService = orderService;
         this.sendMessageService = sendMessageService;
     }
@@ -27,6 +36,14 @@ public class CloseOrderCallbackCommand implements CallbackCommand {
 
         orderService.save(order);
 
-        sendMessageService.sendMainMenu(callbackQuery.getMessage().getChatId(),"Готово");
+        Long chatId = callbackQuery.getMessage().getChatId();
+        Integer messageId = callbackQuery.getMessage().getMessageId();
+        sendMessageService.deleteMessage(chatId,messageId);
+        sendMessageService.sendMainMenu(chatId,"Готово");
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 }

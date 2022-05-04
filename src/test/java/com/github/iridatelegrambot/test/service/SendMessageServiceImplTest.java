@@ -1,8 +1,8 @@
 package com.github.iridatelegrambot.test.service;
 
 import com.github.iridatelegrambot.bot.IridaBot;
-import com.github.iridatelegrambot.service.SendMessageService;
-import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import org.junit.jupiter.api.BeforeEach;

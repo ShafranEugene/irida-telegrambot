@@ -117,4 +117,22 @@ public class UserTelegram {
                 ", active=" + active +
                 '}';
     }
+
+    public String toStringInfoForUser(){
+        String text = "Код: " + chatId +
+                "\nИмя: " + firstName +
+                "\nЛогин: " + userName +
+                "\nСтатус: ";
+        if(active){
+            text += "Активен";
+        } else {
+            text += "Неактивен";
+        }
+        if(admin){
+            text += "\nАдмин: Да";
+        } else {
+            text += "\nАдмин: Нет";
+        }
+        return text;
+    }
 }

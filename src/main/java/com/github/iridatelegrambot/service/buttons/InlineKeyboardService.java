@@ -2,7 +2,11 @@ package com.github.iridatelegrambot.service.buttons;
 
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
+import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+
+import java.util.Map;
+import java.util.Optional;
 
 public interface InlineKeyboardService {
 
@@ -20,5 +24,15 @@ public interface InlineKeyboardService {
 
     InlineKeyboardMarkup showMenuStat();
 
-    InlineKeyboardMarkup showMenuStatDetails(String typeDocument);
+    InlineKeyboardMarkup createMenu(Map<String, String> TextAndCallbackData);
+
+    InlineKeyboardMarkup showMenuStatDetails(WaitDocument waitDocument);
+
+    InlineKeyboardMarkup inviteForAdmin(Long chatIdUser);
+
+    InlineKeyboardMarkup showMenuAdmin();
+
+    Optional<InlineKeyboardMarkup> showAllUsersForSetStatus(boolean status);
+
+    InlineKeyboardMarkup showAllUsersForSetAdmin();
 }

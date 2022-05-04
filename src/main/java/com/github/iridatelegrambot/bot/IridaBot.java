@@ -1,13 +1,11 @@
 package com.github.iridatelegrambot.bot;
 
 import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContainer;
-import com.github.iridatelegrambot.service.*;
 import com.github.iridatelegrambot.command.CommandContainer;
 import com.github.iridatelegrambot.command.CommandName;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
-import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
+import com.github.iridatelegrambot.service.buttons.CommandNameForButtons;
+import com.github.iridatelegrambot.service.statususer.CheckStatusUserService;
 import com.github.iridatelegrambot.service.statuswait.HandleWaitNumber;
-import com.github.iridatelegrambot.service.statuswait.HandleWaitNumberImpl;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +14,8 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.Objects;
+
 
 @Component
 public class IridaBot extends TelegramLongPollingBot {
@@ -23,10 +23,9 @@ public class IridaBot extends TelegramLongPollingBot {
     private final static String COMMAND_PREFIX = "/";
 
     private final CommandContainer container;
-    private final AnswerCatcherService answerCatcher;
     private final CallbackCommandContainer callbackCommandContainer;
-    private final SendMessageServiceImpl sendMessageService;
     private final HandleWaitNumber handleWaitNumber;
+    private final CheckStatusUserService checkStatusUserService;
 
     @Value("${bot.username}")
     private String username;
@@ -35,15 +34,14 @@ public class IridaBot extends TelegramLongPollingBot {
     private String token;
 
     @Autowired
-    public IridaBot(UserTelegramService userTelegramService,
-                    OrderService orderService, InvoiceService invoiceService, InlineKeyboardService inlineKeyboardService,
-                    AnswerCatcherService answerCatcher, MenuButtonsService menuButtonsService) {
-        sendMessageService = new SendMessageServiceImpl(this,inlineKeyboardService,menuButtonsService);
-        container = new CommandContainer(sendMessageService,userTelegramService);
-        callbackCommandContainer = new CallbackCommandContainer(sendMessageService,orderService,invoiceService);
-        handleWaitNumber = new HandleWaitNumberImpl(sendMessageService,answerCatcher);
-        this.answerCatcher = answerCatcher;
+    public IridaBot(CommandContainer container, CallbackCommandContainer callbackCommandContainer,
+                    HandleWaitNumber handleWaitNumber, CheckStatusUserService checkStatusUserService) {
+        this.container = container;
+        this.callbackCommandContainer = callbackCommandContainer;
+        this.handleWaitNumber = handleWaitNumber;
+        this.checkStatusUserService = checkStatusUserService;
     }
+
     @Override
     public String getBotUsername() {
         return username;
@@ -56,6 +54,10 @@ public class IridaBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+
+        if(!checkStatusUserService.check(update)){
+            return;
+        }
 
         if(update.hasCallbackQuery()){
             handleCallback(update);
@@ -81,9 +83,11 @@ public class IridaBot extends TelegramLongPollingBot {
                 String commandIdentifier = message.split(" ")[0].toLowerCase();
 
                 container.findCommand(commandIdentifier).execute(update);
+            } else if(CommandNameForButtons.hasMainCommand(message)) {
+                    container.findCommand(Objects.requireNonNull(CommandNameForButtons.findCommandName(message)).getCommandName()).execute(update);
             } else {
-                container.findCommand(CommandName.NO.getCommandName()).execute(update);
-            }
+                    container.findCommand(CommandName.NO.getCommandName()).execute(update);
+                }
         }
     }
 

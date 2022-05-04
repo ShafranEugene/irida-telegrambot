@@ -2,11 +2,14 @@ package com.github.iridatelegrambot.service.buttons;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName;
 import com.github.iridatelegrambot.entity.BondOrderToInvoice;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
+import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
+import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -14,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.*;
 
+import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.*;
 import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.DELETE;
 import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.INFO;
 
@@ -21,9 +25,11 @@ import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.INFO
 public class InlineKeyboardServiceImpl implements InlineKeyboardService{
 
     private final OrderService orderService;
+    private final UserTelegramService userTelegramService;
     @Autowired
-    public InlineKeyboardServiceImpl(OrderService orderService) {
+    public InlineKeyboardServiceImpl(OrderService orderService,UserTelegramService userTelegramService) {
         this.orderService = orderService;
+        this.userTelegramService = userTelegramService;
     }
 
     @Override
@@ -38,14 +44,15 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
             order.setCity(cityName.getNameCity());
 
             try {
-                String orderInJSON = "add_order:" + objectMapper.writeValueAsString(order);
+                String orderInJSON = ADD_ORDER.getNameForService() + objectMapper.writeValueAsString(order);
                 listJSONOrdersWithCity.add(orderInJSON);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         }
 
-        String cancel = "delete:order:id:" + order.getId();
+        String cancel = CallbackCommandName.CANCEL.getNameForService() + "order:id:" + order.getId();
+        CANCEL.setSubCommand("order");
         listJSONOrdersWithCity.add(cancel);
 
         inlineKeyboardMarkup = creatorMarkupWithCity(cityNamesList,listJSONOrdersWithCity);
@@ -66,14 +73,15 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
             invoice.setCity(cityName.getNameCity());
 
             try {
-                String orderInJSON = "add_invoice:" + objectMapper.writeValueAsString(invoice);
+                String orderInJSON = ADD_INVOICE.getNameForService() + objectMapper.writeValueAsString(invoice);
                 listJSONOrdersWithCity.add(orderInJSON);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
         }
 
-        String cancel = "delete:invoice:id:" + invoice.getId();
+        String cancel = CANCEL.getNameForService() + "invoice:id:" + invoice.getId();
+        CANCEL.setSubCommand("invoice");
         listJSONOrdersWithCity.add(cancel);
 
         inlineKeyboardMarkup = creatorMarkupWithCity(cityNamesList,listJSONOrdersWithCity);
@@ -120,7 +128,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         for(Order order : orders){
             try {
                 BondOrderToInvoice bond = new BondOrderToInvoice(order.getId(),invoice.getId());
-                String orderJson = "addOrdToInv:" + objectMapper.writeValueAsString(bond);
+                String orderJson = ADD_ORDER_TO_INVOICE.getNameForService() + objectMapper.writeValueAsString(bond);
                 CallbackJson.add(orderJson);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -165,8 +173,8 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         buttonYes.setText("Да");
         buttonNo.setText("Нет");
 
-        buttonYes.setCallbackData("closeOrder:" + order.getId() + ":false");
-        buttonNo.setCallbackData("closeOrder:" + order.getId() + ":true");
+        buttonYes.setCallbackData(CLOSE_ORDER.getNameForService() + order.getId() + ":false");
+        buttonNo.setCallbackData(CLOSE_ORDER.getNameForService() + order.getId() + ":true");
 
         row.add(buttonYes);
         row.add(buttonNo);
@@ -183,7 +191,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         List<String> callbackOrders = new ArrayList<>();
 
         for(Order order : orders){
-            String text = "show_order:id:" + order.getId();
+            String text = SHOW_ORDER.getNameForService() + "id:" + order.getId();
             callbackOrders.add(text);
         }
         return creatorMarkupWithOrders(orders,callbackOrders);
@@ -191,22 +199,26 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
 
     @Override
     public InlineKeyboardMarkup showMenuOrder(Order order){
-        HashMap<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new HashMap<>();
         int idOrder = order.getId();
-        buttonsMap.put("Добавить накладную на перемещение","order:addinvoice:id:" + idOrder);
-        buttonsMap.put("Удалить заказ","order:delete:id:" + idOrder);
+        buttonsMap.put("Добавить накладную на перемещение",ORDER_MENU.getNameForService() + "addinvoice:id:" + idOrder);
+        buttonsMap.put("Удалить заказ",ORDER_MENU.getNameForService() + "delete:id:" + idOrder);
+        ORDER_MENU.setSubCommands(new String[]{"addinvoice","delete"});
         return createMenu(buttonsMap);
     }
 
     @Override
     public InlineKeyboardMarkup showMenuStat(){
-        HashMap<String,String> buttonsMap = new HashMap<>();
-        buttonsMap.put("Информация о всех заказах","stat:infoAllOrders");
-        buttonsMap.put("Информация о всех накладных на перемещение","stat:infoAllInvoice");
+        Map<String,String> buttonsMap = new HashMap<>();
+        buttonsMap.put("Информация о всех заказах", STAT_MENU.getNameForService() + "infoAllOrders");
+        buttonsMap.put("Информация о всех накладных", STAT_MENU.getNameForService() + "infoAllInvoice");
+        buttonsMap.put("Информация для администратора", STAT_MENU.getNameForService() + "mainAdminMenu");
+        STAT_MENU.setSubCommands(new String[]{"infoAllOrders","infoAllInvoice","mainAdminMenu"});
         return createMenu(buttonsMap);
     }
 
-    private InlineKeyboardMarkup createMenu(HashMap<String,String> TextAndCallbackData){
+    @Override
+    public InlineKeyboardMarkup createMenu(Map<String, String> TextAndCallbackData){
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         for(Map.Entry<String,String> entry : TextAndCallbackData.entrySet()){
             List<InlineKeyboardButton> row = new ArrayList<>();
@@ -220,11 +232,65 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
         markup.setKeyboard(rows);
         return markup;
     }
+
     @Override
-    public InlineKeyboardMarkup showMenuStatDetails(String typeDocument){
-        HashMap<String,String> buttonsMap = new HashMap<>();
-        buttonsMap.put("Получить более детальную информацию по накладной","stat:" + typeDocument + ":" + INFO.getName());
-        buttonsMap.put("Удалить накладную","stat:" + typeDocument + ":" + DELETE.getName());
+    public InlineKeyboardMarkup showMenuStatDetails(WaitDocument waitDocument){
+        Map<String,String> buttonsMap = new HashMap<>();
+        buttonsMap.put("Получить более детальную информацию по накладной",STAT_DOCUMENT.getNameForService() +
+                waitDocument.getName() + ":" + INFO.getName());
+        buttonsMap.put("Удалить накладную",STAT_DOCUMENT.getNameForService() +
+                waitDocument.getName() + ":" + DELETE.getName());
+        return createMenu(buttonsMap);
+    }
+
+    @Override
+    public InlineKeyboardMarkup inviteForAdmin(Long chatIdUser){
+        Map<String,String> buttonsMap = new HashMap<>();
+        buttonsMap.put("Дать доступ",ADD_STATUS_USER.getNameForService() + "chatId:" + chatIdUser + ":true");
+        buttonsMap.put("Отклонить",ADD_STATUS_USER.getNameForService() + "chatId:" + chatIdUser + ":false");
+        return createMenu(buttonsMap);
+    }
+
+    @Override
+    public InlineKeyboardMarkup showMenuAdmin(){
+        Map<String,String> buttonsMap = new HashMap<>();
+        buttonsMap.put("Закрыть доступ пользователю",ADMIN_MENU.getNameForService() + "closeStatusUser");
+        buttonsMap.put("Открыть доступ пользователю",ADMIN_MENU.getNameForService() + "openStatusUser");
+        buttonsMap.put("Выдать права администратора пользователю",ADMIN_MENU.getNameForService() + "setAdmin");
+        buttonsMap.put("Снять с меня правад администратора",ADMIN_MENU.getNameForService() + "pullOffAdmin");
+        ADMIN_MENU.setSubCommands(new String[]{"closeStatusUser","openStatusUser","setAdmin"});
+        return createMenu(buttonsMap);
+    }
+
+    @Override
+    public Optional<InlineKeyboardMarkup> showAllUsersForSetStatus(boolean status) {
+        Map<String, String> buttonsMap = new HashMap<>();
+        for (UserTelegram userTelegram : userTelegramService.getAllUser()) {
+            if (status) {
+                if (!userTelegram.isActive()) {
+                    buttonsMap.put(userTelegram.getUserName(), ADMIN_MENU_SET_STATUS.getNameForService() + "setActive:" +
+                            userTelegram.getChatId() + ":true");
+                }
+            } else {
+                if (userTelegram.isActive()) {
+                    buttonsMap.put(userTelegram.getUserName(), ADMIN_MENU_SET_STATUS.getNameForService() + "setActive:" +
+                            userTelegram.getChatId() + ":false");
+                }
+            }
+        }
+        if(buttonsMap.size() == 0){
+            return Optional.empty();
+        }
+        return Optional.of(createMenu(buttonsMap));
+    }
+
+    @Override
+    public InlineKeyboardMarkup showAllUsersForSetAdmin(){
+        Map<String,String> buttonsMap = new HashMap<>();
+        for(UserTelegram userTelegram : userTelegramService.getAllUser()){
+            buttonsMap.put(userTelegram.getUserName(),ADMIN_MENU_SET_STATUS.getNameForService() + "setAdmin:" +
+                    userTelegram.getChatId() + ":true");
+        }
         return createMenu(buttonsMap);
     }
 }

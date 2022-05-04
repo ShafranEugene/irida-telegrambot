@@ -1,5 +1,6 @@
 package com.github.iridatelegrambot.test.command.buttons;
 
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommand;
 import com.github.iridatelegrambot.command.CallbackCommand.StatMenuCallbackCommand;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
@@ -10,7 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 public class StatMenuCallbackCommandTest extends AbstractCallbackCommandTest {
     private final StatMenuCallbackCommand statMenuCallbackCommand =
-            new StatMenuCallbackCommand(mSendMessageService,mOrderService,mInvoiceService);
+            new StatMenuCallbackCommand(mSendMessageService,mOrderService,mInvoiceService,mUserTelegramService,mSendMessageService);
 
     @Test
     void shouldProperlyAllInfoOrders(){
@@ -20,17 +21,11 @@ public class StatMenuCallbackCommandTest extends AbstractCallbackCommandTest {
         //when
         statMenuCallbackCommand.execute(callbackQuery);
         //then
-        Mockito.verify(mSendMessageService).sendMenuStatDetails(12345678L,"Список всех заказов:","order");
+        Mockito.verify(mSendMessageService).sendMenuStatDetails(12345678L,"Список всех заказов:",0,WaitDocument.ORDER);
     }
 
-    @Test
-    void shouldProperlySetWaitStatus(){
-        //given
-        CallbackQuery callbackQuery = createCallbackQuery("stat:order:info");
-        //when
-        statMenuCallbackCommand.execute(callbackQuery);
-        //then
-        Assertions.assertTrue(WaitDocument.ORDER.getWaitStatus(12345678L));
-        Assertions.assertTrue(WaitTypeStatus.INFO.getStatus(12345678L));
+    @Override
+    protected CallbackCommand getCallbackCommand() {
+        return statMenuCallbackCommand;
     }
 }

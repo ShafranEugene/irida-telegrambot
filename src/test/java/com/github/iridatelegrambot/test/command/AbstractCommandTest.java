@@ -1,11 +1,13 @@
 package com.github.iridatelegrambot.test.command;
 
 import com.github.iridatelegrambot.command.Command;
-import com.github.iridatelegrambot.service.SendMessageServiceImpl;
+import com.github.iridatelegrambot.command.CommandName;
+import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.bot.IridaBot;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -54,5 +56,10 @@ abstract class AbstractCommandTest {
 
         //then
         Mockito.verify(mIridaBot).execute(sendMessage);
+    }
+
+    @Test
+    void shouldGetProperlyCommand(){
+        Assertions.assertEquals(getCommandName(),getCommand().getCommand().getCommandName());
     }
 }

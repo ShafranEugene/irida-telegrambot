@@ -1,21 +1,21 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.iridatelegrambot.entity.Invoice;
-import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageMainMenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-
+@Component
 public class CancelCallbackCommand implements CallbackCommand{
 
     private final OrderService orderService;
     private final InvoiceService invoiceService;
-    private final SendMessageService sendMessageService;
+    private final SendMessageMainMenuService sendMessageService;
+    private final CallbackCommandName commandName = CallbackCommandName.CANCEL;
 
-    public CancelCallbackCommand(OrderService orderService,InvoiceService invoiceService, SendMessageService sendMessageService){
+    @Autowired
+    public CancelCallbackCommand(OrderService orderService,InvoiceService invoiceService, SendMessageMainMenuService sendMessageService){
         this.orderService = orderService;
         this.invoiceService = invoiceService;
         this.sendMessageService = sendMessageService;
@@ -30,11 +30,18 @@ public class CancelCallbackCommand implements CallbackCommand{
 
         if(type.equals("order")){
             orderService.delete(id);
+            sendMessageService.deleteMessage(chatId,callbackQuery.getMessage().getMessageId());
             sendMessageService.sendMainMenu(chatId,"Заказ был отменен.");
         } else if(type.equals("invoice")){
             invoiceService.detele(id);
+            sendMessageService.deleteMessage(chatId,callbackQuery.getMessage().getMessageId());
             sendMessageService.sendMainMenu(chatId,"Накладная была отменена.");
         }
 
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 }

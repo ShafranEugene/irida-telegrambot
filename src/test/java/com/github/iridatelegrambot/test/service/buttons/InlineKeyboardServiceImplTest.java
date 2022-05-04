@@ -6,6 +6,7 @@ import com.github.iridatelegrambot.entity.BondOrderToInvoice;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
+import com.github.iridatelegrambot.service.UserTelegramServiceImpl;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardServiceImpl;
 import org.aspectj.weaver.ast.Or;
@@ -17,16 +18,20 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InlineKeyboardServiceImplTest {
     private OrderService orderService;
+    private UserTelegramServiceImpl userTelegramService;
     private InlineKeyboardService inlineKeyboardService;
 
     @BeforeEach
     void init(){
         orderService = Mockito.mock(OrderService.class);
-        inlineKeyboardService = new InlineKeyboardServiceImpl(orderService);
+        userTelegramService = Mockito.mock(UserTelegramServiceImpl.class);
+        inlineKeyboardService = new InlineKeyboardServiceImpl(orderService,userTelegramService);
     }
 
     @Test
@@ -71,7 +76,7 @@ public class InlineKeyboardServiceImplTest {
         String bondJson = "null";
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            bondJson = "addOrdToInv:" + objectMapper.writeValueAsString(bondOrderToInvoice);
+            bondJson = "add_ord_to_inv:" + objectMapper.writeValueAsString(bondOrderToInvoice);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -90,5 +95,19 @@ public class InlineKeyboardServiceImplTest {
         InlineKeyboardButton buttonOfMarkup = rows.get(0).get(0);
         //then
         Assertions.assertEquals(button,buttonOfMarkup);
+    }
+
+    @Test
+    void shouldProperlyCreateMenu(){
+        //given
+        Map<String,String> dataButtons = new HashMap<>();
+        dataButtons.put("text","callback");
+        //when
+        InlineKeyboardMarkup markup = inlineKeyboardService.createMenu(dataButtons);
+        List<List<InlineKeyboardButton>> buttons = markup.getKeyboard();
+        InlineKeyboardButton button = buttons.get(0).get(0);
+        //then
+        Assertions.assertEquals("text",button.getText());
+        Assertions.assertEquals("callback",button.getCallbackData());
     }
 }

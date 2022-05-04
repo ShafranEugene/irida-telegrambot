@@ -1,6 +1,7 @@
 package com.github.iridatelegrambot.test.command.buttons;
 
 import com.github.iridatelegrambot.command.CallbackCommand.AddInvoiceCallbackCommand;
+import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommand;
 import com.github.iridatelegrambot.entity.Invoice;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +34,12 @@ public class AddInvoiceCallbackCommandTest extends AbstractCallbackCommandTest{
         addInvoiceCallbackCommand.execute(callbackQuery);
         //then
         Mockito.verify(mInvoiceService).save(invoiceArgumentCaptor.capture());
-        Mockito.verify(mSendMessageService).sendActiveOrdersForInvoice(12345678L,"Выберете заказ:",invoiceArgumentCaptor.getValue());
+        Mockito.verify(mSendMessageService).sendActiveOrdersForInvoice(12345678L,"Выберете заказ:",0,invoiceArgumentCaptor.getValue());
         Assertions.assertEquals("Днепр",invoiceArgumentCaptor.getValue().getCity());
+    }
+
+    @Override
+    protected CallbackCommand getCallbackCommand() {
+        return addInvoiceCallbackCommand;
     }
 }

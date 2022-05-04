@@ -44,8 +44,12 @@ public class MenuButtonsServiceImplTest {
         //when
         ReplyKeyboardMarkup markup = menuButtonsService.mainMenu();
         List<KeyboardRow> rows = markup.getKeyboard();
+        int countButtons = 0;
+        for(KeyboardRow row : rows){
+            countButtons += row.size();
+        }
         //then
-        Assertions.assertEquals(buttonsList.length,rows.size());
+        Assertions.assertEquals(buttonsList.length,countButtons);
     }
 
 

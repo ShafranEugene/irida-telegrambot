@@ -4,17 +4,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.SendMessageService;
+import com.github.iridatelegrambot.service.send.SendMessageMainMenuService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.Optional;
 
+@Component
 public class AddOrderCallbackCommand implements CallbackCommand{
 
-    private final SendMessageService sendMessageService;
+    private final SendMessageMainMenuService sendMessageService;
     private final OrderService orderService;
+    private final CallbackCommandName commandName = CallbackCommandName.ADD_ORDER;
 
-    public AddOrderCallbackCommand(SendMessageService sendMessageService, OrderService orderService) {
+    @Autowired
+    public AddOrderCallbackCommand(SendMessageMainMenuService sendMessageService, OrderService orderService) {
         this.sendMessageService = sendMessageService;
         this.orderService = orderService;
     }
@@ -39,11 +44,17 @@ public class AddOrderCallbackCommand implements CallbackCommand{
             Order orderJson = objectMapper.readValue(JSONData,Order.class);
             order.setCity(orderJson.getCity());
             orderService.save(order);
+            sendMessageService.deleteMessage(chatId,callbackQuery.getMessage().getMessageId());
             sendMessageService.sendMainMenu(chatId,"Готово!");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
 
+    }
+
+    @Override
+    public String getNameCommand() {
+        return commandName.getName();
     }
 }

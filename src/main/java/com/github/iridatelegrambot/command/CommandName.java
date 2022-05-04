@@ -11,13 +11,15 @@ public enum CommandName {
     SHOWACTIVEORDER("/show_active_orders"),
     NO("nocommand");
 
-    private final String commandName;
+    private final String firstName;
 
-    CommandName(String commandName) {
-        this.commandName = commandName;
+
+    CommandName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getCommandName() {
-        return commandName;
+        return firstName;
     }
+
 }

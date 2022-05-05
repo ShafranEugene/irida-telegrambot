@@ -10,10 +10,10 @@
 	</parent>
 	<groupId>com.github</groupId>
 	<artifactId>irida-telegrambot</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.7.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Irida Telegram Bot</name>
-	<description>Telgeram bot for creating a newsfeed</description>
+	<description>Telegram bot for management orders</description>
 	<properties>
 		<java.version>11</java.version>
 		<start-class>com.github.iridatelegrambot.Main</start-class>

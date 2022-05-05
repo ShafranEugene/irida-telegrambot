@@ -1,6 +1,8 @@
 package com.github.iridatelegrambot.test.command;
 
 import com.github.iridatelegrambot.command.*;
+import com.github.iridatelegrambot.service.send.CommandSenderService;
+import com.github.iridatelegrambot.service.send.CommandSenderServiceImpl;
 import com.github.iridatelegrambot.service.send.SendMessageService;
 import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,18 +14,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommandContainerTest {
 
     private CommandContainer container;
-    private SendMessageService sendMessageService;
+    private CommandSenderService commandSenderService;
 
     @BeforeEach
     void init(){
         container = new CommandContainer();
-        sendMessageService = Mockito.mock(SendMessageServiceImpl.class);
+        commandSenderService = Mockito.mock(CommandSenderServiceImpl.class);
     }
 
     @Test
     void shouldSetCommand(){
         //given
-        Command helpCommand = new HelpCommand(sendMessageService);
+        Command helpCommand = new HelpCommand(commandSenderService);
         //when
         container.setCommand(helpCommand);
         Command command = container.findCommand("/help");
@@ -35,7 +37,7 @@ class CommandContainerTest {
     void shouldGetUnknownCommand(){
         //given
         String commandIdentifier = "/aboba";
-        Command unknownCommand = new UnknownCommand(sendMessageService);
+        Command unknownCommand = new UnknownCommand(commandSenderService);
         container.setUnknownCommand(unknownCommand);
         //when
         Command unknown = container.findCommand(commandIdentifier);

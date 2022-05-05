@@ -19,6 +19,6 @@ public class ShowActiveOrdersCommandTest extends AbstractCommandTest{
 
     @Override
     Command getCommand() {
-        return new ShowActiveOrdersCommand(sendMessageService);
+        return new ShowActiveOrdersCommand(commandSenderService);
     }
 }

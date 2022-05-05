@@ -20,8 +20,8 @@ services:
     build:
       context: .
     environment:
-      BOT_NAME: irida_recom_test_bot
-      BOT_TOKEN: 5127901141:AAF_5wRZtWTYSZyyJT-5FkBNPQ9hI3ijgro
+      BOT_NAME: ${BOT_NAME}
+      BOT_TOKEN: ${BOT_TOKEN}
       SPRING_DATABASE_URL: jdbc:mysql://iridaDB:3306/telegram_bot_irida
-      BOT_ADMIN: ZloyShafran
+      BOT_ADMIN: ${BOT_ADMIN}
     restart: always

@@ -127,11 +127,22 @@ public class Order {
 
     @Override
     public String toString() {
+        if(user != null){
+            return "Order{" +
+                    "id=" + id +
+                    ", number='" + number + '\'' +
+                    ", city='" + city + '\'' +
+                    ", user=" + user.getUserName() +
+                    ", statusActive=" + statusActive +
+                    ", date='" + date + '\'' +
+                    ", invoiceList=" + invoiceList +
+                    '}';
+        }
         return "Order{" +
                 "id=" + id +
                 ", number='" + number + '\'' +
                 ", city='" + city + '\'' +
-                ", user=" + user +
+                ", user= not find" +
                 ", statusActive=" + statusActive +
                 ", date='" + date + '\'' +
                 ", invoiceList=" + invoiceList +
@@ -139,27 +150,23 @@ public class Order {
     }
 
     public String toStringForUsers(){
-        String text = "Заказ на перемещение:\n" +
+        StringBuilder text = new StringBuilder("Заказ на перемещение:\n" +
                 "Номер = " + number + "\n" +
-                "Город = " + city;
+                "Город = " + city);
 
         if(user==null) {
-            text += "\nПользователь добавил = Пользователь не известен.\n" +
-                    "Время добавления = " + date + "\n" +
-                    "Накладные на перемещение, подвязынные к заказу:";
+            text.append("\nПользователь добавил = Пользователь не известен.\n" + "Время добавления = ").append(date).append("\n").append("Накладные на перемещение, подвязынные к заказу:");
         } else {
-            text += "\nПользователь добавил = " + user.getFirstName() + ", " + user.getUserName() + "\n" +
-                    "Время добавления = " + date + "\n" +
-                    "Накладные на перемещение, подвязынные к заказу:";
+            text.append("\nПользователь добавил = ").append(user.getFirstName()).append(", ").append(user.getUserName()).append("\n").append("Время добавления = ").append(date).append("\n").append("Накладные на перемещение, подвязынные к заказу:");
         }
 
         if(invoiceList.size() == 0){
-            text += "\n\t-Накладных нет.";
+            text.append("\n\t-Накладных нет.");
         } else {
             for (Invoice invoice : invoiceList){
-                text += "\n\t- НП " + invoice.getNumber() + ", Откуда: " + invoice.getCity();
+                text.append("\n\t- НП ").append(invoice.getNumber()).append(", Откуда: ").append(invoice.getCity());
             }
         }
-        return text;
+        return text.toString();
     }
 }

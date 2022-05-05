@@ -1,7 +1,8 @@
 package com.github.iridatelegrambot.test.command;
 
 import com.github.iridatelegrambot.command.Command;
-import com.github.iridatelegrambot.command.CommandName;
+import com.github.iridatelegrambot.service.send.CommandSenderService;
+import com.github.iridatelegrambot.service.send.CommandSenderServiceImpl;
 import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.bot.IridaBot;
@@ -22,6 +23,8 @@ abstract class AbstractCommandTest {
     protected InlineKeyboardService mInlineKeyboardService = Mockito.mock(InlineKeyboardService.class);
     protected MenuButtonsService menuButtonsService = Mockito.mock(MenuButtonsService.class);
     protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot,mInlineKeyboardService,menuButtonsService);
+    protected CommandSenderService commandSenderService = new CommandSenderServiceImpl(sendMessageService,sendMessageService,sendMessageService,sendMessageService);
+
 
     abstract String getCommandName();
 

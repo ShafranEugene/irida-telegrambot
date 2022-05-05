@@ -22,7 +22,7 @@ public class UnknownCommandTest extends AbstractCommandTest{
 
     @Override
     Command getCommand() {
-        return new UnknownCommand(sendMessageService);
+        return new UnknownCommand(commandSenderService);
     }
 
     @Test

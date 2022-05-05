@@ -1,12 +1,12 @@
 package com.github.iridatelegrambot.command;
 
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.send.CommandSenderService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 @Component
 public class HelpCommand implements Command{
 
-    private final SendMessageService sendMessage;
+    private final CommandSenderService commandSenderService;
     private final CommandName commandName = CommandName.HELP;
 
     public final static String HELP_MESSAGE = String.format("Доступные команды \n\n"
@@ -16,18 +16,19 @@ public class HelpCommand implements Command{
                                                 + "%s - получить информацию по работе бота\n"
                                                 + "%s - добавить заказ на перемещение\n"
                                                 + "%s - добавить накладную на перемещение\n"
-                                                + "%s - получить список всех активных заказов\n",
+                                                + "%s - получить список всех активных заказов\n"
+                                                + "%s - руководство\n",
             CommandName.START.getCommandName(), CommandName.STOP.getCommandName(), CommandName.HELP.getCommandName(),
             CommandName.STAT.getCommandName(), CommandName.ADDORDER.getCommandName(),CommandName.ADDINVOICE.getCommandName(),
-            CommandName.SHOWACTIVEORDER.getCommandName());
+            CommandName.SHOWACTIVEORDER.getCommandName(),CommandName.GUIDE.getCommandName());
 
-    public HelpCommand(SendMessageService sendMessage) {
-        this.sendMessage = sendMessage;
+    public HelpCommand(CommandSenderService commandSenderService) {
+        this.commandSenderService = commandSenderService;
     }
 
     @Override
     public void execute(Update update) {
-        sendMessage.sendMessage(update.getMessage().getChatId().toString(),HELP_MESSAGE);
+        commandSenderService.sendMessage(update.getMessage().getChatId().toString(),HELP_MESSAGE);
     }
 
     @Override

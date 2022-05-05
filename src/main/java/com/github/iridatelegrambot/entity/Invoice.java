@@ -119,15 +119,13 @@ public class Invoice {
         return id == invoice.id &&
                 Objects.equals(number, invoice.number) &&
                 Objects.equals(city, invoice.city) &&
-                Objects.equals(user, invoice.user) &&
                 Objects.equals(comment, invoice.comment) &&
-                Objects.equals(date, invoice.date) &&
-                Objects.equals(order, invoice.order);
+                Objects.equals(date, invoice.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, number, city, user, comment, date, order);
+        return Objects.hash(id, number, city, comment, date);
     }
 
     public String toStringForUser(){

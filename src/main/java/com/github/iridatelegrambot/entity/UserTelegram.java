@@ -114,6 +114,9 @@ public class UserTelegram {
     public String toString() {
         return "UserTelegram{" +
                 "chatId=" + chatId +
+                ", firstName='" + firstName + '\'' +
+                ", userName='" + userName + '\'' +
+                ", admin=" + admin +
                 ", active=" + active +
                 '}';
     }

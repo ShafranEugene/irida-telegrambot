@@ -18,7 +18,7 @@ public class AddOrderCallbackCommandTest extends AbstractCallbackCommandTest{
 
     @BeforeEach
     void init(){
-        addOrderCallbackCommand = new AddOrderCallbackCommand(mSendMessageService,mOrderService);
+        addOrderCallbackCommand = new AddOrderCallbackCommand(commandCallbackSenderService,mOrderService);
     }
 
     @Test

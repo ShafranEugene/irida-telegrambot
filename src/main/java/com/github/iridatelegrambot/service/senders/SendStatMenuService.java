@@ -1,8 +1,8 @@
-package com.github.iridatelegrambot.service.send;
+package com.github.iridatelegrambot.service.senders;
 
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 
-public interface SendMessageStatMenuService extends SendMessageService {
+public interface SendStatMenuService{
 
     void sendMenuStat(Long chatId, String message);
 

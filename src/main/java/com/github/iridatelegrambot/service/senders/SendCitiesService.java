@@ -1,11 +1,11 @@
-package com.github.iridatelegrambot.service.send;
+package com.github.iridatelegrambot.service.senders;
 
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 
 import java.util.Optional;
 
-public interface SendMessageCitiesService extends SendMessageService {
+public interface SendCitiesService{
 
     void sendListCityForOrder(Optional<Order> orderOptional, Long chatId);
 

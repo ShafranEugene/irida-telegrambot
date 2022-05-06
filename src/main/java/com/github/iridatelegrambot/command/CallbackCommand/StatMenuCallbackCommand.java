@@ -5,9 +5,8 @@ import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.send.SendMessageAdminMenuService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import com.github.iridatelegrambot.service.UserTelegramService;
-import com.github.iridatelegrambot.service.send.SendMessageStatMenuService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,8 +17,7 @@ import java.util.Optional;
 @Component
 public class StatMenuCallbackCommand implements CallbackCommand {
 
-    private final SendMessageStatMenuService sendMessageService;
-    private final SendMessageAdminMenuService sendAdminMenu;
+    private final CommandCallbackSenderService commandCallbackSenderService;
     private final OrderService orderService;
     private final InvoiceService invoiceService;
     private final UserTelegramService userTelegramService;
@@ -27,11 +25,9 @@ public class StatMenuCallbackCommand implements CallbackCommand {
     private Integer idMessage;
 
     @Autowired
-    public StatMenuCallbackCommand(SendMessageStatMenuService sendMessageService, OrderService orderService,
-                                   InvoiceService invoiceService, UserTelegramService userTelegramService,
-                                   SendMessageAdminMenuService sendAdminMenu) {
-        this.sendMessageService = sendMessageService;
-        this.sendAdminMenu = sendAdminMenu;
+    public StatMenuCallbackCommand(CommandCallbackSenderService commandCallbackSenderService, OrderService orderService,
+                                   InvoiceService invoiceService, UserTelegramService userTelegramService) {
+        this.commandCallbackSenderService = commandCallbackSenderService;
         this.orderService = orderService;
         this.invoiceService = invoiceService;
         this.userTelegramService = userTelegramService;
@@ -64,7 +60,7 @@ public class StatMenuCallbackCommand implements CallbackCommand {
         for(Order order : orderList){
             info.append("\n\t- Номер - ").append(order.getNumber()).append("; Город - ").append(order.getCity()).append("; Добавлен - ").append(order.getDate()).append(";");
         }
-        sendMessageService.sendMenuStatDetails(chatId,info.toString(),idMessage, WaitDocument.ORDER);
+        commandCallbackSenderService.sendMenuStatDetails(chatId,info.toString(),idMessage, WaitDocument.ORDER);
     }
 
     private void sendInfoAllInvoice(Long chatId){
@@ -73,19 +69,19 @@ public class StatMenuCallbackCommand implements CallbackCommand {
         for (Invoice invoice : invoices){
             info.append("\n\t- Номер - ").append(invoice.getNumber()).append("; Город - ").append(invoice.getCity()).append("; Добавлен - ").append(invoice.getDate()).append(";");
         }
-        sendMessageService.sendMenuStatDetails(chatId,info.toString(),idMessage,WaitDocument.INVOICE);
+        commandCallbackSenderService.sendMenuStatDetails(chatId,info.toString(),idMessage,WaitDocument.INVOICE);
     }
 
     private void sendAdminMenu(Long chatId){
         Optional<UserTelegram> userOptional = userTelegramService.findByChatId(chatId);
         if(userOptional.isPresent()){
             if(userOptional.get().isAdmin()) {
-                sendAdminMenu.sendAdminMenu(chatId, "Меню администратора:",idMessage);
+                commandCallbackSenderService.sendAdminMenu(chatId, "Меню администратора:",idMessage);
             } else {
-                sendMessageService.sendMessage(chatId.toString(),"У Вас нет прав администратора.");
+                commandCallbackSenderService.sendMessage(chatId.toString(),"У Вас нет прав администратора.");
             }
         } else {
-         sendMessageService.sendMessage(chatId.toString(),"Не могу найти Вас в базе, попробуйте воспользоваться командой /start .");
+            commandCallbackSenderService.sendMessage(chatId.toString(),"Не могу найти Вас в базе, попробуйте воспользоваться командой /start .");
         }
     }
 }

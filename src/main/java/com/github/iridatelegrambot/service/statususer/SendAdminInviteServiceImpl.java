@@ -1,19 +1,19 @@
 package com.github.iridatelegrambot.service.statususer;
 
 import com.github.iridatelegrambot.entity.UserTelegram;
-import com.github.iridatelegrambot.service.send.SendMessageInviteForAdminService;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.service.senders.SendInviteForAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SendAdminInviteServiceImpl implements SendAdminInviteService{
-    private final SendMessageInviteForAdminService sendMessageService;
+    private final SendInviteForAdminService sendMessageService;
     private final MuteInviteService muteInviteService;
     private final UserTelegramService userTelegramService;
 
     @Autowired
-    public SendAdminInviteServiceImpl(SendMessageInviteForAdminService sendMessageService,
+    public SendAdminInviteServiceImpl(SendInviteForAdminService sendMessageService,
                                       UserTelegramService userTelegramService, MuteInviteService muteInviteService) {
         this.sendMessageService = sendMessageService;
         this.muteInviteService = muteInviteService;

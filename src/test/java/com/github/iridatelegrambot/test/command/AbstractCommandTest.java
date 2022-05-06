@@ -1,15 +1,16 @@
 package com.github.iridatelegrambot.test.command;
 
 import com.github.iridatelegrambot.command.Command;
-import com.github.iridatelegrambot.service.send.CommandSenderService;
-import com.github.iridatelegrambot.service.send.CommandSenderServiceImpl;
-import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.senders.CommandSenderService;
+import com.github.iridatelegrambot.service.senders.CommandSenderServiceImpl;
+import com.github.iridatelegrambot.service.senders.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.bot.IridaBot;
 import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
 import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
@@ -22,8 +23,8 @@ abstract class AbstractCommandTest {
     protected IridaBot mIridaBot = Mockito.mock(IridaBot.class);
     protected InlineKeyboardService mInlineKeyboardService = Mockito.mock(InlineKeyboardService.class);
     protected MenuButtonsService menuButtonsService = Mockito.mock(MenuButtonsService.class);
-    protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot,mInlineKeyboardService,menuButtonsService);
-    protected CommandSenderService commandSenderService = new CommandSenderServiceImpl(sendMessageService,sendMessageService,sendMessageService,sendMessageService);
+    protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot);
+    protected CommandSenderService commandSenderService = Mockito.mock(CommandSenderServiceImpl.class);
 
 
     abstract String getCommandName();

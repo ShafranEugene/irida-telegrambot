@@ -1,21 +1,22 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
 import com.github.iridatelegrambot.entity.UserTelegram;
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import com.github.iridatelegrambot.service.UserTelegramService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.Optional;
 @Component
 public class AdminSetStatusCallbackCommand implements CallbackCommand {
-    private final SendMessageService sendMessageService;
+    private final CommandCallbackSenderService sendMessageService;
     private final UserTelegramService userTelegramService;
     private Long chatId;
     private Integer messageId;
     private final CallbackCommandName commandName = CallbackCommandName.ADMIN_MENU_SET_STATUS;
-
-    public AdminSetStatusCallbackCommand(SendMessageService sendMessageService, UserTelegramService userTelegramService) {
+    @Autowired
+    public AdminSetStatusCallbackCommand(CommandCallbackSenderService sendMessageService, UserTelegramService userTelegramService) {
         this.sendMessageService = sendMessageService;
         this.userTelegramService = userTelegramService;
     }
@@ -44,7 +45,8 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
             UserTelegram userTelegram = userOptional.get();
             userTelegram.setActive(status);
             userTelegramService.save(userTelegram);
-            sendMessageService.editMessage(chatId,messageId,"Готово, статус пользователя был изменен.");
+            sendMessageService.deleteMessage(chatId,messageId);
+            sendMessageService.sendMessage(chatId.toString(),"Готово, статус пользователя был изменен.");
         } else {
             sendMessageService.sendMessage(chatId.toString(),"Не смог найти такого пользователя.");
         }
@@ -56,7 +58,8 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
             UserTelegram userTelegram = userOptional.get();
             userTelegram.setAdmin(true);
             userTelegramService.save(userTelegram);
-            sendMessageService.editMessage(chatId,messageId,"Готово. Пользователю были выданы права администратора.");
+            sendMessageService.deleteMessage(chatId,messageId);
+            sendMessageService.sendMessage(chatId.toString(),"Готово. Пользователю были выданы права администратора.");
             sendMessageService.sendMessage(chatIdUser.toString(),"Вам было выдано права администратора");
         } else {
             sendMessageService.sendMessage(chatId.toString(),"Не смог найти такого пользователя.");

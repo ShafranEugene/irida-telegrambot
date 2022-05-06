@@ -1,4 +1,4 @@
-# Irida Telegram Bot
+<h1 align="center">Irida Telegram Bot</h1>
 
 Telegram bot for saving and managing orders.
 

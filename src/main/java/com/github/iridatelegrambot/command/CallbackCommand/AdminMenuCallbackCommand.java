@@ -1,7 +1,7 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
 import com.github.iridatelegrambot.entity.UserTelegram;
-import com.github.iridatelegrambot.service.send.SendMessageAdminMenuService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,14 +10,14 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import java.util.Optional;
 @Component
 public class AdminMenuCallbackCommand implements CallbackCommand {
-    private final SendMessageAdminMenuService sendMessageService;
+    private final CommandCallbackSenderService sendMessageService;
     private final UserTelegramService userTelegramService;
     private Long chatId;
     private final CallbackCommandName commandName = CallbackCommandName.ADMIN_MENU;
     private Integer messageId;
 
     @Autowired
-    public AdminMenuCallbackCommand(SendMessageAdminMenuService sendMessageService, UserTelegramService userTelegramService) {
+    public AdminMenuCallbackCommand(CommandCallbackSenderService sendMessageService, UserTelegramService userTelegramService) {
         this.sendMessageService = sendMessageService;
         this.userTelegramService = userTelegramService;
     }

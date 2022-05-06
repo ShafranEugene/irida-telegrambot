@@ -1,10 +1,8 @@
 package com.github.iridatelegrambot.test.command;
 
 import com.github.iridatelegrambot.command.*;
-import com.github.iridatelegrambot.service.send.CommandSenderService;
-import com.github.iridatelegrambot.service.send.CommandSenderServiceImpl;
-import com.github.iridatelegrambot.service.send.SendMessageService;
-import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.senders.CommandSenderService;
+import com.github.iridatelegrambot.service.senders.CommandSenderServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

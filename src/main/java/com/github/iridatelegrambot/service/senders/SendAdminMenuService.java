@@ -1,6 +1,6 @@
-package com.github.iridatelegrambot.service.send;
+package com.github.iridatelegrambot.service.senders;
 
-public interface SendMessageAdminMenuService extends SendMessageService{
+public interface SendAdminMenuService{
 
     void sendAdminMenu(Long chatId, String message,Integer idMessage);
 

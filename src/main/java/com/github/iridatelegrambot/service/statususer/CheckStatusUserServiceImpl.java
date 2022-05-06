@@ -1,7 +1,7 @@
 package com.github.iridatelegrambot.service.statususer;
 
 import com.github.iridatelegrambot.entity.UserTelegram;
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.senders.SendMessageService;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

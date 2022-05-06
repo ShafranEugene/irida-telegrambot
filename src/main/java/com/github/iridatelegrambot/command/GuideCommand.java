@@ -1,8 +1,6 @@
-package com.github.iridatelegrambot.command.CallbackCommand;
+package com.github.iridatelegrambot.command;
 
-import com.github.iridatelegrambot.command.Command;
-import com.github.iridatelegrambot.command.CommandName;
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.senders.SendMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;

@@ -1,4 +1,4 @@
-package com.github.iridatelegrambot.service.send;
+package com.github.iridatelegrambot.service.senders;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommandSenderServiceImpl implements CommandSenderService {
     private final SendMessageService sendMessage;
-    private final SendMessageMainMenuService sendMainMenuService;
-    private final SendMessageStatMenuService sendStatMenu;
-    private final SendMessageOrderMenuService sendMessageService;
+    private final SendMainMenuService sendMainMenuService;
+    private final SendStatMenuService sendStatMenu;
+    private final SendOrderMenuService sendMessageService;
 
     @Autowired
-    public CommandSenderServiceImpl(SendMessageService sendMessage, SendMessageMainMenuService sendMainMenuService, SendMessageStatMenuService sendStatMenu, SendMessageOrderMenuService sendMessageService) {
+    public CommandSenderServiceImpl(SendMessageService sendMessage, SendMainMenuService sendMainMenuService, SendStatMenuService sendStatMenu, SendOrderMenuService sendMessageService) {
         this.sendMessage = sendMessage;
         this.sendMainMenuService = sendMainMenuService;
         this.sendStatMenu = sendStatMenu;

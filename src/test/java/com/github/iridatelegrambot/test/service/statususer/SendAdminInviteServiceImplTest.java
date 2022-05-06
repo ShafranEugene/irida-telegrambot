@@ -3,8 +3,8 @@ package com.github.iridatelegrambot.test.service.statususer;
 import com.github.iridatelegrambot.entity.UserTelegram;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.service.UserTelegramServiceImpl;
-import com.github.iridatelegrambot.service.send.SendMessageInviteForAdminService;
-import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.senders.SendInviteForAdminService;
+import com.github.iridatelegrambot.service.senders.SendInviteForAdminServiceImpl;
 import com.github.iridatelegrambot.service.statususer.MuteInviteService;
 import com.github.iridatelegrambot.service.statususer.MuteInviteServiceImpl;
 import com.github.iridatelegrambot.service.statususer.SendAdminInviteServiceImpl;
@@ -18,13 +18,13 @@ public class SendAdminInviteServiceImplTest {
     private SendAdminInviteServiceImpl sendAdminInviteService;
     private UserTelegramService userTelegramService;
     private MuteInviteService muteInviteService;
-    private SendMessageInviteForAdminService sendMessageService;
+    private SendInviteForAdminService sendMessageService;
 
     @BeforeEach
     void init(){
         userTelegramService = Mockito.mock(UserTelegramServiceImpl.class);
         muteInviteService = Mockito.mock(MuteInviteServiceImpl.class);
-        sendMessageService = Mockito.mock(SendMessageServiceImpl.class);
+        sendMessageService = Mockito.mock(SendInviteForAdminServiceImpl.class);
         sendAdminInviteService = new SendAdminInviteServiceImpl(sendMessageService,userTelegramService,muteInviteService);
     }
 

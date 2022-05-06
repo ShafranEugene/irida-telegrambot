@@ -1,7 +1,6 @@
 package com.github.iridatelegrambot.command;
 
-import com.github.iridatelegrambot.service.send.CommandSenderService;
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.senders.CommandSenderService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 @Component

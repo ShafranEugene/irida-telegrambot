@@ -1,4 +1,4 @@
-package com.github.iridatelegrambot.service.send;
+package com.github.iridatelegrambot.service.senders;
 
 public interface CommandSenderService {
     void sendMainMenu(Long chatId, String message);

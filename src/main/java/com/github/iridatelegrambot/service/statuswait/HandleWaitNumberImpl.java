@@ -3,8 +3,7 @@ package com.github.iridatelegrambot.service.statuswait;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.AnswerCatcherService;
-import com.github.iridatelegrambot.service.send.SendMessageCitiesService;
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,16 +13,16 @@ import java.util.Optional;
 @Service
 public class HandleWaitNumberImpl implements HandleWaitNumber {
 
-    private final SendMessageCitiesService sendMessageService;
+    private final CommandCallbackSenderService commandCallbackSenderService;
     private final AnswerCatcherService answerCatcherService;
     private WaitDocument document;
     private WaitTypeStatus waitType;
     private Long chatId;
     private String answer;
     @Autowired
-    public HandleWaitNumberImpl(SendMessageCitiesService sendMessageService, AnswerCatcherService answerCatcherService) {
-        this.sendMessageService = sendMessageService;
+    public HandleWaitNumberImpl(AnswerCatcherService answerCatcherService, CommandCallbackSenderService commandCallbackSenderService) {
         this.answerCatcherService = answerCatcherService;
+        this.commandCallbackSenderService = commandCallbackSenderService;
     }
     @Override
     public void handle(Update update){
@@ -56,7 +55,7 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
 
         Optional<WaitTypeStatus> typeStatusOptional = document.getWaitType(chatId);
         if(typeStatusOptional.isEmpty()){
-            sendMessageService.sendMessage(chatId.toString(),"Ошибка. Не найден цель для вводимого номера.");
+            commandCallbackSenderService.sendMessage(chatId.toString(),"Ошибка. Не найден цель для вводимого номера.");
         }
         waitType = typeStatusOptional.get();
     }
@@ -67,33 +66,33 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
             if(order.isEmpty()){
                 comeBackDocumentStatus();
             }
-            sendMessageService.sendListCityForOrder(order,chatId);
+            commandCallbackSenderService.sendListCityForOrder(order,chatId);
         } else if(document == WaitDocument.INVOICE){
             Optional<Invoice> invoice = answerCatcherService.addInvoice(update);
             if(invoice.isEmpty()){
                 comeBackDocumentStatus();
             }
-            sendMessageService.sendListCityForInvoice(invoice,chatId);
+            commandCallbackSenderService.sendListCityForInvoice(invoice,chatId);
         }
     }
 
     private void infoDocument(Update update){
         if(document == WaitDocument.ORDER){
             answer = answerCatcherService.infoOrder(update);
-            sendMessageService.sendMessage(chatId.toString(),answer);
+            commandCallbackSenderService.sendMessage(chatId.toString(),answer);
         } else if(document == WaitDocument.INVOICE){
             answer = answerCatcherService.infoInvoice(update);
-            sendMessageService.sendMessage(chatId.toString(),answer);
+            commandCallbackSenderService.sendMessage(chatId.toString(),answer);
         }
     }
 
     private void deleteDocument(Update update){
         if(document == WaitDocument.ORDER){
             answer = answerCatcherService.deleteOrder(update);
-            sendMessageService.sendMessage(chatId.toString(),answer);
+            commandCallbackSenderService.sendMessage(chatId.toString(),answer);
         } else if(document == WaitDocument.INVOICE){
             answer = answerCatcherService.deleteInvoice(update);
-            sendMessageService.sendMessage(chatId.toString(),answer);
+            commandCallbackSenderService.sendMessage(chatId.toString(),answer);
         }
     }
 

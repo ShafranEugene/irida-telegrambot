@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.service.InvoiceService;
-import com.github.iridatelegrambot.service.send.SendMessageWithOrderService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -12,12 +12,12 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 @Component
 public class AddInvoiceCallbackCommand implements CallbackCommand {
 
-    private final SendMessageWithOrderService sendMessageService;
+    private final CommandCallbackSenderService sendMessageService;
     private final InvoiceService invoiceService;
     private final CallbackCommandName commandName = CallbackCommandName.ADD_INVOICE;
 
     @Autowired
-    public AddInvoiceCallbackCommand(SendMessageWithOrderService sendMessageService,InvoiceService invoiceService){
+    public AddInvoiceCallbackCommand(CommandCallbackSenderService sendMessageService,InvoiceService invoiceService){
         this.sendMessageService = sendMessageService;
         this.invoiceService = invoiceService;
     }
@@ -42,7 +42,7 @@ public class AddInvoiceCallbackCommand implements CallbackCommand {
             Invoice invoiceJson = objectMapper.readValue(JSONData,Invoice.class);
             invoice.setCity(invoiceJson.getCity());
             invoiceService.save(invoice);
-            sendMessageService.sendActiveOrdersForInvoice(chatId,"Выберете заказ:",callbackQuery.getMessage().getMessageId(),
+            sendMessageService.sendActiveOrdersForInvoice(chatId,"Выберете заказ:",messageId,
                     invoice);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

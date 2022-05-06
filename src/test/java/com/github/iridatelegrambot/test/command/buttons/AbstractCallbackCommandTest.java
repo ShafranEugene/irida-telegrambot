@@ -4,7 +4,9 @@ import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommand;
 import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandContainer;
 import com.github.iridatelegrambot.service.*;
 
-import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderServiceImpl;
+import com.github.iridatelegrambot.service.senders.SendMessageServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -16,6 +18,7 @@ public abstract class AbstractCallbackCommandTest {
     protected InvoiceServiceImpl mInvoiceService = Mockito.mock(InvoiceServiceImpl.class);
     protected SendMessageServiceImpl mSendMessageService = Mockito.mock(SendMessageServiceImpl.class);
     protected UserTelegramServiceImpl mUserTelegramService = Mockito.mock(UserTelegramServiceImpl.class);
+    protected CommandCallbackSenderService commandCallbackSenderService = Mockito.mock(CommandCallbackSenderServiceImpl.class);
 
     protected abstract CallbackCommand getCallbackCommand();
 

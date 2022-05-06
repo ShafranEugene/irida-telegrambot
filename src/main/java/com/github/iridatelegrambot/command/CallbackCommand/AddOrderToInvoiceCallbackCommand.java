@@ -7,7 +7,7 @@ import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.send.SendMessageWithOrderService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -15,13 +15,13 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 @Component
 public class AddOrderToInvoiceCallbackCommand implements CallbackCommand {
 
-    private final SendMessageWithOrderService sendMessageService;
+    private final CommandCallbackSenderService sendMessageService;
     private final InvoiceService invoiceService;
     private final OrderService orderService;
     private final CallbackCommandName commandName = CallbackCommandName.ADD_ORDER_TO_INVOICE;
 
     @Autowired
-    public AddOrderToInvoiceCallbackCommand(SendMessageWithOrderService sendMessageService, InvoiceService invoiceService,
+    public AddOrderToInvoiceCallbackCommand(CommandCallbackSenderService sendMessageService, InvoiceService invoiceService,
                                             OrderService orderService) {
         this.sendMessageService = sendMessageService;
         this.invoiceService = invoiceService;

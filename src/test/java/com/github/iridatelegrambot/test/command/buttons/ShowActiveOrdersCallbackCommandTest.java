@@ -50,7 +50,7 @@ public class ShowActiveOrdersCallbackCommandTest extends AbstractCallbackCommand
 
         //when
         showActiveOrdersCallbackCommand.execute(callbackQuery);
-        Mockito.verify(mSendMessageService).sendMessage(chatIdCaptor.capture(),messageCaptor.capture());
+        Mockito.verify(commandCallbackSenderService).sendMessage(chatIdCaptor.capture(),messageCaptor.capture());
         //then
         Assertions.assertEquals("Заказ не найден.",messageCaptor.getValue());
         Assertions.assertEquals(String.valueOf(12345678L),chatIdCaptor.getValue());

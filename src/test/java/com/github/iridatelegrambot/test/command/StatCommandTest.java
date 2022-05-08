@@ -18,7 +18,6 @@ public class StatCommandTest {
 
     private final UserTelegramService mUserTelegramService = Mockito.mock(UserTelegramService.class);
     private final IridaBot mIridaBot = Mockito.mock(IridaBot.class);
-    private final SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot);
     private final CommandSenderService commandSenderService = Mockito.mock(CommandSenderService.class);
     private final StatCommand statCommand = new StatCommand(commandSenderService,mUserTelegramService);
 
@@ -46,6 +45,6 @@ public class StatCommandTest {
         statCommand.execute(update);
 
         //then
-        Mockito.verify(mIridaBot).execute(sendMessage);
+        Mockito.verify(commandSenderService).sendStatMenu(chatId,"Количество активных пользователей : 0\nАктивные пользователеи:");
     }
 }

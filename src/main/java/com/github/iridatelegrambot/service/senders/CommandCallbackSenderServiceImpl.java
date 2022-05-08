@@ -11,24 +11,20 @@ import java.util.Optional;
 @Service
 public class CommandCallbackSenderServiceImpl implements CommandCallbackSenderService{
     private final SendMessageService sendMessageService;
-    private final SendWithOrderService sendMessageWithOrderService;
+    private final SendDocumentService sendDocumentService;
     private final SendMainMenuService sendMessageMainMenuService;
-    private final SendAdminMenuService sendMessageAdminMenuService;
     private final SendOrderMenuService sendMessageOrderMenuService;
     private final SendStatMenuService sendMessageStatMenuService;
-    private final SendCitiesService sendCitiesService;
 
     @Autowired
-    public CommandCallbackSenderServiceImpl(SendMessageService sendMessageService, SendWithOrderService sendMessageWithOrderService, SendMainMenuService sendMessageMainMenuService,
-                                            SendAdminMenuService sendMessageAdminMenuService, SendOrderMenuService sendMessageOrderMenuService,
-                                            SendStatMenuService sendMessageStatMenuService, SendCitiesService sendCitiesService) {
+    public CommandCallbackSenderServiceImpl(SendMessageService sendMessageService, SendDocumentService sendDocumentService, SendMainMenuService sendMessageMainMenuService,
+                                            SendOrderMenuService sendMessageOrderMenuService,
+                                            SendStatMenuService sendMessageStatMenuService) {
         this.sendMessageService = sendMessageService;
-        this.sendMessageWithOrderService = sendMessageWithOrderService;
+        this.sendDocumentService = sendDocumentService;
         this.sendMessageMainMenuService = sendMessageMainMenuService;
-        this.sendMessageAdminMenuService = sendMessageAdminMenuService;
         this.sendMessageOrderMenuService = sendMessageOrderMenuService;
         this.sendMessageStatMenuService = sendMessageStatMenuService;
-        this.sendCitiesService = sendCitiesService;
     }
 
     @Override
@@ -38,7 +34,7 @@ public class CommandCallbackSenderServiceImpl implements CommandCallbackSenderSe
 
     @Override
     public void sendActiveOrdersForInvoice(Long chatId, String message, Integer messageId, Invoice invoice){
-        sendMessageWithOrderService.sendActiveOrdersForInvoice(chatId,message,messageId,invoice);
+        sendDocumentService.sendActiveOrdersForInvoice(chatId,message,messageId,invoice);
     }
 
     @Override
@@ -53,17 +49,17 @@ public class CommandCallbackSenderServiceImpl implements CommandCallbackSenderSe
 
     @Override
     public void sendMessageCloseOrder(Long chatId, Integer messageId, String message, Order order){
-        sendMessageWithOrderService.sendMessageCloseOrder(chatId,messageId,message,order);
+        sendDocumentService.sendMessageCloseOrder(chatId,messageId,message,order);
     }
 
     @Override
     public void sendAdminSetStatus(Long chatId, boolean status, String message, Integer messageId){
-        sendMessageAdminMenuService.sendAdminSetStatus(chatId,status,message,messageId);
+        sendMessageStatMenuService.sendAdminSetStatus(chatId,status,message,messageId);
     }
 
     @Override
     public void sendUsersForAdmin(Long chatId, String message, Integer messageId){
-        sendMessageAdminMenuService.sendUsersForAdmin(chatId,message, messageId);
+        sendMessageStatMenuService.sendUsersForAdmin(chatId,message, messageId);
     }
 
     @Override
@@ -78,16 +74,16 @@ public class CommandCallbackSenderServiceImpl implements CommandCallbackSenderSe
 
     @Override
     public void sendAdminMenu(Long chatId, String message, Integer messageId){
-        sendMessageAdminMenuService.sendAdminMenu(chatId,message,messageId);
+        sendMessageStatMenuService.sendAdminMenu(chatId,message,messageId);
     }
 
     @Override
     public void sendListCityForOrder(Optional<Order> orderOptional, Long chatId){
-        sendCitiesService.sendListCityForOrder(orderOptional,chatId);
+        sendDocumentService.sendListCityForOrder(orderOptional,chatId);
     }
 
     @Override
     public void sendListCityForInvoice(Optional<Invoice> invoiceOptional, Long chatId){
-        sendCitiesService.sendListCityForInvoice(invoiceOptional,chatId);
+        sendDocumentService.sendListCityForInvoice(invoiceOptional,chatId);
     }
 }

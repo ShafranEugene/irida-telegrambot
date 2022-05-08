@@ -1,7 +1,8 @@
 package com.github.iridatelegrambot.service.senders;
 
 import com.github.iridatelegrambot.entity.Order;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
+import com.github.iridatelegrambot.service.buttons.InlineDocumentButtonService;
+import com.github.iridatelegrambot.service.buttons.InlineMenuButtonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -10,16 +11,19 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 public class SendOrderMenuServiceImpl implements SendOrderMenuService {
 
     private final SendMessageService sendMessageService;
-    private final InlineKeyboardService inlineKeyboardService;
+    private final InlineMenuButtonService inlineKeyboardService;
+    private final InlineDocumentButtonService inlineDocumentButtonService;
     @Autowired
-    public SendOrderMenuServiceImpl(SendMessageService sendMessageService, InlineKeyboardService inlineKeyboardService) {
+    public SendOrderMenuServiceImpl(SendMessageService sendMessageService, InlineMenuButtonService inlineKeyboardService,
+                                    InlineDocumentButtonService inlineDocumentButtonService) {
         this.sendMessageService = sendMessageService;
         this.inlineKeyboardService = inlineKeyboardService;
+        this.inlineDocumentButtonService = inlineDocumentButtonService;
     }
 
     @Override
     public void sendActiveOrders(Long chatId, String message){
-        sendMessageService.sendMessage(chatId.toString(),message,inlineKeyboardService.showActiveOrders());
+        sendMessageService.sendMessage(chatId.toString(),message,inlineDocumentButtonService.showActiveOrders());
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.github.iridatelegrambot.service.buttons;
 
-import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,9 +21,8 @@ public class InlineMenuButtonServiceImpl implements InlineMenuButtonService {
     }
 
     @Override
-    public InlineKeyboardMarkup showMenuOrder(Order order){
+    public InlineKeyboardMarkup showMenuOrder(Integer idOrder){
         Map<String,String> buttonsMap = new HashMap<>();
-        int idOrder = order.getId();
         buttonsMap.put("Добавить накладную на перемещение",ORDER_MENU.getNameForService() + "addinvoice:id:" + idOrder);
         buttonsMap.put("Удалить заказ",ORDER_MENU.getNameForService() + "delete:id:" + idOrder);
         ORDER_MENU.setSubCommands(new String[]{"addinvoice","delete"});

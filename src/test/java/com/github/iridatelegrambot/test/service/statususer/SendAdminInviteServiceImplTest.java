@@ -1,6 +1,8 @@
 package com.github.iridatelegrambot.test.service.statususer;
 
 import com.github.iridatelegrambot.entity.UserTelegram;
+import com.github.iridatelegrambot.service.HandleUserTelegramService;
+import com.github.iridatelegrambot.service.HandleUserTelegramServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.service.UserTelegramServiceImpl;
 import com.github.iridatelegrambot.service.senders.SendInviteForAdminService;
@@ -19,13 +21,15 @@ public class SendAdminInviteServiceImplTest {
     private UserTelegramService userTelegramService;
     private MuteInviteService muteInviteService;
     private SendInviteForAdminService sendMessageService;
+    private HandleUserTelegramService handleUserTelegramService;
 
     @BeforeEach
     void init(){
         userTelegramService = Mockito.mock(UserTelegramServiceImpl.class);
         muteInviteService = Mockito.mock(MuteInviteServiceImpl.class);
         sendMessageService = Mockito.mock(SendInviteForAdminServiceImpl.class);
-        sendAdminInviteService = new SendAdminInviteServiceImpl(sendMessageService,userTelegramService,muteInviteService);
+        handleUserTelegramService = Mockito.mock(HandleUserTelegramServiceImpl.class);
+        sendAdminInviteService = new SendAdminInviteServiceImpl(sendMessageService, handleUserTelegramService,userTelegramService,muteInviteService);
     }
 
     @Test
@@ -41,10 +45,12 @@ public class SendAdminInviteServiceImplTest {
         adminList.add(admin);
 
         Mockito.when(userTelegramService.findAllAdmin()).thenReturn(adminList);
+        Mockito.when(userTelegramService.findByChatId(11111111L)).thenReturn(Optional.of(newUser));
         Mockito.when(muteInviteService.checkStatus(newUser.getChatId())).thenReturn(true);
-        String message = "Получена заявка на доступ к боту от пользователя:\n" + newUser.toStringInfoForUser();
+        String message = "Получена заявка на доступ к боту от пользователя:\n" +
+                handleUserTelegramService.toStringInfoForUser(11111111L);
         //when
-        sendAdminInviteService.send(newUser);
+        sendAdminInviteService.send(11111111L);
         //then
         Mockito.verify(sendMessageService).sendInviteToAdmin(admin.getChatId(),newUser.getChatId(),message);
     }

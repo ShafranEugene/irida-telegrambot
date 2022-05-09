@@ -1,24 +1,22 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
-import com.github.iridatelegrambot.entity.UserTelegram;
+import com.github.iridatelegrambot.service.HandleUserTelegramService;
 import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
-import com.github.iridatelegrambot.service.UserTelegramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
-import java.util.Optional;
 @Component
 public class AdminSetStatusCallbackCommand implements CallbackCommand {
     private final CommandCallbackSenderService sendMessageService;
-    private final UserTelegramService userTelegramService;
+    private final HandleUserTelegramService handleUserTelegramService;
     private Long chatId;
     private Integer messageId;
     private final CallbackCommandName commandName = CallbackCommandName.ADMIN_MENU_SET_STATUS;
     @Autowired
-    public AdminSetStatusCallbackCommand(CommandCallbackSenderService sendMessageService, UserTelegramService userTelegramService) {
+    public AdminSetStatusCallbackCommand(CommandCallbackSenderService sendMessageService,HandleUserTelegramService handleUserTelegramService) {
         this.sendMessageService = sendMessageService;
-        this.userTelegramService = userTelegramService;
+        this.handleUserTelegramService = handleUserTelegramService;
     }
 
     @Override
@@ -40,11 +38,8 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
     }
 
     private void setStatusUser(Long chatIdUser, boolean status){
-        Optional<UserTelegram> userOptional = userTelegramService.findByChatId(chatIdUser);
-        if(userOptional.isPresent()){
-            UserTelegram userTelegram = userOptional.get();
-            userTelegram.setActive(status);
-            userTelegramService.save(userTelegram);
+        if(handleUserTelegramService.checkUserIsPresent(chatIdUser)){
+            handleUserTelegramService.setUserActiveStatus(chatIdUser,status);
             sendMessageService.deleteMessage(chatId,messageId);
             sendMessageService.sendMessage(chatId.toString(),"Готово, статус пользователя был изменен.");
         } else {
@@ -53,11 +48,8 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
     }
 
     private void setAdmin(Long chatIdUser){
-        Optional<UserTelegram> userOptional = userTelegramService.findByChatId(chatIdUser);
-        if(userOptional.isPresent()){
-            UserTelegram userTelegram = userOptional.get();
-            userTelegram.setAdmin(true);
-            userTelegramService.save(userTelegram);
+        if(handleUserTelegramService.checkUserIsPresent(chatId)){
+            handleUserTelegramService.setUserAdminStatus(chatId,true);
             sendMessageService.deleteMessage(chatId,messageId);
             sendMessageService.sendMessage(chatId.toString(),"Готово. Пользователю были выданы права администратора.");
             sendMessageService.sendMessage(chatIdUser.toString(),"Вам было выдано права администратора");

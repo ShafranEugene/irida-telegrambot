@@ -1,8 +1,8 @@
 package com.github.iridatelegrambot.test.service.statususer;
 
 import com.github.iridatelegrambot.entity.UserTelegram;
-import com.github.iridatelegrambot.service.UserTelegramService;
-import com.github.iridatelegrambot.service.UserTelegramServiceImpl;
+import com.github.iridatelegrambot.service.HandleUserTelegramService;
+import com.github.iridatelegrambot.service.HandleUserTelegramServiceImpl;
 import com.github.iridatelegrambot.service.senders.SendMessageService;
 import com.github.iridatelegrambot.service.senders.SendMessageServiceImpl;
 import com.github.iridatelegrambot.service.statususer.CheckStatusUserService;
@@ -16,22 +16,20 @@ import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.*;
-import java.util.Optional;
 
 public class CheckStatusUserServiceImplTest {
     private CheckStatusUserService checkStatusUserService;
-    private UserTelegramService userTelegramServiceImpl;
+    private HandleUserTelegramService handleUserTelegramService;
     private SendMessageService sendMessageServiceImpl;
     private SendAdminInviteService sendAdminInviteServiceImpl;
     private final Long chatId = 12345678L;
 
     @BeforeEach
     void init(){
-        userTelegramServiceImpl = Mockito.mock(UserTelegramServiceImpl.class);
+        handleUserTelegramService = Mockito.mock(HandleUserTelegramServiceImpl.class);
         sendMessageServiceImpl = Mockito.mock(SendMessageServiceImpl.class);
         sendAdminInviteServiceImpl = Mockito.mock(SendAdminInviteServiceImpl.class);
-        checkStatusUserService = new CheckStatusUserServiceImpl(sendMessageServiceImpl,userTelegramServiceImpl,sendAdminInviteServiceImpl);
+        checkStatusUserService = new CheckStatusUserServiceImpl(sendMessageServiceImpl,sendAdminInviteServiceImpl,handleUserTelegramService);
     }
 
     @Test
@@ -40,7 +38,8 @@ public class CheckStatusUserServiceImplTest {
         UserTelegram userTelegram = new UserTelegram();
         userTelegram.setChatId(chatId);
         userTelegram.setActive(true);
-        Mockito.when(userTelegramServiceImpl.findByChatId(chatId)).thenReturn(Optional.of(userTelegram));
+        Mockito.when(handleUserTelegramService.checkUserOnEmpty(chatId)).thenReturn(false);
+        Mockito.when(handleUserTelegramService.getActiveStatusUser(chatId)).thenReturn(true);
         //when-then
         Assertions.assertTrue(checkStatusUserService.check(createUpdate()));
     }
@@ -51,10 +50,11 @@ public class CheckStatusUserServiceImplTest {
         UserTelegram userTelegram = new UserTelegram();
         userTelegram.setChatId(chatId);
         userTelegram.setActive(false);
-        Mockito.when(userTelegramServiceImpl.findByChatId(chatId)).thenReturn(Optional.of(userTelegram));
+        Mockito.when(handleUserTelegramService.checkUserOnEmpty(chatId)).thenReturn(false);
+        Mockito.when(handleUserTelegramService.getActiveStatusUser(chatId)).thenReturn(false);
         //when-then
         Assertions.assertFalse(checkStatusUserService.check(createUpdate()));
-        Mockito.verify(sendAdminInviteServiceImpl).send(userTelegram);
+        Mockito.verify(sendAdminInviteServiceImpl).send(chatId);
     }
 
     private Update createUpdate(){
@@ -69,16 +69,11 @@ public class CheckStatusUserServiceImplTest {
     void shouldNotFindUser(){
         //given
         Update update = createUpdate();
-        UserTelegram userTelegram = new UserTelegram();
-        userTelegram.setChatId(chatId);
-        Mockito.when(userTelegramServiceImpl.findByChatId(chatId)).thenReturn(Optional.empty());
-        Mockito.when(userTelegramServiceImpl.findOrCreateUser(update)).thenReturn(userTelegram);
-        List<UserTelegram> userList = new ArrayList<>();
-        userList.add(new UserTelegram());
-        Mockito.when(userTelegramServiceImpl.getAllActiveUser()).thenReturn(userList);
+        Mockito.when(handleUserTelegramService.checkUserOnEmpty(chatId)).thenReturn(true);
+        Mockito.when(handleUserTelegramService.checkOnFirstUser(chatId)).thenReturn(false);
         //when-then
         Assertions.assertFalse(checkStatusUserService.check(update));
-        Mockito.verify(sendAdminInviteServiceImpl).send(userTelegram);
+        Mockito.verify(sendAdminInviteServiceImpl).send(chatId);
     }
 
     @Test
@@ -88,7 +83,9 @@ public class CheckStatusUserServiceImplTest {
         userTelegram.setChatId(chatId);
         userTelegram.setActive(false);
         userTelegram.setAdmin(true);
-        Mockito.when(userTelegramServiceImpl.findByChatId(chatId)).thenReturn(Optional.of(userTelegram));
+        Mockito.when(handleUserTelegramService.checkUserOnEmpty(chatId)).thenReturn(false);
+        Mockito.when(handleUserTelegramService.getActiveStatusUser(chatId)).thenReturn(false);
+        Mockito.when(handleUserTelegramService.getAdminStatusUser(chatId)).thenReturn(true);
         //when-then
         Assertions.assertTrue(checkStatusUserService.check(createUpdate()));
     }
@@ -98,9 +95,8 @@ public class CheckStatusUserServiceImplTest {
         Update update = createUpdate();
         UserTelegram userTelegram = new UserTelegram();
         userTelegram.setChatId(chatId);
-        Mockito.when(userTelegramServiceImpl.findByChatId(chatId)).thenReturn(Optional.empty());
-        Mockito.when(userTelegramServiceImpl.findOrCreateUser(update)).thenReturn(userTelegram);
-        Mockito.when(userTelegramServiceImpl.getAllActiveUser()).thenReturn(new ArrayList<>());
+        Mockito.when(handleUserTelegramService.checkUserOnEmpty(chatId)).thenReturn(true);
+        Mockito.when(handleUserTelegramService.checkOnFirstUser(chatId)).thenReturn(true);
         //when-then
         Assertions.assertTrue(checkStatusUserService.check(update));
     }

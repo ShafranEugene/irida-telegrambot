@@ -26,7 +26,12 @@ public class StatCommand implements Command{
         List<UserTelegram> userTelegramList = telegramService.getAllActiveUser();
         StringBuilder text = new StringBuilder(STAT_MESSAGE);
         for(UserTelegram user : userTelegramList){
-            text.append("\n\t - ").append(user.getUserName()).append(", ").append(user.getFirstName()).append(", Id:").append(user.getChatId()).append(", Админ: ").append(user.isAdmin()).append(";");
+            text.append("\n\t - ").append(user.getUserName()).append(", ").append(user.getFirstName()).append(", Id:").append(user.getChatId()).append(", Админ: ");
+            if(user.isAdmin()){
+                text.append("Да;");
+            } else {
+                text.append("Нет;");
+            }
         }
         int quantityUsers = telegramService.getAllActiveUser().size();
         commandSenderService.sendStatMenu(update.getMessage().getChatId(),String.format(text.toString(),quantityUsers));

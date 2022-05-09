@@ -70,11 +70,9 @@ public class SendDocumentServiceImpl implements SendDocumentService {
             sendMessageService.sendMessage(chatId.toString(),"Заказ не найден.");
             return;
         }
-
         Order order = orderOptional.get();
         invoice.setOrder(order);
         invoiceService.save(invoice);
-
         sendMessageCloseOrder(chatId, messageId,"Заказ завершен?",order);
     }
 

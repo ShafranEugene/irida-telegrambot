@@ -79,10 +79,6 @@ public class Order {
         user.addOrder(this);
     }
 
-    public boolean isStatusActive() {
-        return statusActive;
-    }
-
     public void setStatusActive(boolean statusActive) {
         this.statusActive = statusActive;
     }
@@ -118,35 +114,6 @@ public class Order {
                 Objects.equals(user, order.user) &&
                 Objects.equals(date, order.date) &&
                 Objects.equals(invoiceList, order.invoiceList);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, number, city, user, statusActive, date, invoiceList);
-    }
-
-    @Override
-    public String toString() {
-        if(user != null){
-            return "Order{" +
-                    "id=" + id +
-                    ", number='" + number + '\'' +
-                    ", city='" + city + '\'' +
-                    ", user=" + user.getUserName() +
-                    ", statusActive=" + statusActive +
-                    ", date='" + date + '\'' +
-                    ", invoiceList=" + invoiceList +
-                    '}';
-        }
-        return "Order{" +
-                "id=" + id +
-                ", number='" + number + '\'' +
-                ", city='" + city + '\'' +
-                ", user= not find" +
-                ", statusActive=" + statusActive +
-                ", date='" + date + '\'' +
-                ", invoiceList=" + invoiceList +
-                '}';
     }
 
     public String toStringForUsers(){

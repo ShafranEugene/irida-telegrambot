@@ -1,6 +1,6 @@
 package com.github.iridatelegrambot.command;
 
-import com.github.iridatelegrambot.service.senders.SendMessageService;
+import com.github.iridatelegrambot.service.senders.CommandSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,11 +13,11 @@ import java.util.List;
 @Component
 public class GuideCommand implements Command {
 
-    private final SendMessageService sendMessageService;
+    private final CommandSenderService commandSenderService;
     private final CommandName commandName = CommandName.GUIDE;
     @Autowired
-    public GuideCommand(SendMessageService sendMessageService) {
-        this.sendMessageService = sendMessageService;
+    public GuideCommand(CommandSenderService commandSenderService) {
+        this.commandSenderService = commandSenderService;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class GuideCommand implements Command {
             for(String line : lines){
                 text.append(line).append("\n");
             }
-            sendMessageService.sendMessage(chatId.toString(), text.toString());
+            commandSenderService.sendMessage(chatId.toString(), text.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

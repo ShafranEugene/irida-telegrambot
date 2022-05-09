@@ -28,7 +28,7 @@ public class SendOrderMenuServiceImpl implements SendOrderMenuService {
 
     @Override
     public void sendMenuOrder(Long chatId,Order order){
-        InlineKeyboardMarkup markup = inlineKeyboardService.showMenuOrder(order);
+        InlineKeyboardMarkup markup = inlineKeyboardService.showMenuOrder(order.getId());
         sendMessageService.sendMessage(chatId.toString(),order.toStringForUsers(),markup);
     }
 }

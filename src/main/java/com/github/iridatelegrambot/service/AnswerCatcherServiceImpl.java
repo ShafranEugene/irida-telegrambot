@@ -2,7 +2,7 @@ package com.github.iridatelegrambot.service;
 
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
-import com.github.iridatelegrambot.entity.UserTelegram;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -36,12 +36,11 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         if(checkIdentityOrder(numberOrder)){
             return Optional.empty();
         }
-        UserTelegram userTelegram = userTelegramService.findOrCreateUser(update);
 
         Order order = new Order();
         order.setNumber(numberOrder);
         order.setStatusActive(true);
-        order.setUser(userTelegram);
+        order.setUser(userTelegramService.findOrCreateUser(update));
 
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -74,11 +73,10 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         if(checkIdentityInvoice(numberInvoice)){
             return Optional.empty();
         }
-        UserTelegram userTelegram = userTelegramService.findOrCreateUser(update);
 
         Invoice invoice = new Invoice();
         invoice.setNumber(numberInvoice);
-        invoice.setUser(userTelegram);
+        invoice.setUser(userTelegramService.findOrCreateUser(update));
         if(textUpdate.length>1){
             String comment = textUpdate[1];
             invoice.setComment(comment);

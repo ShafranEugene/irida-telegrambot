@@ -26,7 +26,7 @@ public class InlineKeyboardServiceImpl implements InlineKeyboardService{
     }
 
     @Override
-    public InlineKeyboardMarkup createMenu(Map<String, String> textAndCallbackData,Integer amountOfButtonsInRow){
+    public InlineKeyboardMarkup createMenu(TreeMap<String, String> textAndCallbackData,Integer amountOfButtonsInRow){
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         rows.add(new ArrayList<>());
         int counterButtons = 0;

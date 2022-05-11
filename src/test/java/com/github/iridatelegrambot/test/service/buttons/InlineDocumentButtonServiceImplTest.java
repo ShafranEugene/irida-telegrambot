@@ -20,6 +20,7 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.ADD_ORDER;
 import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.ADD_ORDER_TO_INVOICE;
@@ -55,7 +56,7 @@ public class InlineDocumentButtonServiceImplTest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        ArgumentCaptor<Map<String,String>> mapArgumentCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<TreeMap<String,String>> mapArgumentCaptor = ArgumentCaptor.forClass(TreeMap.class);
 
         List<Order> orders = new ArrayList<>();
         orders.add(order);
@@ -82,7 +83,7 @@ public class InlineDocumentButtonServiceImplTest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        ArgumentCaptor<Map<String,String>> mapArgumentCaptor = ArgumentCaptor.forClass(Map.class);
+        ArgumentCaptor<TreeMap<String,String>> mapArgumentCaptor = ArgumentCaptor.forClass(TreeMap.class);
         //when
         inlineDocumentButtonService.cityButtons(order);
         Mockito.verify(inlineKeyboardService).createMenu(mapArgumentCaptor.capture(),eq(3));

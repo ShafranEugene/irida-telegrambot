@@ -28,7 +28,7 @@ public class InlineDocumentButtonServiceImpl implements  InlineDocumentButtonSer
     @Override
     public InlineKeyboardMarkup cityButtons(Order order){
         List<CityName> cityNamesList = new ArrayList<>(Arrays.asList(CityName.values()));
-        Map<String,String> mapData = new HashMap<>();
+        TreeMap<String,String> mapData = new TreeMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
         for (CityName cityName : cityNamesList) {
             order.setCity(cityName.getNameCity());
@@ -50,7 +50,7 @@ public class InlineDocumentButtonServiceImpl implements  InlineDocumentButtonSer
     @Override
     public InlineKeyboardMarkup cityButtons(Invoice invoice){
         List<CityName> cityNamesList = new ArrayList<>(Arrays.asList(CityName.values()));
-        Map<String,String> mapData = new HashMap<>();
+        TreeMap<String,String> mapData = new TreeMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
         for (CityName cityName : cityNamesList) {
             invoice.setCity(cityName.getNameCity());
@@ -73,7 +73,7 @@ public class InlineDocumentButtonServiceImpl implements  InlineDocumentButtonSer
     @Override
     public InlineKeyboardMarkup markupActiveOrdersForInvoice(Invoice invoice){
         List<Order> orders = orderService.getAllOrdersActive();
-        Map<String,String> mapData = new HashMap<>();
+        TreeMap<String,String> mapData = new TreeMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
         for(Order order : orders){
             try {
@@ -89,7 +89,7 @@ public class InlineDocumentButtonServiceImpl implements  InlineDocumentButtonSer
 
     @Override
     public InlineKeyboardMarkup closeOrder(Order order){
-        Map<String,String> mapData = new HashMap<>();
+        TreeMap<String,String> mapData = new TreeMap<>();
         mapData.put("Да",CLOSE_ORDER.getNameForService() + order.getId() + ":false");
         mapData.put("Нет",CLOSE_ORDER.getNameForService() + order.getId() + ":true");
         return inlineKeyboardService.createMenu(mapData,2);
@@ -98,7 +98,7 @@ public class InlineDocumentButtonServiceImpl implements  InlineDocumentButtonSer
     @Override
     public InlineKeyboardMarkup showActiveOrders(){
         List<Order> orders = orderService.getAllOrdersActive();
-        Map<String,String> mapData = new HashMap<>();
+        TreeMap<String,String> mapData = new TreeMap<>();
 
         for(Order order : orders){
             String data = SHOW_ORDER.getNameForService() + "id:" + order.getId();

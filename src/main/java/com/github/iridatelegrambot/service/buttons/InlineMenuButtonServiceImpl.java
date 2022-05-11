@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.*;
 import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.STAT_DOCUMENT;
@@ -22,7 +22,7 @@ public class InlineMenuButtonServiceImpl implements InlineMenuButtonService {
 
     @Override
     public InlineKeyboardMarkup showMenuOrder(Integer idOrder){
-        Map<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new TreeMap<>();
         buttonsMap.put("Добавить накладную на перемещение",ORDER_MENU.getNameForService() + "addinvoice:id:" + idOrder);
         buttonsMap.put("Удалить заказ",ORDER_MENU.getNameForService() + "delete:id:" + idOrder);
         ORDER_MENU.setSubCommands(new String[]{"addinvoice","delete"});
@@ -31,7 +31,7 @@ public class InlineMenuButtonServiceImpl implements InlineMenuButtonService {
 
     @Override
     public InlineKeyboardMarkup showMenuStat(){
-        Map<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new TreeMap<>();
         buttonsMap.put("Информация о всех заказах", STAT_MENU.getNameForService() + "infoAllOrders");
         buttonsMap.put("Информация о всех накладных", STAT_MENU.getNameForService() + "infoAllInvoice");
         buttonsMap.put("Информация для администратора", STAT_MENU.getNameForService() + "mainAdminMenu");
@@ -41,7 +41,7 @@ public class InlineMenuButtonServiceImpl implements InlineMenuButtonService {
 
     @Override
     public InlineKeyboardMarkup showMenuStatDetails(WaitDocument waitDocument){
-        Map<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new TreeMap<>();
         buttonsMap.put("Получить более детальную информацию по накладной",STAT_DOCUMENT.getNameForService() +
                 waitDocument.getName() + ":" + INFO.getName());
         buttonsMap.put("Удалить накладную",STAT_DOCUMENT.getNameForService() +
@@ -51,7 +51,7 @@ public class InlineMenuButtonServiceImpl implements InlineMenuButtonService {
 
     @Override
     public InlineKeyboardMarkup showMenuAdmin(){
-        Map<String,String> buttonsMap = new HashMap<>();
+        Map<String,String> buttonsMap = new TreeMap<>();
         buttonsMap.put("Закрыть доступ пользователю",ADMIN_MENU.getNameForService() + "closeStatusUser");
         buttonsMap.put("Открыть доступ пользователю",ADMIN_MENU.getNameForService() + "openStatusUser");
         buttonsMap.put("Выдать права администратора пользователю",ADMIN_MENU.getNameForService() + "setAdmin");

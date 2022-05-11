@@ -32,8 +32,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
         if(numberOrder.replaceAll("[^0-9]","").isBlank()){
             return Optional.empty();
-        }
-        if(checkIdentityOrder(numberOrder)){
+        } else if(checkIdentityOrder(numberOrder)){
             return Optional.empty();
         }
 
@@ -69,8 +68,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
         if(numberInvoice.replaceAll("[^0-9]","").isBlank()){
             return Optional.empty();
-        }
-        if(checkIdentityInvoice(numberInvoice)){
+        }else if(checkIdentityInvoice(numberInvoice)){
             return Optional.empty();
         }
 

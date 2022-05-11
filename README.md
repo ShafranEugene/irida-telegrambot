@@ -1,22 +1,22 @@
-<h1 align="center">Irida Telegram Bot</h1>
+<h1 style="text-align: center;">Irida Telegram Bot</h1>
 
 Telegram bot for saving and managing orders.
 
 ## Idea
-The main idea is to get practical experience in the development first full project and create a telegram bot which will help with the work of a logistician.
+The main idea is to getting practical experience in the development of first project and creating a telegram bot which will help with the work of a logistician.
 
 ## MVP Scope
-In my work in logistics, I need often to handle orders from branches of my company. These orders contain products that these branches need and need to be transported from other branches by creating an invoice. Bot created for management orders and invoices, show all active orders, save and close them.
+In logistician's job, I need often to handle orders my company's branches. These orders contain products that branches need to transport from other branches by creating an invoice. 
 
-# How it works 
+# How it works
 Based on MVP Scope, in bot have been implemented:
 - Saving orders and invoices.
-- Close orders when creating the corresponding invoice.
-- Show all active orders.
-- Show details and delete any orders and invoices.
-- The bot has a security system, when a new user wants to work with the bot, the bot sends admins to request to get for new user access.
+- Closing orders when creating the corresponding invoice.
+- Showing all active orders.
+- Showing details and deleting any orders and invoices.
+- The bot has a security system - when new user wants to work with the bot, bot sends request to an admin to get access for new user.
 
-The manual is in Russian, users can get it using the /guide command in the bot.
+The manual is in English, users can get it using the /guide command in the bot.
 
 ## Deployment
 Deployment process as easy as possible:

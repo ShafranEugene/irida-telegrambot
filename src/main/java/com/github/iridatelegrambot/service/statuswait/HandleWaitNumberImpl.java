@@ -1,5 +1,7 @@
 package com.github.iridatelegrambot.service.statuswait;
 
+import com.github.iridatelegrambot.entity.Invoice;
+import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.AnswerCatcherService;
 import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,15 +62,18 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
 
     private void addDocument(Update update){
         if(document == WaitDocument.ORDER){
-            if(answerCatcherService.addOrder(update).isEmpty()){
+            Optional<Order> orderOptional = answerCatcherService.addOrder(update);
+            if(orderOptional.isEmpty()){
                 comeBackDocumentStatus();
             }
-            commandCallbackSenderService.sendListCityForOrder(answerCatcherService.addOrder(update),chatId);
+            commandCallbackSenderService.sendListCityForOrder(orderOptional, chatId);
+
         } else if(document == WaitDocument.INVOICE){
-            if(answerCatcherService.addInvoice(update).isEmpty()){
+            Optional<Invoice> invoiceOptional = answerCatcherService.addInvoice(update);
+            if(invoiceOptional.isEmpty()){
                 comeBackDocumentStatus();
             }
-            commandCallbackSenderService.sendListCityForInvoice(answerCatcherService.addInvoice(update),chatId);
+            commandCallbackSenderService.sendListCityForInvoice(invoiceOptional,chatId);
         }
     }
 

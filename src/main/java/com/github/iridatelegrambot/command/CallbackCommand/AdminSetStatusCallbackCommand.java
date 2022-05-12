@@ -48,8 +48,8 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
     }
 
     private void setAdmin(Long chatIdUser){
-        if(handleUserTelegramService.checkUserIsPresent(chatId)){
-            handleUserTelegramService.setUserAdminStatus(chatId,true);
+        if(handleUserTelegramService.checkUserIsPresent(chatIdUser)){
+            handleUserTelegramService.setUserAdminStatus(chatIdUser,true);
             sendMessageService.deleteMessage(chatId,messageId);
             sendMessageService.sendMessage(chatId.toString(),"Готово. Пользователю были выданы права администратора.");
             sendMessageService.sendMessage(chatIdUser.toString(),"Вам было выдано права администратора");

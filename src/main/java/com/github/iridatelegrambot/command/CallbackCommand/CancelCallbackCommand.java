@@ -33,7 +33,7 @@ public class CancelCallbackCommand implements CallbackCommand{
             sendMessageService.deleteMessage(chatId,callbackQuery.getMessage().getMessageId());
             sendMessageService.sendMainMenu(chatId,"Заказ был отменен.");
         } else if(type.equals("invoice")){
-            invoiceService.detele(id);
+            invoiceService.delete(id);
             sendMessageService.deleteMessage(chatId,callbackQuery.getMessage().getMessageId());
             sendMessageService.sendMainMenu(chatId,"Накладная была отменена.");
         }

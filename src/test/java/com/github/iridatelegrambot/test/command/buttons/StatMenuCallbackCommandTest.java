@@ -18,7 +18,7 @@ public class StatMenuCallbackCommandTest extends AbstractCallbackCommandTest {
         //when
         statMenuCallbackCommand.execute(callbackQuery);
         //then
-        Mockito.verify(commandCallbackSenderService).sendMenuStatDetails(12345678L,"Список всех заказов:",0,WaitDocument.ORDER);
+        Mockito.verify(commandCallbackSenderService).sendMenuStatDetails(12345678L,"Список всех заказов:",10,WaitDocument.ORDER);
     }
 
     @Override

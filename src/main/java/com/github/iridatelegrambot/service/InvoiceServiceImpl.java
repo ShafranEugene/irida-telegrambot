@@ -32,8 +32,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void detele(int id) {
-        Invoice invoice = getInvoiceById(id).get();
-        invoiceRepository.delete(invoice);
+    public void delete(int id) {
+        Optional<Invoice> invoiceOptional = getInvoiceById(id);
+        if(invoiceOptional.isPresent()) {
+            Invoice invoice = invoiceOptional.get();
+            invoiceRepository.delete(invoice);
+        }
     }
 }

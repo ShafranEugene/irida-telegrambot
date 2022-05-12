@@ -121,7 +121,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
         for(Invoice invoiceFor : invoiceService.getAllInvoice()){
             if(numberInvoice.equals(invoiceFor.getNumber())){
-                invoiceService.detele(invoiceFor.getId());
+                invoiceService.delete(invoiceFor.getId());
                 return "Накладная с номером \"" + invoiceFor.getNumber() + "\" была удалена.";
             }
         }

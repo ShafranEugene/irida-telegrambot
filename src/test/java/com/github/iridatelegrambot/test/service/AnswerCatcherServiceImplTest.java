@@ -121,7 +121,7 @@ public class AnswerCatcherServiceImplTest {
         answerCatcherService.deleteInvoice(updateWithNumber500);
         //then
         Mockito.verify(orderService).delete(1);
-        Mockito.verify(invoiceService).detele(1);
+        Mockito.verify(invoiceService).delete(1);
     }
 
     @Test

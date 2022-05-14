@@ -16,6 +16,9 @@ public class CallbackCommandContainer {
     public CallbackCommand findAnswer(CallbackQuery callbackQuery) {
         String[] data = callbackQuery.getData().split(":");
         String prefix = data[0];
+        if(!callbackMap.containsKey(prefix)){
+            return callbackMap.get("not_find");
+        }
         return callbackMap.get(prefix);
     }
 }

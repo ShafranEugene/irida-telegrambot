@@ -12,7 +12,8 @@ public enum CallbackCommandName {
     ADD_STATUS_USER("set_status_user","set_status_user:chatId:{id}:boolean"),
     ADMIN_MENU("admin_menu","admin_menu:subcommand"),
     STAT_DOCUMENT("stat_document","stat_document:WaitDocument:WaitTypeStatus"),
-    ADMIN_MENU_SET_STATUS("admin_set_status","admin_set_status:subcommand:{idUsers}:boolean");
+    ADMIN_MENU_SET_STATUS("admin_set_status","admin_set_status:subcommand:{idUsers}:boolean"),
+    NOT_FIND("not_find","not_find");
 
     private final String name;
     private final String format;

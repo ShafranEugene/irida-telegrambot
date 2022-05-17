@@ -7,6 +7,8 @@ import com.github.iridatelegrambot.service.buttons.CommandNameForButtons;
 import com.github.iridatelegrambot.service.statususer.CheckStatusUserService;
 import com.github.iridatelegrambot.service.statuswait.HandleWaitNumber;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,7 @@ public class IridaBot extends TelegramLongPollingBot {
     private final CallbackCommandContainer callbackCommandContainer;
     private final HandleWaitNumber handleWaitNumber;
     private final CheckStatusUserService checkStatusUserService;
+    private final static Logger logger = LoggerFactory.getLogger(IridaBot.class);
 
     @Value("${bot.username}")
     private String username;
@@ -88,6 +91,7 @@ public class IridaBot extends TelegramLongPollingBot {
             } else {
                     container.findCommand(CommandName.NO.getCommandName()).execute(update);
                 }
+            logger.info("Bot received a command \"" + message + "\" from User - " + update.getMessage().getChat().getUserName());
         }
     }
 
@@ -95,5 +99,7 @@ public class IridaBot extends TelegramLongPollingBot {
     private void handleCallback(Update update){
         CallbackQuery callbackQuery = update.getCallbackQuery();
         callbackCommandContainer.findAnswer(callbackQuery).execute(callbackQuery);
+        logger.info("Bot received a callback \"" + callbackQuery.getData() + "\" from User - " + update.getMessage().getChat().getUserName());
+
     }
 }

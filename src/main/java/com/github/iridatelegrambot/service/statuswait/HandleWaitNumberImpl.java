@@ -4,6 +4,8 @@ import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.AnswerCatcherService;
 import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -19,6 +21,7 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
     private WaitTypeStatus waitType;
     private Long chatId;
     private String answer;
+    private final static Logger logger = LoggerFactory.getLogger(HandleWaitNumberImpl.class);
     @Autowired
     public HandleWaitNumberImpl(AnswerCatcherService answerCatcherService, CommandCallbackSenderService commandCallbackSenderService) {
         this.answerCatcherService = answerCatcherService;
@@ -64,6 +67,7 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
         if(document == WaitDocument.ORDER){
             Optional<Order> orderOptional = answerCatcherService.addOrder(update);
             if(orderOptional.isEmpty()){
+                logger.info("Incorrect number document set for add order, try User - " + update.getMessage().getChat().getUserName());
                 comeBackDocumentStatus();
             }
             commandCallbackSenderService.sendListCityForOrder(orderOptional, chatId);
@@ -71,6 +75,7 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
         } else if(document == WaitDocument.INVOICE){
             Optional<Invoice> invoiceOptional = answerCatcherService.addInvoice(update);
             if(invoiceOptional.isEmpty()){
+                logger.info("Incorrect number document set for add invoice, try User - " + update.getMessage().getChat().getUserName());
                 comeBackDocumentStatus();
             }
             commandCallbackSenderService.sendListCityForInvoice(invoiceOptional,chatId);
@@ -98,6 +103,7 @@ public class HandleWaitNumberImpl implements HandleWaitNumber {
     }
 
     private void comeBackDocumentStatus(){
+        logger.info("Incorrect number document set for add");
         document.setWaitNumber(chatId,true,waitType);
     }
 }

@@ -20,6 +20,7 @@
 		<junit.version>5.8.2</junit.version>
 		<mockito.version>4.3.1</mockito.version>
 		<telegrambots.spring.starter.version>5.7.1</telegrambots.spring.starter.version>
+		<slf4j.version>1.7.36</slf4j.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -74,13 +75,16 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>21.0.1</version>
-            <scope>compile</scope>
-        </dependency>
-
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
 
     </dependencies>
 

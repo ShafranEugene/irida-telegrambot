@@ -9,5 +9,5 @@ public interface InlineKeyboardService {
 
     InlineKeyboardMarkup createMenu(Map<String, String> TextAndCallbackData);
 
-    InlineKeyboardMarkup createMenu(TreeMap<String, String> textAndCallbackData, Integer amountOfButtonsInRow);
+    InlineKeyboardMarkup createMenu(Map<String, String> textAndCallbackData, Integer amountOfButtonsInRow);
 }

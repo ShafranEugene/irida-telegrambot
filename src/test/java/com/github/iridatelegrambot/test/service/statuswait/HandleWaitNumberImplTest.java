@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -111,6 +112,9 @@ public class HandleWaitNumberImplTest {
     private Update createUpdate(){
         Update update = new Update();
         Message message = Mockito.mock(Message.class);
+        Chat chat = Mockito.mock(Chat.class);
+        Mockito.when(chat.getUserName()).thenReturn("Lupa");
+        Mockito.when(message.getChat()).thenReturn(chat);
         Mockito.when(message.getChatId()).thenReturn(chatId);
         update.setMessage(message);
         return update;

@@ -2,6 +2,8 @@ package com.github.iridatelegrambot.service.statususer;
 
 import com.github.iridatelegrambot.service.HandleUserTelegramService;
 import com.github.iridatelegrambot.service.senders.SendMessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,6 +17,7 @@ public class CheckStatusUserServiceImpl implements CheckStatusUserService {
     private final SendMessageService sendMessageService;
     private final SendAdminInviteService sendAdminInviteService;
     private final HandleUserTelegramService handleUserTelegramService;
+    private final Logger logger = LoggerFactory.getLogger(CheckStatusUserServiceImpl.class);
 
     @Autowired
     public CheckStatusUserServiceImpl(SendMessageService sendMessageService,
@@ -53,6 +56,8 @@ public class CheckStatusUserServiceImpl implements CheckStatusUserService {
             return true;
         } else {
             sendFalseAnswer(chatId);
+            logger.info("User - " + handleUserTelegramService.toStringInfoForUser(chatId) +
+                    ", try using the bot and don't have rights");
             return false;
         }
     }

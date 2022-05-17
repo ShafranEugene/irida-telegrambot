@@ -28,7 +28,7 @@ public class InlineDocumentButtonServiceImpl implements  InlineDocumentButtonSer
     @Override
     public InlineKeyboardMarkup cityButtons(Order order){
         List<CityName> cityNamesList = new ArrayList<>(Arrays.asList(CityName.values()));
-        TreeMap<String,String> mapData = new TreeMap<>();
+        Map<String,String> mapData = new HashMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
         for (CityName cityName : cityNamesList) {
             order.setCity(cityName.getNameCity());
@@ -50,7 +50,7 @@ public class InlineDocumentButtonServiceImpl implements  InlineDocumentButtonSer
     @Override
     public InlineKeyboardMarkup cityButtons(Invoice invoice){
         List<CityName> cityNamesList = new ArrayList<>(Arrays.asList(CityName.values()));
-        TreeMap<String,String> mapData = new TreeMap<>();
+        Map<String,String> mapData = new HashMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
         for (CityName cityName : cityNamesList) {
             invoice.setCity(cityName.getNameCity());

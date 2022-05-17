@@ -9,6 +9,7 @@ import com.github.iridatelegrambot.service.senders.CommandCallbackSenderServiceI
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 public abstract class AbstractCallbackCommandTest {
@@ -26,6 +27,9 @@ public abstract class AbstractCallbackCommandTest {
         Message message = Mockito.mock(Message.class);
         Mockito.when(message.getChatId()).thenReturn(chatId);
         Mockito.when(message.getMessageId()).thenReturn(10);
+        Chat chat = Mockito.mock(Chat.class);
+        Mockito.when(chat.getUserName()).thenReturn("Lupa");
+        Mockito.when(message.getChat()).thenReturn(chat);
         callbackQuery.setMessage(message);
         callbackQuery.setData(data);
         return callbackQuery;

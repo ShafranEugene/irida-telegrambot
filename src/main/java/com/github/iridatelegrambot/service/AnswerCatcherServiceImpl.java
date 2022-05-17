@@ -3,6 +3,8 @@ package com.github.iridatelegrambot.service;
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -18,6 +20,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
     private final OrderService orderService;
     private final InvoiceService invoiceService;
     private final UserTelegramService userTelegramService;
+    private final static Logger logger = LoggerFactory.getLogger(AnswerCatcherServiceImpl.class);
 
     @Autowired
     public AnswerCatcherServiceImpl(OrderService orderService,InvoiceService invoiceService, UserTelegramService userTelegramService) {
@@ -45,7 +48,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         order.setDate(simpleDateFormat.format(date));
         orderService.save(order);
-
+        logger.info("User - " + update.getMessage().getChat().getUserName() + ". Add order: " + numberOrder);
         return Optional.of(order);
     }
 
@@ -84,7 +87,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         invoice.setDate(simpleDateFormat.format(date));
         invoiceService.save(invoice);
-
+        logger.info("User - " + update.getMessage().getChat().getUserName() + ". Add invoice: " + numberInvoice);
         return Optional.of(invoice);
     }
 
@@ -110,6 +113,8 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
                     invoiceService.save(invoice);
                 }
                 orderService.delete(orderFor.getId());
+                logger.info("Incorrect number document for delete \"" + numberOrder +
+                        "\" order, try User - " + update.getMessage().getChat().getUserName());
                 return "Заказ с номером \"" + orderFor.getNumber() + "\" был удален.";
             }
         }
@@ -122,6 +127,8 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         for(Invoice invoiceFor : invoiceService.getAllInvoice()){
             if(numberInvoice.equals(invoiceFor.getNumber())){
                 invoiceService.delete(invoiceFor.getId());
+                logger.info("Incorrect number document for delete \"" + numberInvoice +
+                        "\" invoice, try User - " + update.getMessage().getChat().getUserName());
                 return "Накладная с номером \"" + invoiceFor.getNumber() + "\" была удалена.";
             }
         }
@@ -135,6 +142,8 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
                 return orderFor.toStringForUsers();
             }
         }
+        logger.info("Incorrect number document for get info \"" + numberOrder +
+                "\" order, try User - " + update.getMessage().getChat().getUserName());
         return "Повторите попытку. Заказ с таким номер не найден.";
     }
     @Override
@@ -145,6 +154,8 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
                 return invoiceFor.toStringForUser();
             }
         }
+        logger.info("Incorrect number document for get info \"" + numberInvoice +
+                "\" invoice, try User - " + update.getMessage().getChat().getUserName());
         return "Повторите попытку. Накладная с таким номер не найден.";
     }
 }

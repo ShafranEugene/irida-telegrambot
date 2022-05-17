@@ -35,13 +35,14 @@ Where:
 - ${BOT_ADMIN} - telegram user's name of first admin
 
 ## Technological stack
-- Spring Boot as a skeleton framework
+- Spring Boot as a base framework
 - Telegram-bot Spring Boot starter
 - Spring Boot Starter Data JPA
 - MySQL database
 - Flyway database migration tool
 - Jackson Databind for some callback buttons
-- JUnit Jupiter API and Mockito Core for tests
+- Logback and slf4j
+- JUnit Jupiter API and Mockito Core
 
 ## License
 This project is Apache License 2.0 - see the [LICENSE](LICENSE) file for details

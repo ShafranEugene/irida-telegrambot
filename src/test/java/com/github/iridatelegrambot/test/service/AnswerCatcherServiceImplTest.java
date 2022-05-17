@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -37,12 +38,16 @@ public class AnswerCatcherServiceImplTest {
         Message messageForSave = Mockito.mock(Message.class);
         Mockito.when(messageForSave.getText()).thenReturn("600");
         Mockito.when(messageForSave.getChatId()).thenReturn(chatId);
+        Chat chat = Mockito.mock(Chat.class);
+        Mockito.when(chat.getUserName()).thenReturn("Lupa");
+        Mockito.when(messageForSave.getChat()).thenReturn(chat);
         updateWithNumber600ForSave.setMessage(messageForSave);
 
         updateWithNumber500 = new Update();
         Message message = Mockito.mock(Message.class);
         Mockito.when(message.getText()).thenReturn("500");
         Mockito.when(message.getChatId()).thenReturn(chatId);
+        Mockito.when(message.getChat()).thenReturn(chat);
         updateWithNumber500.setMessage(message);
 
         List<Order> orderList = new ArrayList<>();

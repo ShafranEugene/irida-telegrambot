@@ -9,10 +9,13 @@ import com.github.iridatelegrambot.command.CallbackCommand.NotFindCallbackComman
 import com.github.iridatelegrambot.service.buttons.CommandNameForButtons;
 import com.github.iridatelegrambot.service.statususer.CheckStatusUserService;
 import com.github.iridatelegrambot.service.statuswait.HandleWaitNumber;
+import com.github.iridatelegrambot.service.statuswait.WaitDocument;
+import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -54,6 +57,9 @@ public class IridaBotTest {
         Mockito.when(message.getChatId()).thenReturn(12345678L);
         Mockito.when(message.getText()).thenReturn(text);
         Mockito.when(message.hasText()).thenReturn(true);
+        Chat chat = Mockito.mock(Chat.class);
+        Mockito.when(chat.getUserName()).thenReturn("Lupa");
+        Mockito.when(message.getChat()).thenReturn(chat);
         update.setMessage(message);
         Mockito.when(checkStatusUserService.check(update)).thenReturn(true);
         return update;
@@ -65,6 +71,11 @@ public class IridaBotTest {
         Update update = new Update();
         CallbackQuery callbackQuery = new CallbackQuery();
         update.setCallbackQuery(callbackQuery);
+        Message message = Mockito.mock(Message.class);
+        Chat chat = Mockito.mock(Chat.class);
+        Mockito.when(chat.getUserName()).thenReturn("Lupa");
+        Mockito.when(message.getChat()).thenReturn(chat);
+        update.setMessage(message);
         Mockito.when(checkStatusUserService.check(update)).thenReturn(true);
         Mockito.when(callbackCommandContainer.findAnswer(callbackQuery)).thenReturn(Mockito.mock(AddOrderCallbackCommand.class));
         //when
@@ -77,34 +88,43 @@ public class IridaBotTest {
     void shouldCatchMessage(){
         //given
         Update update = createUpdate("/stat");
-        Mockito.when(container.findCommand("/stat")).thenReturn(Mockito.mock(StatCommand.class));
+        StatCommand statCommand = Mockito.mock(StatCommand.class);
+        WaitDocument.INVOICE.setWaitNumber(12345678L,false, WaitTypeStatus.ADD);
+        WaitDocument.ORDER.setWaitNumber(12345678L,false, WaitTypeStatus.ADD);
+        Mockito.when(container.findCommand("/stat")).thenReturn(statCommand);
         //when
         iridaBot.onUpdateReceived(update);
         //then
-        Mockito.verify(container).findCommand("/stat");
+        Mockito.verify(statCommand).execute(update);
     }
 
     @Test
     void shouldNotFindMessage(){
         //given
         Update update = createUpdate("test");
-        Mockito.when(container.findCommand(CommandName.NO.getCommandName())).thenReturn(Mockito.mock(NoCommand.class));
+        NoCommand noCommand = Mockito.mock(NoCommand.class);
+        WaitDocument.INVOICE.setWaitNumber(12345678L,false, WaitTypeStatus.ADD);
+        WaitDocument.ORDER.setWaitNumber(12345678L,false, WaitTypeStatus.ADD);
+        Mockito.when(container.findCommand(CommandName.NO.getCommandName())).thenReturn(noCommand);
         //when
         iridaBot.onUpdateReceived(update);
         //then
-        Mockito.verify(container).findCommand(CommandName.NO.getCommandName());
+        Mockito.verify(noCommand).execute(update);
     }
 
     @Test
     void shouldCatchMainCommand(){
         //given
         Update update = createUpdate(CommandNameForButtons.HELP.getName());
+        HelpCommand helpCommand = Mockito.mock(HelpCommand.class);
+        WaitDocument.INVOICE.setWaitNumber(12345678L,false, WaitTypeStatus.ADD);
+        WaitDocument.ORDER.setWaitNumber(12345678L,false, WaitTypeStatus.ADD);
         Mockito.when(container.findCommand(Objects.requireNonNull(CommandNameForButtons.findCommandName("Помощь")).getCommandName()))
-                .thenReturn(Mockito.mock(HelpCommand.class));
+                .thenReturn(helpCommand);
         //when
         iridaBot.onUpdateReceived(update);
         //then
-        Mockito.verify(container).findCommand(CommandNameForButtons.findCommandName("Помощь").getCommandName());
+        Mockito.verify(helpCommand).execute(update);
     }
 
     @Test
@@ -114,6 +134,12 @@ public class IridaBotTest {
         CallbackQuery callbackQuery = Mockito.mock(CallbackQuery.class);
         Mockito.when(callbackQuery.getData()).thenReturn("test_1");
         update.setCallbackQuery(callbackQuery);
+        Message message = Mockito.mock(Message.class);
+        Chat chat = Mockito.mock(Chat.class);
+        Mockito.when(chat.getUserName()).thenReturn("Lupa");
+        Mockito.when(message.getChat()).thenReturn(chat);
+        update.setMessage(message);
+
         CallbackCommandContainer callbackContainer = new CallbackCommandContainer();
         NotFindCallbackCommand notFindCallbackCommand = Mockito.mock(NotFindCallbackCommand.class);
         callbackContainer.setCallbackCommand(CallbackCommandName.NOT_FIND.getName(),notFindCallbackCommand);

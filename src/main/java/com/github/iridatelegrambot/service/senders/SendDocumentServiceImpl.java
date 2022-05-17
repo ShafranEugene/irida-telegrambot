@@ -6,6 +6,8 @@ import com.github.iridatelegrambot.service.InvoiceService;
 import com.github.iridatelegrambot.service.OrderService;
 import com.github.iridatelegrambot.service.buttons.InlineDocumentButtonService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -17,6 +19,7 @@ public class SendDocumentServiceImpl implements SendDocumentService {
     private final InlineDocumentButtonService inlineKeyboardService;
     private final OrderService orderService;
     private final InvoiceService invoiceService;
+    private final static Logger logger = LoggerFactory.getLogger(SendDocumentServiceImpl.class);
 
     @Autowired
     public SendDocumentServiceImpl(SendMessageService sendMessageService, InlineDocumentButtonService inlineKeyboardService,
@@ -73,6 +76,7 @@ public class SendDocumentServiceImpl implements SendDocumentService {
         Order order = orderOptional.get();
         invoice.setOrder(order);
         invoiceService.save(invoice);
+        logger.info("User - " + chatId + ". Add invoice: " + invoice.getNumber());
         sendMessageCloseOrder(chatId, messageId,"Заказ завершен?",order);
     }
 

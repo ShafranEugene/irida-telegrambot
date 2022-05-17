@@ -83,7 +83,7 @@ public class InlineDocumentButtonServiceImplTest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        ArgumentCaptor<TreeMap<String,String>> mapArgumentCaptor = ArgumentCaptor.forClass(TreeMap.class);
+        ArgumentCaptor<Map<String,String>> mapArgumentCaptor = ArgumentCaptor.forClass(Map.class);
         //when
         inlineDocumentButtonService.cityButtons(order);
         Mockito.verify(inlineKeyboardService).createMenu(mapArgumentCaptor.capture(),eq(3));

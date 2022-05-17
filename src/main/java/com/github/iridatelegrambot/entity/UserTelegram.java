@@ -72,20 +72,12 @@ public class UserTelegram {
         this.admin = admin;
     }
 
-    public List<Order> getOrderList() {
-        return orderList;
-    }
-
     public void addOrder(Order order) {
         if(orderList.contains(order)){
             return;
         }
         orderList.add(order);
         order.setUser(this);
-    }
-
-    public List<Invoice> getInvoiceList() {
-        return invoiceList;
     }
 
     public void addInvoice(Invoice invoice) {
@@ -103,36 +95,5 @@ public class UserTelegram {
         UserTelegram that = (UserTelegram) object;
         return active == that.active &&
                 Objects.equals(chatId, that.chatId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(chatId, active);
-    }
-
-    @Override
-    public String toString() {
-        return "UserTelegram{" +
-                "chatId=" + chatId +
-                ", active=" + active +
-                '}';
-    }
-
-    public String toStringInfoForUser(){
-        String text = "Код: " + chatId +
-                "\nИмя: " + firstName +
-                "\nЛогин: " + userName +
-                "\nСтатус: ";
-        if(active){
-            text += "Активен";
-        } else {
-            text += "Неактивен";
-        }
-        if(admin){
-            text += "\nАдмин: Да";
-        } else {
-            text += "\nАдмин: Нет";
-        }
-        return text;
     }
 }

@@ -3,16 +3,17 @@ import java.util.*;
 public enum CallbackCommandName {
     ADD_ORDER("add_order","add_order:JSON(Order)"),
     ADD_INVOICE("add_invoice","add_invoice:JSON(Invoice)"),
-    ADD_ORDER_TO_INVOICE("add_ord_to_inv","addOrdToInv:JSON(BondOrderToInvoice)"),
+    ADD_ORDER_TO_INVOICE("add_ord_to_inv","add_ord_to_inv:JSON(BondOrderToInvoice)"),
     CLOSE_ORDER("close_order","delete:{id}:boolean"),
     SHOW_ORDER("show_order","show_order:id:{id}"),
     ORDER_MENU("order","order:subcommand:id:{id}"),
     STAT_MENU("stat","stat:subcommand"),
     CANCEL("delete","delete:subcommand:id:{id}"),
-    ADD_STATUS_USER("set_status_user","setStatusUser:chatId:{id}:boolean"),
-    ADMIN_MENU("admin_menu","adminMenu:subcommand"),
+    ADD_STATUS_USER("set_status_user","set_status_user:chatId:{id}:boolean"),
+    ADMIN_MENU("admin_menu","admin_menu:subcommand"),
     STAT_DOCUMENT("stat_document","stat_document:WaitDocument:WaitTypeStatus"),
-    ADMIN_MENU_SET_STATUS("admin_set_status","admin_set_status:subcommand:{idUsers}:boolean");
+    ADMIN_MENU_SET_STATUS("admin_set_status","admin_set_status:subcommand:{idUsers}:boolean"),
+    NOT_FIND("not_find","not_find");
 
     private final String name;
     private final String format;

@@ -9,18 +9,17 @@ public enum WaitDocument {
     ORDER("order"),
     INVOICE("invoice");
 
-    private String name;
-    private HashMap<Long,Boolean> waitNumber = new HashMap<>();
-    private List<WaitTypeStatus> waitTypeStatusList = Arrays.asList(WaitTypeStatus.values());
-    private HashMap<Long,Integer> idOrderForInvoice = new HashMap<>();
+    private final String name;
+    private final HashMap<Long,Boolean> waitNumber = new HashMap<>();
+    private final List<WaitTypeStatus> waitTypeStatusList = Arrays.asList(WaitTypeStatus.values());
+    private final HashMap<Long,Integer> idOrderForInvoice = new HashMap<>();
 
     WaitDocument(String name) {
         this.name = name;
     }
 
     public static Boolean getWaitAllStatus(Long chatId){
-        WaitDocument[] waitDocumentList = WaitDocument.values();
-        for(WaitDocument document : waitDocumentList){
+        for(WaitDocument document : WaitDocument.values()){
             if(document.getWaitStatus(chatId)){
                 return true;
             }
@@ -29,8 +28,7 @@ public enum WaitDocument {
     }
 
     public void setWaitNumber(Long chatId,Boolean statusDocument, WaitTypeStatus waitTypeStatus){
-        List<WaitDocument> waitDocumentList = Arrays.asList(WaitDocument.values());
-        for(WaitDocument document : waitDocumentList){
+        for(WaitDocument document : WaitDocument.values()){
             document.waitNumber.put(chatId, false);
         }
         waitNumber.put(chatId,statusDocument);

@@ -3,7 +3,7 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 import com.github.iridatelegrambot.command.AddInvoiceCommand;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,12 +15,12 @@ import java.util.Optional;
 @Component
 public class OrderMenuCallbackCommand implements CallbackCommand {
     private final OrderService orderService;
-    private final SendMessageService sendMessageService;
+    private final CommandCallbackSenderService sendMessageService;
     private final CallbackCommandName commandName = CallbackCommandName.ORDER_MENU;
     private final AddInvoiceCommand addInvoiceCommand;
 
     @Autowired
-    public OrderMenuCallbackCommand(OrderService orderService, SendMessageService sendMessageService,AddInvoiceCommand addInvoiceCommand) {
+    public OrderMenuCallbackCommand(OrderService orderService, CommandCallbackSenderService sendMessageService,AddInvoiceCommand addInvoiceCommand) {
         this.orderService = orderService;
         this.sendMessageService = sendMessageService;
         this.addInvoiceCommand = addInvoiceCommand;

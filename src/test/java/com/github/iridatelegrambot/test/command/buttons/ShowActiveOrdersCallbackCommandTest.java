@@ -12,14 +12,12 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.eq;
-
 public class ShowActiveOrdersCallbackCommandTest extends AbstractCallbackCommandTest{
 
     private ShowActiveOrdersCallbackCommand showActiveOrdersCallbackCommand;
     @BeforeEach
     void init(){
-        showActiveOrdersCallbackCommand = new ShowActiveOrdersCallbackCommand(mSendMessageService,mOrderService);
+        showActiveOrdersCallbackCommand = new ShowActiveOrdersCallbackCommand(commandCallbackSenderService,mOrderService);
     }
 
     @Test
@@ -35,7 +33,7 @@ public class ShowActiveOrdersCallbackCommandTest extends AbstractCallbackCommand
 
         //when
         showActiveOrdersCallbackCommand.execute(callbackQuery);
-        Mockito.verify(mSendMessageService).sendMenuOrder(longArgumentCaptor.capture(),orderArgumentCaptor.capture());
+        Mockito.verify(commandCallbackSenderService).sendMenuOrder(longArgumentCaptor.capture(),orderArgumentCaptor.capture());
         //then
         Assertions.assertEquals(order.toStringForUsers(),orderArgumentCaptor.getValue().toStringForUsers());
         Assertions.assertEquals(callbackQuery.getMessage().getChatId(),longArgumentCaptor.getValue());
@@ -52,7 +50,7 @@ public class ShowActiveOrdersCallbackCommandTest extends AbstractCallbackCommand
 
         //when
         showActiveOrdersCallbackCommand.execute(callbackQuery);
-        Mockito.verify(mSendMessageService).sendMessage(chatIdCaptor.capture(),messageCaptor.capture());
+        Mockito.verify(commandCallbackSenderService).sendMessage(chatIdCaptor.capture(),messageCaptor.capture());
         //then
         Assertions.assertEquals("Заказ не найден.",messageCaptor.getValue());
         Assertions.assertEquals(String.valueOf(12345678L),chatIdCaptor.getValue());

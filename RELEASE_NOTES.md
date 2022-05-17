@@ -1,5 +1,13 @@
 # Release Notes
 
+## 0.7.0-SNAPSHOT
+
+*   IRIDA-10: Added command /guide.
+
+## 0.6.0-SNAPSHOT
+
+*   IRIDA-9: Added a security system and admin menu.
+
 ## 0.5.0-SNAPSHOT
 
 *   IRIDA-6: Added the ability to show all open orders for the user.

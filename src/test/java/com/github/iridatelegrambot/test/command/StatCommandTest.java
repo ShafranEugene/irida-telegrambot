@@ -1,10 +1,10 @@
 package com.github.iridatelegrambot.test.command;
 import com.github.iridatelegrambot.command.StatCommand;
-import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.senders.CommandSenderService;
+import com.github.iridatelegrambot.service.senders.CommandSenderServiceImpl;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.bot.IridaBot;
-import com.github.iridatelegrambot.service.buttons.InlineKeyboardService;
-import com.github.iridatelegrambot.service.buttons.MenuButtonsService;
+import com.github.iridatelegrambot.service.senders.SendMessageServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,10 +18,8 @@ public class StatCommandTest {
 
     private final UserTelegramService mUserTelegramService = Mockito.mock(UserTelegramService.class);
     private final IridaBot mIridaBot = Mockito.mock(IridaBot.class);
-    protected InlineKeyboardService mInlineKeyboardService = Mockito.mock(InlineKeyboardService.class);
-    protected MenuButtonsService menuButtonsService = Mockito.mock(MenuButtonsService.class);
-    protected SendMessageServiceImpl sendMessageService = new SendMessageServiceImpl(mIridaBot,mInlineKeyboardService,menuButtonsService);
-    private final StatCommand statCommand = new StatCommand(sendMessageService,mUserTelegramService);
+    private final CommandSenderService commandSenderService = Mockito.mock(CommandSenderService.class);
+    private final StatCommand statCommand = new StatCommand(commandSenderService,mUserTelegramService);
 
     @Test
     void shouldProperSendMessage() throws TelegramApiException {
@@ -47,6 +45,6 @@ public class StatCommandTest {
         statCommand.execute(update);
 
         //then
-        Mockito.verify(mIridaBot).execute(sendMessage);
+        Mockito.verify(commandSenderService).sendStatMenu(chatId,"Количество активных пользователей : 0\nАктивные пользователеи:");
     }
 }

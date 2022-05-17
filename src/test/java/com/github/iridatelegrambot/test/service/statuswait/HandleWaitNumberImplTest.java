@@ -3,10 +3,7 @@ package com.github.iridatelegrambot.test.service.statuswait;
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.AnswerCatcherService;
 import com.github.iridatelegrambot.service.AnswerCatcherServiceImpl;
-import com.github.iridatelegrambot.service.send.SendMessageCitiesService;
-import com.github.iridatelegrambot.service.send.SendMessageInviteForAdminService;
-import com.github.iridatelegrambot.service.send.SendMessageService;
-import com.github.iridatelegrambot.service.send.SendMessageServiceImpl;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import com.github.iridatelegrambot.service.statuswait.HandleWaitNumberImpl;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import com.github.iridatelegrambot.service.statuswait.WaitTypeStatus;
@@ -15,22 +12,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.Optional;
 
 public class HandleWaitNumberImplTest {
-    private SendMessageCitiesService sendMessageService;
+    private CommandCallbackSenderService commandCallbackSenderService;
     private AnswerCatcherService answerCatcherService;
     private HandleWaitNumberImpl handleWaitNumber;
     private final Long chatId = 12345678L;
 
     @BeforeEach
     void init(){
-        sendMessageService = Mockito.mock(SendMessageServiceImpl.class);
+        commandCallbackSenderService = Mockito.mock(CommandCallbackSenderService.class);
         answerCatcherService = Mockito.mock(AnswerCatcherServiceImpl.class);
-        handleWaitNumber = new HandleWaitNumberImpl(sendMessageService,answerCatcherService);
+        handleWaitNumber = new HandleWaitNumberImpl(answerCatcherService,commandCallbackSenderService);
     }
 
     @Test
@@ -43,7 +41,7 @@ public class HandleWaitNumberImplTest {
         ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
         //when
         handleWaitNumber.handle(update);
-        Mockito.verify(sendMessageService).sendMessage(chatIdCaptor.capture(),messageCaptor.capture());
+        Mockito.verify(commandCallbackSenderService).sendMessage(chatIdCaptor.capture(),messageCaptor.capture());
         //then
         Assertions.assertEquals("The order has been found.",messageCaptor.getValue());
         Assertions.assertEquals(String.valueOf(chatId),chatIdCaptor.getValue());
@@ -60,7 +58,7 @@ public class HandleWaitNumberImplTest {
         ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
         //when
         handleWaitNumber.handle(update);
-        Mockito.verify(sendMessageService).sendMessage(chatIdCaptor.capture(),messageCaptor.capture());
+        Mockito.verify(commandCallbackSenderService).sendMessage(chatIdCaptor.capture(),messageCaptor.capture());
         //then
         Assertions.assertEquals("The invoice has been deleted.",messageCaptor.getValue());
         Assertions.assertEquals(String.valueOf(chatId),chatIdCaptor.getValue());
@@ -81,7 +79,7 @@ public class HandleWaitNumberImplTest {
         ArgumentCaptor<Long> chatIdCaptor = ArgumentCaptor.forClass(Long.class);
         //when
         handleWaitNumber.handle(update);
-        Mockito.verify(sendMessageService).sendListCityForOrder(orderCaptor.capture(),chatIdCaptor.capture());
+        Mockito.verify(commandCallbackSenderService).sendListCityForOrder(orderCaptor.capture(),chatIdCaptor.capture());
         //then
         Assertions.assertEquals(orderOptional,orderCaptor.getValue());
         Assertions.assertFalse(WaitDocument.ORDER.getWaitStatus(chatId));
@@ -114,6 +112,9 @@ public class HandleWaitNumberImplTest {
     private Update createUpdate(){
         Update update = new Update();
         Message message = Mockito.mock(Message.class);
+        Chat chat = Mockito.mock(Chat.class);
+        Mockito.when(chat.getUserName()).thenReturn("Lupa");
+        Mockito.when(message.getChat()).thenReturn(chat);
         Mockito.when(message.getChatId()).thenReturn(chatId);
         update.setMessage(message);
         return update;

@@ -2,7 +2,7 @@ package com.github.iridatelegrambot.command.CallbackCommand;
 
 import com.github.iridatelegrambot.entity.Order;
 import com.github.iridatelegrambot.service.OrderService;
-import com.github.iridatelegrambot.service.send.SendMessageOrderMenuService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -11,12 +11,12 @@ import java.util.Optional;
 @Component
 public class ShowActiveOrdersCallbackCommand implements CallbackCommand {
 
-    private final SendMessageOrderMenuService sendMessageService;
+    private final CommandCallbackSenderService sendMessageService;
     private final OrderService orderService;
     private final CallbackCommandName commandName = CallbackCommandName.SHOW_ORDER;
 
     @Autowired
-    public ShowActiveOrdersCallbackCommand(SendMessageOrderMenuService sendMessageService, OrderService orderService) {
+    public ShowActiveOrdersCallbackCommand(CommandCallbackSenderService sendMessageService, OrderService orderService) {
         this.sendMessageService = sendMessageService;
         this.orderService = orderService;
     }

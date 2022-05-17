@@ -82,10 +82,6 @@ public class Invoice {
         }
     }
 
-    public String getComment() {
-        return comment;
-    }
-
     public void setComment(String comment) {
         this.comment = comment;
     }
@@ -99,19 +95,6 @@ public class Invoice {
     }
 
     @Override
-    public String toString() {
-        return "Invoice{" +
-                "id=" + id +
-                ", number='" + number + '\'' +
-                ", city='" + city + '\'' +
-                ", user=" + user +
-                ", comment='" + comment + '\'' +
-                ", date='" + date + '\'' +
-                ", order=" + order +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
@@ -119,15 +102,8 @@ public class Invoice {
         return id == invoice.id &&
                 Objects.equals(number, invoice.number) &&
                 Objects.equals(city, invoice.city) &&
-                Objects.equals(user, invoice.user) &&
                 Objects.equals(comment, invoice.comment) &&
-                Objects.equals(date, invoice.date) &&
-                Objects.equals(order, invoice.order);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, number, city, user, comment, date, order);
+                Objects.equals(date, invoice.date);
     }
 
     public String toStringForUser(){

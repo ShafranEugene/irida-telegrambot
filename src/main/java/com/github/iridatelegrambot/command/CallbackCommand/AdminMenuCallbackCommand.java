@@ -1,25 +1,23 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
-import com.github.iridatelegrambot.entity.UserTelegram;
-import com.github.iridatelegrambot.service.send.SendMessageAdminMenuService;
-import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.service.HandleUserTelegramService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
-import java.util.Optional;
 @Component
 public class AdminMenuCallbackCommand implements CallbackCommand {
-    private final SendMessageAdminMenuService sendMessageService;
-    private final UserTelegramService userTelegramService;
-    private Long chatId;
+    private final CommandCallbackSenderService sendMessageService;
     private final CallbackCommandName commandName = CallbackCommandName.ADMIN_MENU;
+    private final HandleUserTelegramService handleUserTelegramService;
+    private Long chatId;
     private Integer messageId;
 
     @Autowired
-    public AdminMenuCallbackCommand(SendMessageAdminMenuService sendMessageService, UserTelegramService userTelegramService) {
+    public AdminMenuCallbackCommand(CommandCallbackSenderService sendMessageService, HandleUserTelegramService handleUserTelegramService) {
         this.sendMessageService = sendMessageService;
-        this.userTelegramService = userTelegramService;
+        this.handleUserTelegramService = handleUserTelegramService;
     }
 
     @Override
@@ -58,11 +56,8 @@ public class AdminMenuCallbackCommand implements CallbackCommand {
     }
 
     private void pullOffAdmin(){
-        Optional<UserTelegram> userTelegramOptional = userTelegramService.findByChatId(chatId);
-        if(userTelegramOptional.isPresent()){
-            UserTelegram userTelegram = userTelegramOptional.get();
-            userTelegram.setAdmin(false);
-            userTelegramService.save(userTelegram);
+        if(!handleUserTelegramService.checkUserOnEmpty(chatId)){
+            handleUserTelegramService.setUserAdminStatus(chatId,false);
             sendMessageService.sendMessage(chatId.toString(),"Вы сняли с себя права администратора!");
         } else {
             sendMessageService.sendMessage(chatId.toString(),"Пользователь не найден.");

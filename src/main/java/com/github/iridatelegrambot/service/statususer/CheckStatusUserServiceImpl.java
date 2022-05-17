@@ -1,13 +1,12 @@
 package com.github.iridatelegrambot.service.statususer;
 
-import com.github.iridatelegrambot.entity.UserTelegram;
-import com.github.iridatelegrambot.service.send.SendMessageService;
-import com.github.iridatelegrambot.service.UserTelegramService;
+import com.github.iridatelegrambot.service.HandleUserTelegramService;
+import com.github.iridatelegrambot.service.senders.SendMessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import java.util.Optional;
 
 //The bot has simple protection, users must have an active status to work with the bot.
 //This status makes it active and gives access to the bot, the administrator.
@@ -16,15 +15,16 @@ import java.util.Optional;
 public class CheckStatusUserServiceImpl implements CheckStatusUserService {
 
     private final SendMessageService sendMessageService;
-    private final UserTelegramService userTelegramService;
     private final SendAdminInviteService sendAdminInviteService;
+    private final HandleUserTelegramService handleUserTelegramService;
+    private final Logger logger = LoggerFactory.getLogger(CheckStatusUserServiceImpl.class);
 
     @Autowired
-    public CheckStatusUserServiceImpl(SendMessageService sendMessageService, UserTelegramService userTelegramService,
-                                      SendAdminInviteService sendAdminInviteService) {
+    public CheckStatusUserServiceImpl(SendMessageService sendMessageService,
+                                      SendAdminInviteService sendAdminInviteService, HandleUserTelegramService handleUserTelegramService) {
         this.sendMessageService = sendMessageService;
-        this.userTelegramService = userTelegramService;
         this.sendAdminInviteService = sendAdminInviteService;
+        this.handleUserTelegramService = handleUserTelegramService;
     }
 
     @Override
@@ -38,34 +38,33 @@ public class CheckStatusUserServiceImpl implements CheckStatusUserService {
             chatId = update.getMessage().getChatId();
         }
 
-        Optional<UserTelegram> optionalUserTelegram = userTelegramService.findByChatId(chatId);
-        if(optionalUserTelegram.isEmpty()){
-            UserTelegram userTelegram = userTelegramService.findOrCreateUser(update);
-            if(userTelegramService.getAllActiveUser().size() == 0){
-                userTelegram.setAdmin(true);
-                userTelegramService.save(userTelegram);
+        if(handleUserTelegramService.checkUserOnEmpty(chatId)){
+            handleUserTelegramService.createUser(update);
+            if(handleUserTelegramService.checkOnFirstUser(chatId)){
+                handleUserTelegramService.setUserActiveStatus(chatId,true);
                 return true;
+            } else {
+                sendFalseAnswer(chatId);
+                return false;
             }
-            sendFalseAnswer(userTelegram);
-            return false;
         }
 
-        UserTelegram userTelegram = optionalUserTelegram.get();
-        if(userTelegram.isActive()){
+        if(handleUserTelegramService.getActiveStatusUser(chatId)){
             return true;
-        } else if(userTelegram.isAdmin()) {
-            userTelegram.setActive(true);
-            userTelegramService.save(userTelegram);
+        } else if(handleUserTelegramService.getAdminStatusUser(chatId)) {
+            handleUserTelegramService.setUserActiveStatus(chatId,true);
             return true;
         } else {
-            sendFalseAnswer(userTelegram);
+            sendFalseAnswer(chatId);
+            logger.info("User - " + handleUserTelegramService.toStringInfoForUser(chatId) +
+                    ", try using the bot and don't have rights");
             return false;
         }
     }
 
-    private void sendFalseAnswer(UserTelegram userTelegram){
-        sendAdminInviteService.send(userTelegram);
-        sendMessageService.sendMessage(userTelegram.getChatId().toString(),
+    private void sendFalseAnswer(Long chatId){
+        sendAdminInviteService.send(chatId);
+        sendMessageService.sendMessage(chatId.toString(),
                 "Ваша учетная запись не имеет доступа к боту." +
                         "\nЗаявка на согласование была отправлена администратору." +
                         "\nПосле одобрения, бот уведомит Вас.");

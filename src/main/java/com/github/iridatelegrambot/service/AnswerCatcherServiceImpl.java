@@ -2,7 +2,9 @@ package com.github.iridatelegrambot.service;
 
 import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
-import com.github.iridatelegrambot.entity.UserTelegram;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -18,6 +20,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
     private final OrderService orderService;
     private final InvoiceService invoiceService;
     private final UserTelegramService userTelegramService;
+    private final static Logger logger = LoggerFactory.getLogger(AnswerCatcherServiceImpl.class);
 
     @Autowired
     public AnswerCatcherServiceImpl(OrderService orderService,InvoiceService invoiceService, UserTelegramService userTelegramService) {
@@ -32,22 +35,20 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
         if(numberOrder.replaceAll("[^0-9]","").isBlank()){
             return Optional.empty();
-        }
-        if(checkIdentityOrder(numberOrder)){
+        } else if(checkIdentityOrder(numberOrder)){
             return Optional.empty();
         }
-        UserTelegram userTelegram = userTelegramService.findOrCreateUser(update);
 
         Order order = new Order();
         order.setNumber(numberOrder);
         order.setStatusActive(true);
-        order.setUser(userTelegram);
+        order.setUser(userTelegramService.findOrCreateUser(update));
 
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         order.setDate(simpleDateFormat.format(date));
         orderService.save(order);
-
+        logger.info("User - " + update.getMessage().getChat().getUserName() + ". Add order: " + numberOrder);
         return Optional.of(order);
     }
 
@@ -70,15 +71,13 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
         if(numberInvoice.replaceAll("[^0-9]","").isBlank()){
             return Optional.empty();
-        }
-        if(checkIdentityInvoice(numberInvoice)){
+        }else if(checkIdentityInvoice(numberInvoice)){
             return Optional.empty();
         }
-        UserTelegram userTelegram = userTelegramService.findOrCreateUser(update);
 
         Invoice invoice = new Invoice();
         invoice.setNumber(numberInvoice);
-        invoice.setUser(userTelegram);
+        invoice.setUser(userTelegramService.findOrCreateUser(update));
         if(textUpdate.length>1){
             String comment = textUpdate[1];
             invoice.setComment(comment);
@@ -88,7 +87,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         invoice.setDate(simpleDateFormat.format(date));
         invoiceService.save(invoice);
-
+        logger.info("User - " + update.getMessage().getChat().getUserName() + ". Add invoice: " + numberInvoice);
         return Optional.of(invoice);
     }
 
@@ -114,6 +113,8 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
                     invoiceService.save(invoice);
                 }
                 orderService.delete(orderFor.getId());
+                logger.info("Incorrect number document for delete \"" + numberOrder +
+                        "\" order, try User - " + update.getMessage().getChat().getUserName());
                 return "Заказ с номером \"" + orderFor.getNumber() + "\" был удален.";
             }
         }
@@ -125,7 +126,9 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
 
         for(Invoice invoiceFor : invoiceService.getAllInvoice()){
             if(numberInvoice.equals(invoiceFor.getNumber())){
-                invoiceService.detele(invoiceFor.getId());
+                invoiceService.delete(invoiceFor.getId());
+                logger.info("Incorrect number document for delete \"" + numberInvoice +
+                        "\" invoice, try User - " + update.getMessage().getChat().getUserName());
                 return "Накладная с номером \"" + invoiceFor.getNumber() + "\" была удалена.";
             }
         }
@@ -139,6 +142,8 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
                 return orderFor.toStringForUsers();
             }
         }
+        logger.info("Incorrect number document for get info \"" + numberOrder +
+                "\" order, try User - " + update.getMessage().getChat().getUserName());
         return "Повторите попытку. Заказ с таким номер не найден.";
     }
     @Override
@@ -149,6 +154,8 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
                 return invoiceFor.toStringForUser();
             }
         }
+        logger.info("Incorrect number document for get info \"" + numberInvoice +
+                "\" invoice, try User - " + update.getMessage().getChat().getUserName());
         return "Повторите попытку. Накладная с таким номер не найден.";
     }
 }

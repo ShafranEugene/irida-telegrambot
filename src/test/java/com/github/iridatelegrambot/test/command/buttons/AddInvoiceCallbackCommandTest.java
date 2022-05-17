@@ -19,7 +19,7 @@ public class AddInvoiceCallbackCommandTest extends AbstractCallbackCommandTest{
 
     @BeforeEach
     void init(){
-        addInvoiceCallbackCommand = new AddInvoiceCallbackCommand(mSendMessageService,mInvoiceService);
+        addInvoiceCallbackCommand = new AddInvoiceCallbackCommand(commandCallbackSenderService,mInvoiceService);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class AddInvoiceCallbackCommandTest extends AbstractCallbackCommandTest{
         addInvoiceCallbackCommand.execute(callbackQuery);
         //then
         Mockito.verify(mInvoiceService).save(invoiceArgumentCaptor.capture());
-        Mockito.verify(mSendMessageService).sendActiveOrdersForInvoice(12345678L,"Выберете заказ:",0,invoiceArgumentCaptor.getValue());
+        Mockito.verify(commandCallbackSenderService).sendActiveOrdersForInvoice(12345678L,"Выберете заказ:",10,invoiceArgumentCaptor.getValue());
         Assertions.assertEquals("Днепр",invoiceArgumentCaptor.getValue().getCity());
     }
 

@@ -1,8 +1,8 @@
-package com.github.iridatelegrambot.service.send;
+package com.github.iridatelegrambot.service.senders;
 
 import com.github.iridatelegrambot.entity.Order;
 
-public interface SendMessageOrderMenuService extends SendMessageService {
+public interface SendOrderMenuService {
 
     void sendActiveOrders(Long chatId, String message);
 

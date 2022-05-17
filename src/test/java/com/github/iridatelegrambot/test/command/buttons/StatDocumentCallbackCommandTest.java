@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 public class StatDocumentCallbackCommandTest extends AbstractCallbackCommandTest {
-    private final StatDocumentCallbackCommand statDocument = new StatDocumentCallbackCommand(mSendMessageService);
+    private final StatDocumentCallbackCommand statDocument = new StatDocumentCallbackCommand(commandCallbackSenderService);
 
     @Test
     void shouldProperlySetWaitStatus(){

@@ -1,6 +1,6 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import com.github.iridatelegrambot.service.statuswait.WaitDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,11 +10,11 @@ import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.DELE
 import static com.github.iridatelegrambot.service.statuswait.WaitTypeStatus.INFO;
 @Component
 public class StatDocumentCallbackCommand implements CallbackCommand {
-    private final SendMessageService sendMessageService;
+    private final CommandCallbackSenderService sendMessageService;
     private final CallbackCommandName commandName = CallbackCommandName.STAT_DOCUMENT;
 
     @Autowired
-    public StatDocumentCallbackCommand(SendMessageService sendMessageService) {
+    public StatDocumentCallbackCommand(CommandCallbackSenderService sendMessageService) {
         this.sendMessageService = sendMessageService;
     }
 

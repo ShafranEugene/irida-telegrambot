@@ -1,6 +1,5 @@
 package com.github.iridatelegrambot.test.command.buttons;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.iridatelegrambot.command.CallbackCommand.AddOrderToInvoiceCallbackCommand;
 import com.github.iridatelegrambot.command.CallbackCommand.CallbackCommand;
 import com.github.iridatelegrambot.entity.Invoice;
@@ -20,7 +19,7 @@ public class AddOrderToInvoiceCallbackCommandTest extends AbstractCallbackComman
 
     @BeforeEach
     void init(){
-        addOrderToInvoiceCallbackCommand = new AddOrderToInvoiceCallbackCommand(mSendMessageService,mInvoiceService,mOrderService);
+        addOrderToInvoiceCallbackCommand = new AddOrderToInvoiceCallbackCommand(commandCallbackSenderService,mInvoiceService,mOrderService);
     }
 
     @Test

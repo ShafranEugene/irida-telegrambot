@@ -13,5 +13,5 @@ public interface InvoiceService {
 
     List<Invoice> getAllInvoice();
 
-    void detele(int id);
+    void delete(int id);
 }

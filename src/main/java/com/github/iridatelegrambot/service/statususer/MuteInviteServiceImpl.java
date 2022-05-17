@@ -6,7 +6,7 @@ import java.util.*;
 
 @Service
 public class MuteInviteServiceImpl implements MuteInviteService{
-    private Map<Long, Calendar> muteMap = new HashMap<>();
+    private final Map<Long, Calendar> muteMap = new HashMap<>();
 
     @Override
     public boolean checkStatus(Long chatId){

@@ -1,7 +1,7 @@
 package com.github.iridatelegrambot.command.CallbackCommand;
 
 import com.github.iridatelegrambot.entity.UserTelegram;
-import com.github.iridatelegrambot.service.send.SendMessageService;
+import com.github.iridatelegrambot.service.senders.CommandCallbackSenderService;
 import com.github.iridatelegrambot.service.UserTelegramService;
 import com.github.iridatelegrambot.service.statususer.MuteInviteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +12,13 @@ import java.util.Optional;
 
 @Component
 public class AddStatusUserCallbackCommand implements CallbackCommand {
-    private final SendMessageService sendMessageService;
+    private final CommandCallbackSenderService sendMessageService;
     private final UserTelegramService userTelegramService;
     private final CallbackCommandName commandName = CallbackCommandName.ADD_STATUS_USER;
     private final MuteInviteService muteInviteService;
 
     @Autowired
-    public AddStatusUserCallbackCommand(SendMessageService sendMessageService,MuteInviteService muteInviteService, UserTelegramService userTelegramService) {
+    public AddStatusUserCallbackCommand(CommandCallbackSenderService sendMessageService, MuteInviteService muteInviteService, UserTelegramService userTelegramService) {
         this.sendMessageService = sendMessageService;
         this.userTelegramService = userTelegramService;
         this.muteInviteService = muteInviteService;

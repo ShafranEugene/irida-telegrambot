@@ -69,13 +69,14 @@ public class IridaBotTest {
     void shouldCatchCallback(){
         //given
         Update update = new Update();
-        CallbackQuery callbackQuery = new CallbackQuery();
-        update.setCallbackQuery(callbackQuery);
         Message message = Mockito.mock(Message.class);
         Chat chat = Mockito.mock(Chat.class);
         Mockito.when(chat.getUserName()).thenReturn("Lupa");
         Mockito.when(message.getChat()).thenReturn(chat);
         update.setMessage(message);
+        CallbackQuery callbackQuery = new CallbackQuery();
+        callbackQuery.setMessage(message);
+        update.setCallbackQuery(callbackQuery);
         Mockito.when(checkStatusUserService.check(update)).thenReturn(true);
         Mockito.when(callbackCommandContainer.findAnswer(callbackQuery)).thenReturn(Mockito.mock(AddOrderCallbackCommand.class));
         //when
@@ -133,12 +134,13 @@ public class IridaBotTest {
         Update update = new Update();
         CallbackQuery callbackQuery = Mockito.mock(CallbackQuery.class);
         Mockito.when(callbackQuery.getData()).thenReturn("test_1");
-        update.setCallbackQuery(callbackQuery);
         Message message = Mockito.mock(Message.class);
         Chat chat = Mockito.mock(Chat.class);
         Mockito.when(chat.getUserName()).thenReturn("Lupa");
         Mockito.when(message.getChat()).thenReturn(chat);
         update.setMessage(message);
+        Mockito.when(callbackQuery.getMessage()).thenReturn(message);
+        update.setCallbackQuery(callbackQuery);
 
         CallbackCommandContainer callbackContainer = new CallbackCommandContainer();
         NotFindCallbackCommand notFindCallbackCommand = Mockito.mock(NotFindCallbackCommand.class);

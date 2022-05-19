@@ -1,4 +1,5 @@
 <h1 style="text-align: center;">Irida Telegram Bot</h1>
+[![BCH compliance](https://bettercodehub.com/edge/badge/ShafranEugene/irida-telegrambot?branch=main)](https://bettercodehub.com/)
 
 Telegram bot for saving and managing orders.
 

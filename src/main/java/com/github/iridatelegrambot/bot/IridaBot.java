@@ -99,7 +99,7 @@ public class IridaBot extends TelegramLongPollingBot {
     private void handleCallback(Update update){
         CallbackQuery callbackQuery = update.getCallbackQuery();
         callbackCommandContainer.findAnswer(callbackQuery).execute(callbackQuery);
-        logger.info("Bot received a callback \"" + callbackQuery.getData() + "\" from User - " + update.getMessage().getChat().getUserName());
+        logger.info("Bot received a callback \"" + callbackQuery.getData() + "\" from User - " + update.getCallbackQuery().getMessage().getChat().getUserName());
 
     }
 }

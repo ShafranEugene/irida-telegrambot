@@ -1,9 +1,9 @@
 <h1 style="text-align: center;">Irida Telegram Bot</h1>
+
 [![BCH compliance](https://bettercodehub.com/edge/badge/ShafranEugene/irida-telegrambot?branch=main)](https://bettercodehub.com/)
 
-Telegram bot for saving and managing orders.
-
 ## Idea
+Telegram bot for saving and managing orders.
 The main idea is to getting practical experience in the development of first project and creating a telegram bot which will help with the work of a logistician.
 
 ## MVP Scope

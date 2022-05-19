@@ -1,5 +1,7 @@
 package com.github.iridatelegrambot.service.statususer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -7,12 +9,16 @@ import java.util.*;
 @Service
 public class MuteInviteServiceImpl implements MuteInviteService{
     private final Map<Long, Calendar> muteMap = new HashMap<>();
+    private final static Logger logger = LoggerFactory.getLogger(MuteInviteServiceImpl.class);
 
     @Override
     public boolean checkStatus(Long chatId){
         if(muteMap.containsKey(chatId)){
             Calendar calendarNow = new GregorianCalendar();
-            return calendarNow.after(muteMap.get(chatId));
+            Calendar muteTimeUser = muteMap.get(chatId);
+            logger.info("User - " + chatId + ",time now: " + calendarNow.getTime().toString() +
+                    ", user is muted until: " + muteTimeUser.getTime().toString());
+            return calendarNow.after(muteTimeUser);
         }
         return true;
     }
@@ -21,6 +27,7 @@ public class MuteInviteServiceImpl implements MuteInviteService{
     public void setMute(Long chatId){
         Calendar calendar = new GregorianCalendar();
         calendar.roll(Calendar.HOUR,+1);
+        logger.info("User - " + chatId + ", has been get mute to " + calendar.getTime().toString());
         muteMap.put(chatId,calendar);
     }
 
@@ -28,6 +35,7 @@ public class MuteInviteServiceImpl implements MuteInviteService{
     public void setMuteOfDay(Long chatId){
         Calendar calendar = new GregorianCalendar();
         calendar.roll(Calendar.DAY_OF_MONTH,+1);
+        logger.info("User - " + chatId + ", has been get mute to " + calendar.getTime().toString());
         muteMap.put(chatId,calendar);
     }
 }

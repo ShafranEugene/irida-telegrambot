@@ -1,6 +1,6 @@
 language: java
-
-jdk: openjdk11
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+jdk:
+  - oraclejdk11
+install:
+  - mvn -N io.takari:maven:wrapper
+  - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V

@@ -1,6 +1,21 @@
 language: java
+sudo: enabled
+services:
+  - mysql
+
 jdk:
   - oraclejdk11
+
+env:
+  global:
+    - TRAVIS=true
+
+before_install:
+  - sudo mysql -e 'CREATE DATABASE telegram_bot_irida;'
+  - sudo mysql -e 'select database();'
+  - sudo mysql -e 'SHOW DATABASES;'
+  - sudo mysql --version
+
 install:
   - mvn -N io.takari:maven:wrapper
   - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V

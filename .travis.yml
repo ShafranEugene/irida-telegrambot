@@ -11,12 +11,20 @@ env:
     - TRAVIS=true
 
 before_install:
-  - sudo mysql -e 'CREATE DATABASE telegram_bot_irida;'
+  - wget https://repo.mysql.com/mysql-apt-config_0.8.22-1_all.deb
+  - sudo dpkg -i mysql-apt-config_0.8.22-1_all.deb
+  - sudo apt-get update -q
+  - sudo apt-get install -q -y --allow-unauthenticated -o Dpkg::Options::=--force-confnew mysql-server
+  - sudo systemctl restart mysql
+  - sudo mysql_upgrade
+  - mysql --version
+  - sudo mysql -h 127.0.0.1 -P 3306 -u root < src/main/resources/travis.sql
   - sudo mysql -e 'select database();'
   - sudo mysql -e 'SHOW DATABASES;'
-  - sudo mysql --version
-  - sudo mysql -e 'CREATE USER "bestuser"@"localhost" IDENTIFIED BY "bestuser"; FLUSH PRIVILEGES;'
 
 install:
   - mvn -N io.takari:maven:wrapper
   - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

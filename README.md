@@ -1,7 +1,7 @@
 <h1 style="text-align: center;">Irida Telegram Bot</h1>
 
-[![codecov](https://codecov.io/gh/ShafranEugene/irida-telegrambot/branch/main/graph/badge.svg?token=W99DJQY3LG)](https://codecov.io/gh/ShafranEugene/irida-telegrambot)
 [![Build Status](https://app.travis-ci.com/ShafranEugene/test-Irida-Travis.svg?token=ZDs73qE4zkUi15p39FoZ&branch=main)](https://app.travis-ci.com/ShafranEugene/test-Irida-Travis)
+[![codecov](https://codecov.io/gh/ShafranEugene/irida-telegrambot/branch/main/graph/badge.svg?token=W99DJQY3LG)](https://codecov.io/gh/ShafranEugene/irida-telegrambot)
 [![BCH compliance](https://bettercodehub.com/edge/badge/ShafranEugene/irida-telegrambot?branch=main)](https://bettercodehub.com/)
 
 ## Idea
@@ -30,7 +30,7 @@ Required software:
 
 to deploy application run bash script:
 
-bash start.sh ${BOT_NAME} ${BOT_TOKEN} ${BOT_ADMIN}
+- bash start.sh ${BOT_NAME} ${BOT_TOKEN} ${BOT_ADMIN}
 
 Where:
 - ${BOT_NAME} - name your bot

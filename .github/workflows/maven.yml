@@ -45,6 +45,6 @@ jobs:
         email: ${{ secrets.HEROKU_EMAIL }}
         api_key: ${{ secrets.HEROKU_API_KEY }}
         docker_compose_file: ./docker-compose.yml
-        heroku_apps: ${{ secrets.HEROKU_APP_NAME }}
+        heroku_apps: [{"imagename":"irida","appname":"${{ secrets.HEROKU_APP_NAME }}","apptype":"web"}]
 
 

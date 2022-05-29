@@ -11,7 +11,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logs/${LOG_FILE}.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <maxHistory>60</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+            <totalSizeCap>80MB</totalSizeCap>
         </rollingPolicy>
         <encoder>
             <pattern>%-4relative %d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>

@@ -26,7 +26,7 @@ public class MuteInviteServiceImpl implements MuteInviteService{
     @Override
     public void setMute(Long chatId){
         Calendar calendar = new GregorianCalendar();
-        calendar.roll(Calendar.HOUR,+1);
+        calendar.add(Calendar.HOUR,+1);
         logger.info("User - " + chatId + ", has been get mute to " + calendar.getTime().toString());
         muteMap.put(chatId,calendar);
     }
@@ -34,7 +34,7 @@ public class MuteInviteServiceImpl implements MuteInviteService{
     @Override
     public void setMuteOfDay(Long chatId){
         Calendar calendar = new GregorianCalendar();
-        calendar.roll(Calendar.DAY_OF_MONTH,+1);
+        calendar.add(Calendar.DAY_OF_MONTH,+1);
         logger.info("User - " + chatId + ", has been get mute to " + calendar.getTime().toString());
         muteMap.put(chatId,calendar);
     }

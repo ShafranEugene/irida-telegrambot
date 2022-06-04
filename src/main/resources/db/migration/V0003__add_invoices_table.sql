@@ -1,5 +1,3 @@
-USE telegram_bot_irida;
-
 ALTER TABLE orders ADD date_created TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;
 
 DROP TABLE IF EXISTS invoices;

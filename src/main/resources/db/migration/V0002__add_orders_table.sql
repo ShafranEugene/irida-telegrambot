@@ -1,5 +1,3 @@
-USE telegram_bot_irida;
-
 DROP TABLE IF EXISTS orders;
 
 CREATE TABLE orders (

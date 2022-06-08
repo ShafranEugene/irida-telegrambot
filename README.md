@@ -19,7 +19,7 @@ Based on MVP Scope, in bot have been implemented:
 - Showing details and deleting any orders and invoices.
 - The bot has a security system - when new user wants to work with the bot, bot sends request to an admin to get access for new user.
 
-The manual is in English, users can get it using the /guide command in the bot.
+The manual is in Russian, users can get it using the /guide command in the bot.
 
 ## Deployment
 Deployment process as easy as possible:

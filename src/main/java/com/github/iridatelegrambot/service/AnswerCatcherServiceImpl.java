@@ -101,6 +101,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         });
         return DBhasInvoice[0];
     }
+
     @Override
     public String deleteOrder(Update update){
         String numberOrder = update.getMessage().getText();
@@ -120,6 +121,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         }
         return "Повторите попытку. Заказ с таким номер не найден.";
     }
+
     @Override
     public String deleteInvoice(Update update){
         String numberInvoice = update.getMessage().getText();
@@ -134,6 +136,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
         }
         return "Повторите попытку. Накладная с таким номер не найден.";
     }
+
     @Override
     public String infoOrder(Update update){
         String numberOrder = update.getMessage().getText();
@@ -146,6 +149,7 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
                 "\" order, try User - " + update.getMessage().getChat().getUserName());
         return "Повторите попытку. Заказ с таким номер не найден.";
     }
+
     @Override
     public String infoInvoice(Update update){
         String numberInvoice = update.getMessage().getText();
@@ -158,4 +162,6 @@ public class AnswerCatcherServiceImpl implements AnswerCatcherService{
                 "\" invoice, try User - " + update.getMessage().getChat().getUserName());
         return "Повторите попытку. Накладная с таким номер не найден.";
     }
+
+
 }

@@ -6,6 +6,7 @@ import com.github.iridatelegrambot.service.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -120,31 +121,69 @@ public class AnswerCatcherServiceImplTest {
     }
 
     @Test
-    void shouldProperlyDelete(){
+    void shouldProperlyDeleteInvoice(){
         //when
-        answerCatcherService.deleteOrder(updateWithNumber500);
         answerCatcherService.deleteInvoice(updateWithNumber500);
         //then
-        Mockito.verify(orderService).delete(1);
         Mockito.verify(invoiceService).delete(1);
     }
 
     @Test
-    void shouldProperlyGetInfo(){
-        //given
-        Order order = new Order();
-        order.setId(1);
-        order.setNumber("500");
+    void shouldProperlyDeleteOrder(){
+        //when
+        answerCatcherService.deleteOrder(updateWithNumber500);
+        //then
+        Mockito.verify(orderService).delete(1);
+    }
 
+    @Test
+    void shouldProperlyGetInfoInvoice(){
+        //given
         Invoice invoice = new Invoice();
         invoice.setId(1);
         invoice.setNumber("500");
         //when
-        String orderInfo = answerCatcherService.infoOrder(updateWithNumber500);
         String invoiceInfo = answerCatcherService.infoInvoice(updateWithNumber500);
         //then
-        Assertions.assertEquals(order.toStringForUsers(),orderInfo);
         Assertions.assertEquals(invoice.toStringForUser(),invoiceInfo);
+    }
+
+    @Test
+    void shouldProperlyGetInfoOrder(){
+        //given
+        Order order = new Order();
+        order.setId(1);
+        order.setNumber("500");
+        //when
+        String orderInfo = answerCatcherService.infoOrder(updateWithNumber500);
+        //then
+        Assertions.assertEquals(order.toStringForUsers(),orderInfo);
+    }
+
+    @Test
+    void shouldNotFindOrder(){
+        //given
+        Mockito.when(orderService.getAllOrders()).thenReturn(new ArrayList<>());
+        String unknownAnswer = "Повторите попытку. Заказ с таким номер не найден.";
+        //when
+        String answer1 = answerCatcherService.deleteOrder(updateWithNumber500);
+        String answer2 = answerCatcherService.infoOrder(updateWithNumber500);
+        //then
+        Assertions.assertEquals(unknownAnswer,answer1);
+        Assertions.assertEquals(unknownAnswer,answer2);
+    }
+
+    @Test
+    void shouldNotFindInvoice(){
+        //given
+        Mockito.when(invoiceService.getAllInvoice()).thenReturn(new ArrayList<>());
+        String unknownAnswer = "Повторите попытку. Накладная с таким номер не найден.";
+        //when
+        String answer1 = answerCatcherService.deleteInvoice(updateWithNumber500);
+        String answer2 = answerCatcherService.deleteInvoice(updateWithNumber500);
+        //then
+        Assertions.assertEquals(unknownAnswer,answer1);
+        Assertions.assertEquals(unknownAnswer,answer2);
     }
 
 }

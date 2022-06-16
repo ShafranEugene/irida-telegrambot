@@ -23,7 +23,7 @@ public class HandleUserTelegramServiceImpl implements HandleUserTelegramService{
         Optional<UserTelegram> userTelegramOptional = userTelegramService.findByChatId(chatId);
         if(userTelegramOptional.isPresent()) {
             UserTelegram userTelegram = userTelegramOptional.get();
-            String text = "Код: " + chatId +
+            String text = "Id: " + chatId +
                     "\nИмя: " + userTelegram.getFirstName() +
                     "\nЛогин: " + userTelegram.getUserName() +
                     "\nСтатус: ";
@@ -44,53 +44,43 @@ public class HandleUserTelegramServiceImpl implements HandleUserTelegramService{
     }
 
     @Override
-    public void setUserActiveStatus(Long chatId, Boolean status){
+    public void setUserActiveStatus(Long chatId, Boolean status, Long chatIdAdmin){
         Optional<UserTelegram> userTelegramOptional = userTelegramService.findByChatId(chatId);
         if(userTelegramOptional.isPresent()) {
             UserTelegram userTelegram = userTelegramOptional.get();
             userTelegram.setActive(status);
             userTelegramService.save(userTelegram);
         } else {
-            userNotFind(chatId);
+            userNotFind(chatIdAdmin);
         }
     }
 
     @Override
-    public void setUserAdminStatus(Long chatId, Boolean status){
+    public void setUserAdminStatus(Long chatId, Boolean status , Long chatIdAdmin){
         Optional<UserTelegram> userTelegramOptional = userTelegramService.findByChatId(chatId);
         if(userTelegramOptional.isPresent()) {
             UserTelegram userTelegram = userTelegramOptional.get();
             userTelegram.setAdmin(status);
             userTelegramService.save(userTelegram);
         } else {
-            userNotFind(chatId);
+            userNotFind(chatIdAdmin);
         }
     }
 
-    private void userNotFind(Long chatId){
-        sendMessageService.sendMessage(chatId.toString(),"Пользователь не найден.");
+    private void userNotFind(Long chatIdAdmin){
+        sendMessageService.sendMessage(chatIdAdmin.toString(),"Пользователь не найден.");
     }
 
     @Override
     public Boolean getActiveStatusUser(Long chatId){
         Optional<UserTelegram> userTelegramOptional = userTelegramService.findByChatId(chatId);
-        if(userTelegramOptional.isPresent()) {
-            return userTelegramOptional.get().isActive();
-        } else {
-            userNotFind(chatId);
-            return false;
-        }
+        return userTelegramOptional.map(UserTelegram::isActive).orElse(false);
     }
 
     @Override
     public Boolean getAdminStatusUser(Long chatId){
         Optional<UserTelegram> userTelegramOptional = userTelegramService.findByChatId(chatId);
-        if(userTelegramOptional.isPresent()) {
-            return userTelegramOptional.get().isAdmin();
-        } else {
-            userNotFind(chatId);
-            return false;
-        }
+        return userTelegramOptional.map(UserTelegram::isAdmin).orElse(false);
     }
 
     @Override

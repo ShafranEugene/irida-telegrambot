@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -83,6 +84,37 @@ class SendMessageServiceImplTest {
 
         //then
         Mockito.verify(mIridaBot).execute(deleteMessage);
+    }
+
+    @Test
+    void messageIsEmpty(){
+        //given
+        Long chatId = 12345678L;
+        String message = null;
+        //when
+        sendMessageService.sendMessage(chatId.toString(),message);
+        //then
+        try {
+            Mockito.verify(mIridaBot,Mockito.times(0)).execute((SendMessage) Mockito.any());
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void messageIsEmptyWithMarkup(){
+        //given
+        Long chatId = 12345678L;
+        String message = "";
+        InlineKeyboardMarkup markup = null;
+        //when
+        sendMessageService.sendMessage(chatId.toString(),message,markup);
+        //then
+        try {
+            Mockito.verify(mIridaBot,Mockito.times(0)).execute((SendMessage) Mockito.any());
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
     }
 
 }

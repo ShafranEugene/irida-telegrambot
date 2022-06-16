@@ -29,7 +29,7 @@ public class AdminSetStatusCallbackCommandTest extends AbstractCallbackCommandTe
         //when
         setStatusCallbackCommand.execute(callbackQuery);
         //then
-        Mockito.verify(handleUserTelegramService).setUserAdminStatus(10L,true);
+        Mockito.verify(handleUserTelegramService).setUserAdminStatus(10L,true,12345678L);
     }
 
     @Test
@@ -51,7 +51,7 @@ public class AdminSetStatusCallbackCommandTest extends AbstractCallbackCommandTe
         //when
         setStatusCallbackCommand.execute(callbackQuery);
         //then
-        Mockito.verify(handleUserTelegramService).setUserActiveStatus(10L,true);
+        Mockito.verify(handleUserTelegramService).setUserActiveStatus(10L,true,12345678L);
     }
 
     @Test

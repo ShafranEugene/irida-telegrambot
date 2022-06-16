@@ -39,7 +39,7 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
 
     private void setStatusUser(Long chatIdUser, boolean status){
         if(handleUserTelegramService.checkUserIsPresent(chatIdUser)){
-            handleUserTelegramService.setUserActiveStatus(chatIdUser,status);
+            handleUserTelegramService.setUserActiveStatus(chatIdUser,status,chatId);
             sendMessageService.deleteMessage(chatId,messageId);
             sendMessageService.sendMessage(chatId.toString(),"Готово, статус пользователя был изменен.");
         } else {
@@ -49,7 +49,7 @@ public class AdminSetStatusCallbackCommand implements CallbackCommand {
 
     private void setAdmin(Long chatIdUser){
         if(handleUserTelegramService.checkUserIsPresent(chatIdUser)){
-            handleUserTelegramService.setUserAdminStatus(chatIdUser,true);
+            handleUserTelegramService.setUserAdminStatus(chatIdUser,true,chatId);
             sendMessageService.deleteMessage(chatId,messageId);
             sendMessageService.sendMessage(chatId.toString(),"Готово. Пользователю были выданы права администратора.");
             sendMessageService.sendMessage(chatIdUser.toString(),"Вам было выдано права администратора");

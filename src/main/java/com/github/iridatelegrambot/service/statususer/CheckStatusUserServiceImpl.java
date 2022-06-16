@@ -41,7 +41,7 @@ public class CheckStatusUserServiceImpl implements CheckStatusUserService {
         if(handleUserTelegramService.checkUserOnEmpty(chatId)){
             handleUserTelegramService.createUser(update);
             if(handleUserTelegramService.checkOnFirstUser(chatId)){
-                handleUserTelegramService.setUserActiveStatus(chatId,true);
+                handleUserTelegramService.setUserActiveStatus(chatId,true,chatId);
                 return true;
             } else {
                 sendFalseAnswer(chatId);
@@ -52,12 +52,12 @@ public class CheckStatusUserServiceImpl implements CheckStatusUserService {
         if(handleUserTelegramService.getActiveStatusUser(chatId)){
             return true;
         } else if(handleUserTelegramService.getAdminStatusUser(chatId)) {
-            handleUserTelegramService.setUserActiveStatus(chatId,true);
+            handleUserTelegramService.setUserActiveStatus(chatId,true,chatId);
             return true;
         } else {
             sendFalseAnswer(chatId);
             logger.info("User - " + handleUserTelegramService.toStringInfoForUser(chatId) +
-                    ", try using the bot and don't have rights");
+                    ", try is using the bot and don't have rights");
             return false;
         }
     }

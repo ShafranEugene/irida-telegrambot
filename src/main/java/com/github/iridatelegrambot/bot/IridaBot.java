@@ -36,6 +36,9 @@ public class IridaBot extends TelegramLongPollingBot {
     @Value("${bot.token}")
     private String token;
 
+    @Value("${bot.protection}")
+    private Boolean protection;
+
     @Autowired
     public IridaBot(CommandContainer container, CallbackCommandContainer callbackCommandContainer,
                     HandleWaitNumber handleWaitNumber, CheckStatusUserService checkStatusUserService) {
@@ -58,8 +61,10 @@ public class IridaBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
-        if(!checkStatusUserService.check(update)){
-            return;
+        if(protection) {
+            if (!checkStatusUserService.check(update)) {
+                return;
+            }
         }
 
         if(update.hasCallbackQuery()){

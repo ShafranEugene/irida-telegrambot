@@ -30,12 +30,12 @@ Required software:
 
 to deploy application run bash script:
 
-- bash start.sh ${BOT_NAME} ${BOT_TOKEN} ${BOT_ADMIN}
+- bash start.sh BOT_NAME BOT_TOKEN BOT_ADMIN
 
 Where:
-- ${BOT_NAME} - name your bot
-- ${BOT_TOKEN} - token your bot
-- ${BOT_ADMIN} - telegram user's name of first admin
+- BOT_NAME - name your bot
+- BOT_TOKEN - token your bot
+- BOT_ADMIN - telegram user's name of first admin
 
 ## Technological stack
 - Spring Boot as a base framework

@@ -4,6 +4,8 @@ import com.github.iridatelegrambot.entity.Invoice;
 import com.github.iridatelegrambot.entity.Order;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
+import java.util.Optional;
+
 public interface InlineDocumentButtonService {
     InlineKeyboardMarkup cityButtons(Order order);
 
@@ -13,5 +15,5 @@ public interface InlineDocumentButtonService {
 
     InlineKeyboardMarkup closeOrder(Order order);
 
-    InlineKeyboardMarkup showActiveOrders();
+    Optional<InlineKeyboardMarkup> showActiveOrders();
 }

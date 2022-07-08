@@ -96,14 +96,18 @@ public class InlineDocumentButtonServiceImpl implements  InlineDocumentButtonSer
     }
 
     @Override
-    public InlineKeyboardMarkup showActiveOrders(){
+    public Optional<InlineKeyboardMarkup> showActiveOrders(){
         List<Order> orders = orderService.getAllOrdersActive();
         TreeMap<String,String> mapData = new TreeMap<>();
+
+        if(orders.size() == 0){
+            return Optional.empty();
+        }
 
         for(Order order : orders){
             String data = SHOW_ORDER.getNameForService() + "id:" + order.getId();
             mapData.put(order.getNumber(),data);
         }
-        return inlineKeyboardService.createMenu(mapData,3);
+        return Optional.of(inlineKeyboardService.createMenu(mapData,3));
     }
 }

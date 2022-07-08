@@ -43,6 +43,7 @@ public class IridaBotTest {
         //given
         Update update = createUpdate("/test");
         Mockito.when(checkStatusUserService.check(update)).thenReturn(false);
+        iridaBot.setProtection(true);
         //when
         iridaBot.onUpdateReceived(update);
         //then

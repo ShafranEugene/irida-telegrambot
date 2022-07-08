@@ -5,9 +5,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public interface HandleUserTelegramService {
     String toStringInfoForUser(Long chatId);
 
-    void setUserActiveStatus(Long chatId, Boolean status);
+    void setUserActiveStatus(Long chatId, Boolean status, Long chatIdAdmin);
 
-    void setUserAdminStatus(Long chatId, Boolean status);
+    void setUserAdminStatus(Long chatId, Boolean status, Long chatIdAdmin);
 
     Boolean getActiveStatusUser(Long chatId);
 

@@ -22,7 +22,7 @@ public class SendDocumentServiceImplTest {
     private OrderService orderService;
     private InvoiceService invoiceService;
     private SendDocumentService sendDocumentService;
-    private final Long chatId = 12345678L;
+    private final Long chatId = 112358L;
     @BeforeEach
     void init(){
         sendMessageService = Mockito.mock(SendMessageService.class);

@@ -57,8 +57,10 @@ public class InlineAdminButtonServiceImpl implements InlineAdminButtonService {
     public InlineKeyboardMarkup showAllUsersForSetAdmin(){
         Map<String,String> buttonsMap = new HashMap<>();
         for(UserTelegram userTelegram : userTelegramService.getAllUser()){
-            buttonsMap.put(userTelegram.getUserName(),ADMIN_MENU_SET_STATUS.getNameForService() + "setAdmin:" +
-                    userTelegram.getChatId() + ":true");
+            if(!userTelegram.isAdmin()) {
+                buttonsMap.put(userTelegram.getUserName(), ADMIN_MENU_SET_STATUS.getNameForService() + "setAdmin:" +
+                        userTelegram.getChatId() + ":true");
+            }
         }
         return inlineKeyboardService.createMenu(buttonsMap);
     }

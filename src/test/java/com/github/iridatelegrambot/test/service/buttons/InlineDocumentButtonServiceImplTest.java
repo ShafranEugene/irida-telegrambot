@@ -16,14 +16,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
-import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.ADD_ORDER;
-import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.ADD_ORDER_TO_INVOICE;
+import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.*;
+import static com.github.iridatelegrambot.command.CallbackCommand.CallbackCommandName.CLOSE_ORDER;
 import static org.mockito.ArgumentMatchers.eq;
 
 public class InlineDocumentButtonServiceImplTest {
@@ -89,6 +87,56 @@ public class InlineDocumentButtonServiceImplTest {
         Mockito.verify(inlineKeyboardService).createMenu(mapArgumentCaptor.capture(),eq(3));
         //then
         Assertions.assertEquals(orderToJson,mapArgumentCaptor.getValue().get("Днепр"));
+    }
+
+    @Test
+    void shouldGetCloseButtons(){
+        //give
+        Order order = new Order();
+        order.setId(20);
+        TreeMap<String,String> mapData = new TreeMap<>();
+        mapData.put("Да",CLOSE_ORDER.getNameForService() + order.getId() + ":false");
+        mapData.put("Нет",CLOSE_ORDER.getNameForService() + order.getId() + ":true");
+        //when
+        inlineDocumentButtonService.closeOrder(order);
+        //then
+        Mockito.verify(inlineKeyboardService).createMenu(mapData,2);
+    }
+
+    @Test
+    void shouldGetActiveOrderButtons(){
+        //give
+        Order order1 = new Order();
+        order1.setId(10);
+        order1.setNumber("500");
+
+        List<Order> orderList = new ArrayList<>();
+        orderList.add(order1);
+
+        Mockito.when(orderService.getAllOrdersActive()).thenReturn(orderList);
+
+        TreeMap<String,String> mapData = new TreeMap<>();
+        String data = SHOW_ORDER.getNameForService() + "id:" + order1.getId();
+        mapData.put(order1.getNumber(),data);
+
+        InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
+
+        Mockito.when(inlineKeyboardService.createMenu(mapData,3)).thenReturn(markup);
+        //when
+        Optional<InlineKeyboardMarkup> optional = inlineDocumentButtonService.showActiveOrders();
+        //then
+        Assertions.assertTrue(optional.isPresent());
+        Assertions.assertEquals(markup,optional.get());
+    }
+
+    @Test
+    void shouldNotFindActiveOrders(){
+        //given
+        Mockito.when(orderService.getAllOrdersActive()).thenReturn(new ArrayList<>());
+        //when
+        Optional<InlineKeyboardMarkup> optional = inlineDocumentButtonService.showActiveOrders();
+        //then
+        Assertions.assertTrue(optional.isEmpty());
     }
 
 }

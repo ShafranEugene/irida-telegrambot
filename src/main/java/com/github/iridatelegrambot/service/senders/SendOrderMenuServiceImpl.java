@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
+import java.util.Optional;
+
 @Service
 public class SendOrderMenuServiceImpl implements SendOrderMenuService {
 
@@ -23,7 +25,12 @@ public class SendOrderMenuServiceImpl implements SendOrderMenuService {
 
     @Override
     public void sendActiveOrders(Long chatId, String message){
-        sendMessageService.sendMessage(chatId.toString(),message,inlineDocumentButtonService.showActiveOrders());
+        Optional<InlineKeyboardMarkup> optionalButtons = inlineDocumentButtonService.showActiveOrders();
+        if(optionalButtons.isPresent()) {
+            sendMessageService.sendMessage(chatId.toString(), message, optionalButtons.get());
+        } else {
+            sendMessageService.sendMessage(chatId.toString(),"Активных заказов не найдено.");
+        }
     }
 
     @Override

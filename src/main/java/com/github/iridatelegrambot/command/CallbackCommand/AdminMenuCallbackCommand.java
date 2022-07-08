@@ -57,7 +57,7 @@ public class AdminMenuCallbackCommand implements CallbackCommand {
 
     private void pullOffAdmin(){
         if(!handleUserTelegramService.checkUserOnEmpty(chatId)){
-            handleUserTelegramService.setUserAdminStatus(chatId,false);
+            handleUserTelegramService.setUserAdminStatus(chatId,false,chatId);
             sendMessageService.sendMessage(chatId.toString(),"Вы сняли с себя права администратора!");
         } else {
             sendMessageService.sendMessage(chatId.toString(),"Пользователь не найден.");
